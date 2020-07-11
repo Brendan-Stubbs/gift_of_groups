@@ -21,5 +21,6 @@ from uac import views as uac_views
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("register/", uac_views.Register.as_view(), name="register"),
+    path("", include("django.contrib.auth.urls")),
     path("", include("gifts.urls")),
 ]
