@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "gifts",
+    "uac.apps.UacConfig",
+    "gifts.apps.GiftsConfig",
 ]
 
 MIDDLEWARE = [

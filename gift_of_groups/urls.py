@@ -15,8 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from uac import views as uac_views
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("register/", uac_views.Register.as_view(), name="register"),
     path("", include("gifts.urls")),
 ]
