@@ -20,7 +20,8 @@ class Profile(models.Model):
 
 class GiftGroup(models.Model):
     name = models.CharField(max_length=50)
-    user = models.ManyToManyField(Profile)
+    users = models.ManyToManyField(Profile)
+    admins = models.ManyToManyField(Profile, related_name="admin")
     created_at = models.DateField(auto_now_add=True)
 
     def __unicode__(self):
@@ -34,8 +35,3 @@ class GiftGroup(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
-
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
