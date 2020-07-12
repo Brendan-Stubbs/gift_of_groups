@@ -3,31 +3,12 @@
 
 {% block title %} Sign Up {% endblock %}
 {% block content %}
+{% load crispy_forms_tags %}
 
-<div class="container">
-    <div class="row">
-        <div class="offset-md-2 col-md-8">
-            <form method="POST" class="form-group">
-                {% csrf_token %}
-                <div class="row">
-                    <div class="col-md">
-                        <label>Email</label>
-                        {{form.email}}
-                        <label>First Name</label>
-                        {{form.first_name}}
-                        <label>Last Name</label>
-                        {{form.last_name}}
-                        <label>Password</label>
-                        {{form.password1}}
-                        <label>Confirm Password</label>
-                        {{form.password2}}
-                    </div>
-                </div>
-                <div class="offset-md-4 col-md-4">
-                    <button type="submit" class="btn btn-success">Register</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+<form method="POST" class="form-group offset-lg-4 col-lg-4 offset-md-3 col-md-6 offset-sm-2 col-sm-8">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="btn btn-success">Create Account</button>
+</form>
+
 {% endblock %}

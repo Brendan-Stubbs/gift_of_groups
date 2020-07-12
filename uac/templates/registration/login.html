@@ -10,7 +10,7 @@ Login Here
 
 {% block content %}
 
-<form method="POST" class="form-group offset-lg-2 col-lg-8">
+<form method="POST" class="form-group offset-lg-4 col-lg-4 offset-md-3 col-md-6 offset-sm-2 col-sm-8">
     {% csrf_token %}
     {{ form|crispy }}
     <p>Don't have an account? Create one <a href="{% url 'register' %}">here</a></p>

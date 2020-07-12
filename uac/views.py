@@ -7,6 +7,8 @@ from django.contrib.auth import authenticate, login
 # Create your views here.
 class Register(generic.View):
     def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect("index")
         form = RegisterForm()
         context = {"form": form}
         return render(request, "register/register.html", context)
@@ -15,15 +17,14 @@ class Register(generic.View):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.username = form.cleaned_data["email"]
+            user.email = form.cleaned_data["username"]
             user.save()
             new_user = authenticate(
-                username=form.cleaned_data["email"],
+                username=form.cleaned_data["username"],
                 password=form.cleaned_data["password1"],
             )
             login(request, new_user)
         else:
-            form = RegisterForm()
             context = {"form": form}
             return render(request, "register/register.html", context)
         return redirect("index")

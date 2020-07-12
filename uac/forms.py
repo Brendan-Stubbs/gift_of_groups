@@ -7,9 +7,9 @@ from django.contrib.auth.models import User
 class RegisterForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ["email", "password1", "password2", "first_name", "last_name"]
+        fields = ["username", "first_name", "last_name", "password1", "password2"]
 
-    email = forms.EmailField(
+    username = forms.EmailField(
         widget=forms.EmailInput(
             attrs={"class": "form-control", "placeholder": "test@test.com"}
         )
