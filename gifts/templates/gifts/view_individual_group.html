@@ -1,0 +1,28 @@
+{% extends 'gifts/base.html' %}
+
+{% block content %}
+
+<h1>{{group.name}}</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+            <th scope="col">Admin</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for member in members %}
+        <td>{{member.user.first_name}}
+        <td>{{member.user.last_name}}</td>
+        <td>{% if member.is_admin %}<i class="fas fa-check-square site-green" style="font-size:20px"></i>{% else %} <a
+                href="{% url 'group_grant_admin' group_id=group.id profile_id=member.id %}"><i
+                    class="fas fa-plus-square site-purple"></i></a>{% endif %}
+        </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

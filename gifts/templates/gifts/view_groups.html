@@ -15,18 +15,6 @@
         padding: 20px 5px;
     }
 
-    .site-green {
-        color: #71dc5e;
-    }
-
-    .site-purple {
-        color: #7d55b1
-    }
-
-    .site-blue {
-        color: #9abae7;
-    }
-
     .card {
         margin-bottom: 20px;
         padding: 20px 0;
@@ -56,7 +44,7 @@
 <div class="row">
     {% for group in groups %}
     <div class="offset-3 col-6 offset-sm-0 col-md-4 col-lg-3">
-        <a href="#" class="card-anchor">
+        <a href="{% url 'view_individual_group' group.id %}" class="card-anchor">
             <div class="card">
                 <div class="card-body">
                     <div class="card-icon-container"><i class="fas fa-users card-icon site-purple"></i></div>
@@ -68,6 +56,7 @@
         </a>
     </div>
     {% endfor %}
+
     <div class="offset-3 col-6 offset-sm-0 col-md-4 col-lg-3">
         <a href="{% url 'new_group' %}" class="card-anchor">
             <div class="card">
