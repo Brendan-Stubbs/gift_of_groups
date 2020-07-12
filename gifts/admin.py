@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import GiftGroup, Profile
 
-# Register your models here.
+admin.site.register(GiftGroup)
+admin.site.register(Profile)

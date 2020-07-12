@@ -4,7 +4,6 @@ from .forms import RegisterForm
 from django.contrib.auth import authenticate, login
 
 
-# Create your views here.
 class Register(generic.View):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
