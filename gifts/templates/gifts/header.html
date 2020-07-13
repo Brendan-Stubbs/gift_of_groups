@@ -1,44 +1,38 @@
-<style>
-    nav {
-        margin-bottom: 35px;
-    }
-</style>
-
-
-<nav class="navbar navbar-expand-md navbar-dark bg-dark">
-    <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item {% if page_name == 'groups' %}active{%endif%}">
-                <a class="nav-link" href="{% url 'view_groups' %}">Groups</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Gifts</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Something</a>
-            </li>
+<nav class="grey darken-2">
+    <div class="nav-wrapper">
+        <a href="{% url 'index' %}" class="brand-logo center">Gifty Groups</a>
+        <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        <ul class="left hide-on-med-and-down">
+            <li><a href="{% url 'view_groups' %}">Groups</a></li>
+            <li><a href="#">Gifts</a></li>
+            <li><a href="#">Something</a></li>
         </ul>
-    </div>
-    <div class="mx-auto order-0">
-        <a class="navbar-brand mx-auto" href="{% url 'index' %}">Gifty Groups </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-    <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
-        <ul class="navbar-nav ml-auto">
+        <ul class="right hide-on-med-and-down">
             {% if user.is_authenticated %}
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'logout' %}">Log out</a>
-            </li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
             {% else %}
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'register' %}">Sign up</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'login' %}">Log in</a>
-            </li>
+            <li><a href="{% url 'register' %}">Sign up</a></li>
+            <li><a href="{% url 'login' %}">Log in</a></li>
             {% endif %}
         </ul>
     </div>
 </nav>
+
+<ul class="sidenav" id="mobile-demo">
+    {% if not user.is_authenticated %}
+    <li><a href="{% url 'register' %}">Sign up</a></li>
+    <li><a href="{% url 'login' %}">Log in</a></li>
+    {% endif %}
+    <li><a href="{% url 'view_groups' %}">Groups</a></li>
+    <li><a href="Gifts">Gifts</a></li>
+    <li><a href="#">Something</a></li>
+    {% if user.is_authenticated %}
+    <li><a href="{% url 'logout' %}">Logout</a></li>
+    {% endif %}
+</ul>
+
+<style>
+    nav {
+        margin-bottom: 30px;
+    }
+</style>

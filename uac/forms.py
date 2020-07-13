@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 
 
 class RegisterForm(UserCreationForm):
+    error_css_class = "red-text"
+
     class Meta:
         model = User
         fields = ["username", "first_name", "last_name", "password1", "password2"]

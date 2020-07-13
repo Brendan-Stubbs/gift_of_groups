@@ -37,14 +37,17 @@ class CreateGroup(generic.View):
             instance.admins.add(request.user.profile)
             instance.users.add(request.user.profile)
             instance.save()
-            return redirect("view_groups")  # TODO change to direct to added group
+            return redirect("view_individual_group", instance.id)
         context = {"form": form}
         return render(request, "gifts/create_group.html", context)
 
 
 class EditGroup(generic.View):
     def get(self, request, *args, **kwargs):
-        if not GiftGroup.objects.filter(id=self.kwargs["id"]).exists():
+        if (
+            not GiftGroup.objects.filter(id=self.kwargs["id"]).exists()
+            or not request.user.is_authenticated
+        ):
             return  # TODO add approprite redirect
         user = request.user.profile
         group = GiftGroup.objects.get(id=self.kwargs["id"])
@@ -69,3 +72,48 @@ class EditGroup(generic.View):
             return redirect("view_groups")
         context = {"form": form}
         return render(request, "gifts/edit_group.html", context)
+
+
+class ViewIndividualGroup(generic.View):
+    def get(self, request, *args, **kwargs):
+        if (
+            not GiftGroup.objects.filter(id=self.kwargs["id"]).exists()
+            or not request.user.is_authenticated
+        ):
+            return  # TODO appropriate redirect
+        profile = request.user.profile
+        group = GiftGroup.objects.get(id=self.kwargs["id"])
+        if not profile in group.users.all():
+            return  # TODO appropriate redirect
+        members = group.users.all()
+        for member in members:
+            member.is_admin = member in group.admins.all()
+        user_is_admin = profile in group.admins.all()
+        context = {
+            "members": members,
+            "user_is_admin": user_is_admin,
+            "group": group,
+        }
+        return render(request, "gifts/view_individual_group.html", context)
+
+
+class GrantAdminAccess(generic.View):
+    def get(self, request, *args, **kwargs):
+        if (
+            not request.user.is_authenticated
+            or not GiftGroup.objects.filter(id=self.kwargs["group_id"]).exists()
+            or not Profile.objects.filter(id=self.kwargs["profile_id"]).exists()
+        ):
+            print("First")
+            return  # TODO appropriate redirect
+        profile = request.user.profile
+        group = GiftGroup.objects.get(id=self.kwargs["group_id"])
+        selected_user = Profile.objects.get(id=self.kwargs["profile_id"])
+        if not profile in group.admins.all():
+            return  # TODO appropriate redirect
+            print("Second")
+
+        group.admins.add(selected_user)
+        group.save()
+        return redirect("view_individual_group", group.id)
+
