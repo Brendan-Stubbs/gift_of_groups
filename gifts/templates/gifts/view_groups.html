@@ -15,17 +15,12 @@
         padding: 20px 5px;
     }
 
-    .card {
-        margin-bottom: 20px;
-        padding: 20px 0;
+    .card-body {
+        padding: 20px;
     }
 
     .card:hover {
         opacity: 0.8;
-    }
-
-    .admin-icon {
-        color: #ea4d69;
     }
 
 
@@ -43,12 +38,12 @@
 
 <div class="row">
     {% for group in groups %}
-    <div class="offset-3 col-6 offset-sm-0 col-md-4 col-lg-3">
+    <div class="col offset-s2 s8 offset-m1 m5 l4">
         <a href="{% url 'view_individual_group' group.id %}" class="card-anchor">
             <div class="card">
                 <div class="card-body">
                     <div class="card-icon-container"><i class="fas fa-users card-icon site-purple"></i></div>
-                    <h5 class="card-title">{{group.name}}</h5>
+                    <h5 class="card-title" style="white-space: nowrap;">{{group.name}}</h5>
                     <small style="position: absolute" class="card-text">{{group.members_total}}
                         member{% if group.members_total > 1 %}s{% endif %}</small>
                 </div>
@@ -57,10 +52,9 @@
     </div>
     {% endfor %}
 
-    <div class="offset-3 col-6 offset-sm-0 col-md-4 col-lg-3">
+    <div class="col offset-s2 s8 offset-m1 m5 l4">
         <a href="{% url 'new_group' %}" class="card-anchor">
             <div class="card">
-                <!-- <i class="fas fa-plus site-green top-icon"></i> -->
                 <div class="card-body">
                     <div class="card-icon-container">
                         <i class="fas fa-plus card-icon site-green"></i>
