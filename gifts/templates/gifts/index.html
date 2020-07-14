@@ -5,6 +5,7 @@
 
 {% block content %}
 <h1>Home</h1>
+
 {% if user.is_authenticated %}
 <p>Hi {{request.user.first_name}}</p>
 {% endif %}

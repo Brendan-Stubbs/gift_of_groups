@@ -117,3 +117,8 @@ class GrantAdminAccess(generic.View):
         group.save()
         return redirect("view_individual_group", group.id)
 
+
+# TODO dropdown for group invitations Accept / Reject
+# TODO Leave group
+# TODO Create an invitation
+

@@ -35,3 +35,29 @@ class GiftGroup(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
+
+
+class GiftGroupInvitation(models.Model):
+    STATUS_PENDING = 1
+    STATUS_ACCEPTED = 2
+    STATUS_REJECTED = 3
+
+    STATUS_CHOICES = (
+        (STATUS_PENDING, "Pending"),
+        (STATUS_ACCEPTED, "Accepted"),
+        (STATUS_REJECTED, "Rejected"),
+    )
+
+    gift_group = models.ForeignKey(GiftGroup, on_delete=models.CASCADE)
+    inviter = models.ForeignKey(User, on_delete=models.CASCADE)
+    invitee_email = models.CharField(max_length=50)
+    status = models.IntegerField(default=1, choices=STATUS_CHOICES)
+
+    def accepted(self):
+        if not User.objects.filter(email=self.invitee_email):
+            return
+        invitee = User.objects.get(email=self.invitee_email)
+        self.gift_group.users.add(invitee)
+        self.status = STATUS_ACCEPTED
+        self.save()
+

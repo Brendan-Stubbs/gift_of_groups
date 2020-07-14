@@ -26,7 +26,7 @@ SECRET_KEY = "fe1769t_=18)kl@p-hq97&id3l&r=c1zrn8zy#7!zv-2gtks0_"
 DEBUG = True
 
 ALLOWED_HOSTS = []
-# ALLOWED_HOSTS = ["97b0e035dc20.ngrok.io", "127.0.0.1:4040", "localhost"]
+# ALLOWED_HOSTS = ["f95b1acf4e83.ngrok.io", "127.0.0.1:4040", "localhost"]
 
 
 # Application definition
@@ -66,6 +66,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "utils.custom_context_processors.check_invitations",
             ],
         },
     },
