@@ -1,12 +1,10 @@
-{% extends 'gifts/base.html'%}
-
-{% block title %} Gifty Groups {% endblock %}
-
-
+{% extends 'gifts/base.html'%} {% block title %} Gifty Groups {% endblock %}
 {% block content %}
 <h1>Home</h1>
 
 {% if user.is_authenticated %}
 <p>Hi {{request.user.first_name}}</p>
 {% endif %}
+<p>This page is not important right now, so it looks shit</p>
+
 {% endblock %}

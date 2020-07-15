@@ -37,16 +37,37 @@
 
 <body style="background: rgb(238,174,202); background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1)
     100%);">
+
     {% include 'gifts/header.html'%}
+
     <div class="content container">
         {% block content %}
         {% endblock %}
     </div>
 </body>
 
+{% for invitation in gift_group_invitations %}
+<div id="inviteModal{{invitation.id}}" class="modal">
+    <div class="modal-content">
+        <h4>{{invitation.gift_group.name}}</h4>
+        <p>{{invitation.inviter.first_name}} {{invitation.inviter.last_name}} has invited you to join the group
+            {{invitation.gift_group.name}}, along with {{invitation.gift_group.users.count}} other people.</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat green">Accept</a>
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat red">Reject</a>
+    </div>
+</div>
+
+{% endfor %}
+
 <script>
     $(document).ready(function () {
         $('.sidenav').sidenav();
+    });
+    $(document).ready(function () {
+        $('.modal').modal();
+        $(".dropdown-trigger").dropdown();
     });
 </script>
 

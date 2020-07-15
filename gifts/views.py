@@ -121,4 +121,4 @@ class GrantAdminAccess(generic.View):
 # TODO dropdown for group invitations Accept / Reject
 # TODO Leave group
 # TODO Create an invitation
-
+# TODO Limit invitations to one per group

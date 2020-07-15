@@ -1,3 +1,20 @@
+<!-- Invitation Dropdowns -->
+
+<ul id="inviteDropdown" class="dropdown-content">
+    {% for invitation in gift_group_invitations %}
+    <li><a class="modal-trigger" href="#inviteModal{{invitation.id}}">{{ invitation.gift_group.name }}</a></li>
+    {% endfor %}
+</ul>
+
+<ul id="inviteDropdownMobile" class="dropdown-content">
+    {% for invitation in gift_group_invitations %}
+    <li><a class="modal-trigger" href="#inviteModal{{invitation.id}}">{{ invitation.gift_group.name }}</a></li>
+    {% endfor %}
+</ul>
+
+<!-- End Invitation Dropdowns -->
+
+
 <nav class="grey darken-2">
     <div class="nav-wrapper">
         <a href="{% url 'index' %}" class="brand-logo center">Gifty Groups</a>
@@ -6,10 +23,12 @@
             <li><a href="{% url 'view_groups' %}">Groups</a></li>
             <li><a href="#">Gifts</a></li>
             {% if gift_group_invitations.count > 0 %}
-            <li><a href="#">Invitations <span class="new badge">{{gift_group_invitations.count}}</span></a></li>
+            <li><a class="dropdown-trigger" href="#!" data-target="inviteDropdown">Invitations<i
+                        class="material-icons right">arrow_drop_down</i> <span
+                        class="new badge">{{gift_group_invitations.count}}</span></a></li>
             {% endif %}
-
         </ul>
+
         <ul class="right hide-on-med-and-down">
             {% if user.is_authenticated %}
             <li><a href="{% url 'logout' %}">Logout</a></li>
@@ -27,7 +46,8 @@
     <li><a href="{% url 'login' %}">Log in</a></li>
     {% endif %}
     {% if gift_group_invitations.count > 0 %}
-    <li><a href="#">Invitations <span class="new badge">{{gift_group_invitations.count}}</span></a></li>
+    <li><a class="dropdown-trigger" data-target="inviteDropdownMobile">Invitations <span
+                class="new badge">{{gift_group_invitations.count}}</span></a></li>
     {% endif %}
     <li><a href="{% url 'view_groups' %}">Groups</a></li>
     <li><a href="Gifts">Gifts</a></li>
