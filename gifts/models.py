@@ -54,10 +54,14 @@ class GiftGroupInvitation(models.Model):
     status = models.IntegerField(default=1, choices=STATUS_CHOICES)
 
     def accepted(self):
-        if not User.objects.filter(email=self.invitee_email):
+        if not User.objects.filter(email=self.invitee_email).exists():
             return
-        invitee = User.objects.get(email=self.invitee_email)
+        invitee = Profile.objects.get(user__email=self.invitee_email)
         self.gift_group.users.add(invitee)
-        self.status = STATUS_ACCEPTED
+        self.status = self.STATUS_ACCEPTED
+        self.save()
+
+    def rejected(self):
+        self.status = self.STATUS_REJECTED
         self.save()
 

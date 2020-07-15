@@ -44,22 +44,28 @@
         {% block content %}
         {% endblock %}
     </div>
+
+    <!-- Invitation Modals -->
+    {% for invitation in gift_group_invitations %}
+    <div id="inviteModal{{invitation.id}}" class="modal">
+        <div class="modal-content">
+            <h4>{{invitation.gift_group.name}}</h4>
+            <p>{{invitation.inviter.first_name}} {{invitation.inviter.last_name}} has invited you to join the group
+                {{invitation.gift_group.name}}, along with {{invitation.gift_group.users.count}} other people.</p>
+        </div>
+        <div class="modal-footer">
+            <a href="{% url 'accept_invite' invitation.id %}"
+                class="modal-close waves-effect waves-green btn-flat green">Accept
+            </a>
+            <a href="{% url 'reject_invite' invitation.id %}"
+                class="modal-close waves-effect waves-green btn-flat red">Reject
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+    <!-- End Invitation Modals -->
+
 </body>
-
-{% for invitation in gift_group_invitations %}
-<div id="inviteModal{{invitation.id}}" class="modal">
-    <div class="modal-content">
-        <h4>{{invitation.gift_group.name}}</h4>
-        <p>{{invitation.inviter.first_name}} {{invitation.inviter.last_name}} has invited you to join the group
-            {{invitation.gift_group.name}}, along with {{invitation.gift_group.users.count}} other people.</p>
-    </div>
-    <div class="modal-footer">
-        <a href="#!" class="modal-close waves-effect waves-green btn-flat green">Accept</a>
-        <a href="#!" class="modal-close waves-effect waves-green btn-flat red">Reject</a>
-    </div>
-</div>
-
-{% endfor %}
 
 <script>
     $(document).ready(function () {

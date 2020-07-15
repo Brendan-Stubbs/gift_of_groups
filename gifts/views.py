@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import generic
 from .forms import GiftGroupForm, Profile
-from gifts.models import GiftGroup
+from gifts.models import GiftGroup, GiftGroupInvitation
 
 
 class Index(generic.View):
@@ -104,21 +104,47 @@ class GrantAdminAccess(generic.View):
             or not GiftGroup.objects.filter(id=self.kwargs["group_id"]).exists()
             or not Profile.objects.filter(id=self.kwargs["profile_id"]).exists()
         ):
-            print("First")
             return  # TODO appropriate redirect
         profile = request.user.profile
         group = GiftGroup.objects.get(id=self.kwargs["group_id"])
         selected_user = Profile.objects.get(id=self.kwargs["profile_id"])
         if not profile in group.admins.all():
             return  # TODO appropriate redirect
-            print("Second")
 
         group.admins.add(selected_user)
         group.save()
         return redirect("view_individual_group", group.id)
 
 
-# TODO dropdown for group invitations Accept / Reject
+class AcceptGiftGroupInvitation(generic.View):
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return # TODO appropriate redirect
+        if not GiftGroupInvitation.objects.filter(id=self.kwargs["id"]):
+            return #TODO appropriate redirect
+        invitation = GiftGroupInvitation.objects.get(id=self.kwargs["id"])
+        if invitation.invitee_email != request.user.email:
+            return #TODO appropriate redirect
+        invitation.accepted()
+        return redirect("view_individual_group", invitation.gift_group.id)
+
+
+class RejectGiftGroupInvitation(generic.View):
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return # TODO appropriate redirect
+        if not GiftGroupInvitation.objects.filter(id=self.kwargs["id"]):
+            return #TODO appropriate redirect
+        invitation = GiftGroupInvitation.objects.get(id=self.kwargs["id"])
+        if invitation.invitee_email != request.user.email:
+            return #TODO appropriate redirect
+        invitation.rejected()
+        return redirect("index") #TODO Ajax instead?
+
+
+
 # TODO Leave group
 # TODO Create an invitation
 # TODO Limit invitations to one per group
+# TODO refactor user relationships to use user instead of profile
+# TODO consider changing Reject Invite to an ajax function. Maybe just on rejection
