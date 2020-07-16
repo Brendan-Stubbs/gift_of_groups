@@ -7,7 +7,8 @@ urlpatterns = [
     path("groups", views.ViewGroups.as_view(), name="view_groups"),
     path("edit_group/<int:id>/", views.EditGroup.as_view(), name="edit_group"),
     path("groups/<int:id>/", views.ViewIndividualGroup.as_view(), name="view_individual_group"),
-    path("group_grant_admin/<int:group_id>/<int:profile_id>/", views.GrantAdminAccess.as_view(), name="group_grant_admin"),
+    path("group_grant_admin/<int:group_id>/<int:user_id>/", views.GrantAdminAccess.as_view(), name="group_grant_admin"),
     path("accept_invite/<int:id>/", views.AcceptGiftGroupInvitation.as_view(), name="accept_invite"),
     path("reject_invite/<int:id>/", views.RejectGiftGroupInvitation.as_view(), name="reject_invite"),
+    path("leave_group/<int:id>/", views.LeaveGiftGroup.as_view(), name="leave_group"),
 ]
