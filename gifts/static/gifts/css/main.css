@@ -17,3 +17,11 @@ nav {
 form {
     padding: 30px;
 }
+
+.nav-margin {
+    margin-top: 50px
+}
+
+.footer-margin {
+    margin-bottom: 50px;
+}

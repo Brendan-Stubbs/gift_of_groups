@@ -13,10 +13,8 @@ class Register(generic.View):
         return render(request, "register/register.html", context)
 
     def post(self, request, *args, **kwargs):
-        print("POST")
         form = RegisterForm(request.POST)
         if form.is_valid():
-            print("No error")
             user = form.save(commit=False)
             user.email = form.cleaned_data["username"]
             user.save()
@@ -26,9 +24,6 @@ class Register(generic.View):
             )
             login(request, new_user)
         else:
-            print("HERE")
-            print(form.errors.as_data())
-            print("HERE")
             context = {"form": form}
             return render(request, "register/register.html", context)
         return redirect("index")

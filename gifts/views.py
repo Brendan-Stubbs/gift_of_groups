@@ -31,7 +31,6 @@ class EditProfile(generic.View):
             messages.success(request, 'Your profile was updated successfully!')
         else:
             messages.warning(request, "There was an error saving your changes, please try again!")
-            print(form.errors)
         context={"form":form}
         return render(request, "gifts/edit_profile.html", context)
 

@@ -34,11 +34,10 @@
     }
 </style>
 
-<h1>Your Groups</h1>
-
 <div class="content container">
+    <h1>Your Groups</h1>
 
-    <div class="row">
+    <div class="row content-page nav-margin footer-margin">
         {% for group in groups %}
         <div class="col offset-s2 s8 offset-m1 m5 l4">
             <a href="{% url 'view_individual_group' group.id %}" class="card-anchor">

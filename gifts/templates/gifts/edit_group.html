@@ -4,16 +4,19 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<h1>Edit Group</h1>
+<div class="containt container">
+    <h1>Edit Group</h1>
 
-<form method="POST" class="form-group offset-lg-4 col-lg-4 offset-md-3 col-md-6 offset-sm-2 col-sm-8">
-    {% csrf_token %}
-    {{form.name}}
-    <label>
-        {{form.standard_user_can_invite}}
-        <span>Standard User can invite</span>
-    </label>
-    <button type="submit" class="btn btn-success">Save Changes</button>
-</form>
+    <form method="POST" class="form-group offset-lg-4 col-lg-4 offset-md-3 col-md-6 offset-sm-2 col-sm-8">
+        {% csrf_token %}
+        {{form.name}}
+        <label>
+            {{form.standard_user_can_invite}}
+            <span>Standard User can invite</span>
+        </label>
+        <br>
+        <button type="submit" class="btn btn-success">Save Changes</button>
+    </form>
+</div>
 
 {% endblock %}

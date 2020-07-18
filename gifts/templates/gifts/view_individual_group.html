@@ -2,65 +2,65 @@
 
 {% block content %}
 
-<h1>{{group.name}}</h1>
+<div class="content container">
 
-{% if user_is_admin %}
-<a href="{% url 'edit_group' group.id %}"><button class="btn orange">Edit</button></a>
-{% endif %}
-<a href="{% url 'leave_group' group.id %}"><button class="btn red">Leave group</button></a>
+    <h1>{{group.name}}</h1>
 
-<div class="row">
-    <div class="col s12 offset-m2 m8 l7">
-        <p>Members</p>
-        <ul class="collection">
-            {% for member in members %}
-            <li class="collection-item avatar">
-                <i class="material-icons circle">folder</i>
-                <span class="title">{{member.first_name}} {{member.last_name}}</span>
-                <p>First Line</p>
-                {% if member.is_admin %}<i class="material-icons secondary-content yellow-text">verified</i>
-                {% elif user_is_admin %}
-                <a href="{% url 'group_grant_admin' group_id=group.id user_id=member.id %}">
-                    <i class="material-icons secondary-content green-text">add_circle</i>
-                </a>
-                {% else %}
-                <i class="material-icons secondary-content teal-text">account_circle</i>
-                {% endif %}
+    {% if user_is_admin %}
+    <a href="{% url 'edit_group' group.id %}"><button class="btn orange">Edit</button></a>
+    {% endif %}
+    <a href="{% url 'leave_group' group.id %}"><button class="btn red">Leave group</button></a>
 
-            </li>
-            {% endfor %}
-        </ul>
-        {% if group.standard_user_can_invite or user_is_admin %}
-        <form method="POST">
-            {% csrf_token %}
-            {{invitation_form.invitee_email}}
-            <button class="btn green">Invite</button>
-            {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                <li class="{{ message.tags }}">{{ message }}</li>
+    <div class="row">
+        <div class="col s12 offset-m2 m8 l7">
+            <p>Members</p>
+            <ul class="collection">
+                {% for member in members %}
+                <li class="collection-item avatar">
+                    <i class="material-icons circle">folder</i>
+                    <span class="title">{{member.first_name}} {{member.last_name}}</span>
+                    <p>First Line</p>
+                    {% if member.is_admin %}<i class="material-icons secondary-content yellow-text">verified</i>
+                    {% elif user_is_admin %}
+                    <a href="{% url 'group_grant_admin' group_id=group.id user_id=member.id %}">
+                        <i class="material-icons secondary-content green-text">add_circle</i>
+                    </a>
+                    {% else %}
+                    <i class="material-icons secondary-content teal-text">account_circle</i>
+                    {% endif %}
+
+                </li>
                 {% endfor %}
             </ul>
+            {% if group.standard_user_can_invite or user_is_admin %}
+            <form method="POST">
+                {% csrf_token %}
+                {{invitation_form.invitee_email}}
+                <button class="btn green">Invite</button>
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </form>
             {% endif %}
-        </form>
-        {% endif %}
+        </div>
+
+        <div class="col s12 offset-m2 m8 l5">
+            <p>Gifts</p>
+            <ul class="collection">
+                {% for member in members %}
+                <li class="collection-item avatar">
+                    <i class="material-icons circle">recycle</i>
+                    <span class="title"></span>
+                    <p></p>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
-
-    <div class="col s12 offset-m2 m8 l5">
-        <p>Gifts</p>
-        <ul class="collection">
-            {% for member in members %}
-            <li class="collection-item avatar">
-                <i class="material-icons circle">recycle</i>
-                <span class="title"></span>
-                <p></p>
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
-
-
-
 </div>
 
 {% endblock %}

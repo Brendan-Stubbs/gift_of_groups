@@ -71,3 +71,21 @@ class GiftGroupInvitation(models.Model):
         self.status = self.STATUS_REJECTED
         self.save()
 
+
+class Gift(models.Model):
+    gift_group = models.ForeignKey(GiftGroup, null=True, on_delete=models.SET_NULL)
+    receiver = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    item_title = models.CharField(max_length=100)
+    item_description = models.TextField(blank=True)
+    item_url = models.URLField(null=True, blank=True)
+    target_amount = models.FloatField(default=0)
+
+
+class ContributorGiftRelation(models.Model):
+    contributor = models.ForeignKey(User, on_delete=models.CASCADE)
+    gift = models.ForeignKey(Gift, on_delete=models.CASCADE)
+    contribution = models.FloatField(default = 0)
+    has_made_payment = models.BooleanField(default=True)
+    payment_has_cleared = models.BooleanField(default=True)
+
+    # TODO change title, description, url to a gift idea foreign key
