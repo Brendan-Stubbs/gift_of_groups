@@ -1,4 +1,8 @@
-{% extends 'gifts/base.html'%} {% block title %} Gifty Groups {% endblock %}
+{% extends 'gifts/base.html'%} {% block title %} Giftly Groups {% endblock %}
+{% load static %}
+{% block head_links %}
+<link rel="stylesheet" type="text/css" href="{% static 'gifts/index.css' %}">
+{% endblock %}
 {% block content %}
 <h1>Home</h1>
 

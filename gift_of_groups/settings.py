@@ -26,7 +26,7 @@ SECRET_KEY = "fe1769t_=18)kl@p-hq97&id3l&r=c1zrn8zy#7!zv-2gtks0_"
 DEBUG = True
 
 ALLOWED_HOSTS = []
-# ALLOWED_HOSTS = ["4ed1fa7b4768.ngrok.io", "127.0.0.1:4040", "localhost"]
+# ALLOWED_HOSTS = ["08539af97962.ngrok.io", "127.0.0.1:4040", "localhost"]
 
 
 # Application definition
@@ -117,6 +117,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = "/static/"
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
