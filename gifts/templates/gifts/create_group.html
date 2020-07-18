@@ -11,7 +11,11 @@
         <div class="col-content">
             <form method="POST">
                 {% csrf_token %}
-                {{ form|crispy }}
+                {{form.name}}
+                <label>
+                    {{form.standard_user_can_invite}}
+                    <span>Standard User can invite</span>
+                </label>
                 <div class="center">
                     <button type="submit" class="btn">Create Group</button>
                 </div>

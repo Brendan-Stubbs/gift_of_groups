@@ -4,6 +4,9 @@
 
 <h1>{{group.name}}</h1>
 
+{% if user_is_admin %}
+<a href="{% url 'edit_group' group.id %}"><button class="btn orange">Edit</button></a>
+{% endif %}
 <a href="{% url 'leave_group' group.id %}"><button class="btn red">Leave group</button></a>
 
 <div class="row">
@@ -32,6 +35,13 @@
             {% csrf_token %}
             {{invitation_form.invitee_email}}
             <button class="btn green">Invite</button>
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
         </form>
         {% endif %}
     </div>

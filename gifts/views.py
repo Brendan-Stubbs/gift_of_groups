@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.views import generic
 from django.contrib.auth.models import User
+from django.contrib import messages
 
-from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm
+from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm
 from gifts.models import GiftGroup, GiftGroupInvitation
 
 
@@ -12,10 +13,33 @@ class Index(generic.View):
         return render(request, "gifts/index.html", context)
 
 
+class EditProfile(generic.View):
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('/login/?next=%s' % request.path)
+        form = ProfileForm(instance=request.user.profile)
+        context = {"form": form}
+        return render(request, "gifts/edit_profile.html", context)
+
+
+    def post(self, request, *arg, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('/login/?next=%s' % request.path)
+        form = ProfileForm(request.POST, instance=request.user.profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your profile was updated successfully!')
+        else:
+            messages.warning(request, "There was an error saving your changes, please try again!")
+            print(form.errors)
+        context={"form":form}
+        return render(request, "gifts/edit_profile.html", context)
+
+
 class ViewGroups(generic.View):
     def get(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            return redirect("index")  # TODO Change to something apropriate
+            return redirect('/login/?next=%s' % request.path)
         user = request.user
         groups = GiftGroup.objects.filter(users=user)
         for group in groups:
@@ -28,11 +52,18 @@ class ViewGroups(generic.View):
 
 class CreateGroup(generic.View):
     def get(self, request, *arg, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('/login/?next=%s' % request.path)
+
         form = GiftGroupForm()
         context = {"form": form}
         return render(request, "gifts/create_group.html", context)
 
+
     def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('/login/?next=%s' % request.path)
+
         form = GiftGroupForm(request.POST)
         if form.is_valid():
             instance = form.save()
@@ -46,27 +77,29 @@ class CreateGroup(generic.View):
 
 class EditGroup(generic.View):
     def get(self, request, *args, **kwargs):
-        if (
-            not GiftGroup.objects.filter(id=self.kwargs["id"]).exists()
-            or not request.user.is_authenticated
-        ):
-            return  # TODO add approprite redirect
+        if not request.user.is_authenticated:
+            return redirect('/login/?next=%s' % request.path)
+        if not GiftGroup.objects.filter(id=self.kwargs["id"]).exists():
+            return  redirect("groups")
         user = request.user
         group = GiftGroup.objects.get(id=self.kwargs["id"])
         if not user in group.admins.all():
-            return  # TODO add appropriate redirect
+            return redirect("view_individual_group", group.id)
 
         form = GiftGroupForm(instance=group)
         context = {"form": form}
         return render(request, "gifts/edit_group.html", context)
+        
 
     def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('/login/?next=%s' % request.path)
         if not GiftGroup.objects.filter(id=self.kwargs["id"]).exists():
-            return  # TODO add approprite redirect
+            return redirect("groups")
         user = request.user
         group = GiftGroup.objects.get(id=self.kwargs["id"])
         if not user in group.admins.all():
-            return  # TODO add appropriate redirect
+            return redirect("view_individual_group", group.id)
 
         form = GiftGroupForm(request.POST, instance=group)
         if form.is_valid():
@@ -78,15 +111,14 @@ class EditGroup(generic.View):
 
 class ViewIndividualGroup(generic.View):
     def get(self, request, *args, **kwargs):
-        if (
-            not GiftGroup.objects.filter(id=self.kwargs["id"]).exists()
-            or not request.user.is_authenticated
-        ):
-            return  # TODO appropriate redirect
+        if not request.user.is_authenticated:
+            return redirect('/login/?next=%s' % request.path)
+        if not GiftGroup.objects.filter(id=self.kwargs["id"]).exists():
+            return redirect("groups")
         user = request.user
         group = GiftGroup.objects.get(id=self.kwargs["id"])
         if not user in group.users.all():
-            return  # TODO appropriate redirect
+            return redirect("groups")
         members = group.users.all()
         for member in members:
             member.is_admin = member in group.admins.all()
@@ -104,7 +136,7 @@ class ViewIndividualGroup(generic.View):
 
     def post(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            return redirect("register")
+            return redirect('/login/?next=%s' % request.path)
         user = request.user
         group = GiftGroup.objects.get(id=self.kwargs["id"])
         if not user in group.users.all():
@@ -118,35 +150,37 @@ class ViewIndividualGroup(generic.View):
             instance.status = GiftGroupInvitation.STATUS_PENDING
             if not GiftGroupInvitation.objects.filter(invitee_email=instance.invitee_email, gift_group=group, status=1) and not GiftGroup.objects.filter(id=group.id, users__email=instance.invitee_email).exists():
                 instance.save()
+                messages.success(request, "{} has been invited to the group".format(instance.invitee_email))
+            else:
+                messages.warning(request, "{} has already been invited to this group".format(instance.invitee_email))
 
         return redirect("view_individual_group", group.id)
 
 
 class GrantAdminAccess(generic.View):
     def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('/login/?next=%s' % request.path)
         if (
-            not request.user.is_authenticated
-            or not GiftGroup.objects.filter(id=self.kwargs["group_id"]).exists()
+            not GiftGroup.objects.filter(id=self.kwargs["group_id"]).exists()
             or not User.objects.filter(id=self.kwargs["profile_id"]).exists()
         ):
-            return  # TODO appropriate redirect
+            return redirect("groups")
         user = request.user
         group = GiftGroup.objects.get(id=self.kwargs["group_id"])
         selected_user = User.objects.get(id=self.kwargs["profile_id"])
-        if not user in group.admins.all():
-            return  # TODO appropriate redirect
-
-        group.admins.add(selected_user)
-        group.save()
+        if user in group.admins.all():
+            group.admins.add(selected_user)
+            group.save()
         return redirect("view_individual_group", group.id)
 
 
 class AcceptGiftGroupInvitation(generic.View):
     def get(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            return # TODO appropriate redirect
+            return redirect('/login/?next=%s' % request.path)
         if not GiftGroupInvitation.objects.filter(id=self.kwargs["id"]):
-            return #TODO appropriate redirect
+            return redirect("groups")
         invitation = GiftGroupInvitation.objects.get(id=self.kwargs["id"])
         if invitation.invitee_email != request.user.email:
             return #TODO appropriate redirect
@@ -157,7 +191,7 @@ class AcceptGiftGroupInvitation(generic.View):
 class RejectGiftGroupInvitation(generic.View):
     def get(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            return # TODO appropriate redirect
+            return redirect('/login/?next=%s' % request.path)
         if not GiftGroupInvitation.objects.filter(id=self.kwargs["id"]):
             return #TODO appropriate redirect
         invitation = GiftGroupInvitation.objects.get(id=self.kwargs["id"])
@@ -170,9 +204,9 @@ class RejectGiftGroupInvitation(generic.View):
 class LeaveGiftGroup(generic.View):
     def get(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            return #TODO appropriate redirect
+            return redirect('/login/?next=%s' % request.path)
         if not GiftGroup.objects.filter(id=self.kwargs['id']):
-            return # TODO appropriate redirect
+            return redirect("groups")
         gift_group = GiftGroup.objects.get(id=self.kwargs['id'])
         gift_group.users.remove(request.user)
         gift_group.admins.remove(request.user)
@@ -182,3 +216,11 @@ class LeaveGiftGroup(generic.View):
 
 
 # TODO consider changing Reject Invite to an ajax function. Maybe just on rejection
+
+# Next Phases
+# TODO add birthdays to profile
+# TODO gifts
+# TODO gift comments
+# TODO notifications (ajax to mark as read)
+# TODO functionality to invite non group members to a once off gift
+

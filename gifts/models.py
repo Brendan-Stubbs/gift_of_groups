@@ -28,7 +28,7 @@ class GiftGroup(models.Model):
     def create_invitation(self, inviter, invitee_email):
         if not GiftGroupInvitation.objects.filter(gift_group=self, invitee=invitee_email, status=GiftGroupInvitation.STATUS_PENDING).exists() and not invitee in self.users.all():
             GiftGroupInvitation.objects.create(gift_group=self, invitee_email=invitee_email, inviter=inviter)
-            # TODO trigger an email hear
+            # TODO trigger an email here
 
     def __unicode__(self):
         return self.name

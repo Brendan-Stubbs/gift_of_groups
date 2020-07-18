@@ -26,7 +26,7 @@ SECRET_KEY = "fe1769t_=18)kl@p-hq97&id3l&r=c1zrn8zy#7!zv-2gtks0_"
 DEBUG = True
 
 ALLOWED_HOSTS = []
-# ALLOWED_HOSTS = ["f95b1acf4e83.ngrok.io", "127.0.0.1:4040", "localhost"]
+# ALLOWED_HOSTS = ["4ed1fa7b4768.ngrok.io", "127.0.0.1:4040", "localhost"]
 
 
 # Application definition
@@ -122,3 +122,11 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
+LOGIN_URL = "/login"
+
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.INFO: '',
+    30: 'red-text',
+    25: 'green-text'
+}
