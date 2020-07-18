@@ -10,29 +10,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{% static 'gifts/main.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'gifts/css/main.css' %}">
     {% block head_links %} {% endblock %}
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-
-    <style>
-        .site-green {
-            color: #71dc5e;
-        }
-
-        .site-purple {
-            color: #7d55b1
-        }
-
-        .site-blue {
-            color: #9abae7;
-        }
-
-        form {
-            padding: 30px;
-        }
-    </style>
 
 </head>
 
@@ -41,10 +22,9 @@
 
     {% include 'gifts/header.html'%}
 
-    <div class="content container">
-        {% block content %}
-        {% endblock %}
-    </div>
+    {% block content %}
+    {% endblock %}
+    {% include 'gifts/footer.html'%}
 
     <!-- Invitation Modals -->
     {% for invitation in gift_group_invitations %}

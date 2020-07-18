@@ -1,14 +1,128 @@
 {% extends 'gifts/base.html'%} {% block title %} Giftly Groups {% endblock %}
-{% load static %}
-{% block head_links %}
-<link rel="stylesheet" type="text/css" href="{% static 'gifts/index.css' %}">
-{% endblock %}
-{% block content %}
-<h1>Home</h1>
+{%load static %} {% block head_links %} {% endblock %} {% block content %}
 
-{% if user.is_authenticated %}
-<p>Hi {{request.user.first_name}}</p>
-{% endif %}
-<p>This page is not important right now, so it looks shit</p>
+<!-- Section: Slider -->
+<div class="slider">
+    <ul class="slides">
+        <li>
+            <img src="{% static 'gifts/images/header-image.jpg' %}" />
+            <div class="caption center-align">
+                <h3 class="black-text">Go the extra mile</h3>
+                <h6 class="light black-text text-lighten-1 hide-on-small-only">
+                    When the gift of friendship is simply not enough
+                </h6>
+            </div>
+        </li>
+        <!-- <li>
+            <img src="{% static 'gifts/images/header-image.jpg' %}">
+            <div class="caption left-align">
+                <h3 class="black-text">Automated Gift Organisation</h3>
+                <h6 class="light black-text text-lighten-1 hide-on-small-only">Join a group, and we'll do the hard work
+                    of keeping track of
+                    birthdays for you. All you need to do is select your desired notice period</h6>
+            </div>
+        </li> -->
+        <li>
+            <img src="{% static 'gifts/images/header-image2.jpg' %}" />
+            <div class="caption right-align">
+                <h3>Let your captain do the rest</h3>
+                <h6 class="light grey-text text-lighten-3 hide-on-small-only">
+                    Whoever elects to be captain will be in charge of the bits we can't do
+                    for you.
+                </h6>
+            </div>
+        </li>
+    </ul>
+</div>
+<!-- End Section Slider -->
+
+<!-- Section Icon Boxes -->
+<section class="section section-icons center">
+    <div class="container">
+        <div class="row">
+            <h4 class="center">Some Title</h4>
+            <div class="col s12 m4">
+                <div class="card-panel">
+                    <i class="fas fa-user-plus large teal-text"></i>
+                    <h4>Sign up</h4>
+                    <p>Create an account and complete your profile</p>
+                </div>
+            </div>
+            <div class="col s12 m4">
+                <div class="card-panel">
+                    <i class="fas fa-users large teal-text"></i>
+                    <h4>Join Groups</h4>
+                    <p>View your groups and invite your friends</p>
+                </div>
+            </div>
+            <div class="col s12 m4">
+                <div class="card-panel">
+                    <i class="fas fa-gift large teal-text"></i>
+                    <h4>Give a Gift</h4>
+                    <p>See the smile on your friend's face when they receive their gift</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Icon Boxes Section -->
+
+<!-- Section image section -->
+<section class="section section-image-row">
+    <div class="container">
+        <div class="row">
+            <h4 class="center">Some Title</h4>
+
+            <div class="col s12 m4">
+                <div class="card small">
+                    <div class="card-image">
+                        <img src="{% static 'gifts/images/gift-purple.jpg'%}" alt="" />
+                        <span class="card-title black-text">Something</span>
+                    </div>
+                    <div class="card-content">
+                        I am a very short piece of text, and I don't say anything
+                    </div>
+                </div>
+            </div>
+
+            <div class="col s12 m4">
+                <div class="card small">
+                    <div class="card-image">
+                        <img src="{% static 'gifts/images/gift-purple.jpg'%}" alt="" />
+                        <span class="card-title black-text">Something</span>
+                    </div>
+                    <div class="card-content">
+                        I am a very short piece of text, and I don't say anything
+                    </div>
+                </div>
+            </div>
+
+            <div class="col s12 m4">
+                <div class="card small">
+                    <div class="card-image">
+                        <img src="{% static 'gifts/images/gift-purple.jpg'%}" alt="" />
+                        <span class="card-title black-text">Something</span>
+                    </div>
+                    <div class="card-content">
+                        I am a very short piece of text, and I don't say anything
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End image section -->
+
+<script>
+    $(document).ready(function () {
+        $(".slider").slider({
+            indicators: false,
+            transition: 500,
+            interval: 4000,
+        });
+    });
+</script>
 
 {% endblock %}
+
+<!-- https://unsplash.com/photos/mTkXSSScrzw -->
