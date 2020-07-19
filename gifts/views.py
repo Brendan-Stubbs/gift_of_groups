@@ -225,7 +225,12 @@ class ViewGift(generic.View):
         gift = Gift.objects.get(pk=self.kwargs["id"])
         if not ContributorGiftRelation.objects.filter(contributor=user, gift=gift).exists():
             redirect ('view_groups')
-        context = { "gift":gift }
+        gift_relations = ContributorGiftRelation.objects.filter(gift=gift)
+        members = [x.contributor for x in gift_relations]
+        context = { 
+            "gift":gift,
+            "members": members,
+            }
         return render(request, "gifts/view_gift.html", context)
 
 

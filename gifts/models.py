@@ -37,7 +37,8 @@ class GiftGroup(models.Model):
 
     def get_group_gifts_for_user(self, user):
         '''Returns all active gifts for the group, excluding the one's pertaining to user'''
-        return Gift.objects.filter(gift_group=self, is_complete=False).exclude(receiver=user)
+        group_gifts = ContributorGiftRelation.objects.filter(gift__gift_group=self, gift__is_complete=False, contributor=user).exclude(gift__receiver=user)
+        return [x.gift for x in group_gifts]
 
     def create_gift_relation_for_group(self,user):
         active_gifts = Gift.objects.filter(gift_group=self, is_complete=False).exclude(receiver=user)

@@ -1,4 +1,5 @@
 {% extends 'gifts/base.html' %}
+{% load static %}
 
 {% block content %}
 
@@ -17,18 +18,10 @@
             <ul class="collection">
                 {% for member in members %}
                 <li class="collection-item avatar">
-                    <i class="material-icons circle">folder</i>
+                    <img src="{% static 'gifts/images/avatar_placeholder.png' %}" alt="" class="circle">
+                    <!-- <i class="material-icons circle">folder</i> -->
                     <span class="title">{{member.first_name}} {{member.last_name}}</span>
                     <p>First Line</p>
-                    {% if member.is_admin %}<i class="material-icons secondary-content yellow-text">verified</i>
-                    {% elif user_is_admin %}
-                    <a href="{% url 'group_grant_admin' group_id=group.id user_id=member.id %}">
-                        <i class="material-icons secondary-content green-text">add_circle</i>
-                    </a>
-                    {% else %}
-                    <i class="material-icons secondary-content teal-text">account_circle</i>
-                    {% endif %}
-
                 </li>
                 {% endfor %}
             </ul>
@@ -57,7 +50,7 @@
                 {% for gift in active_gifts %}
                 <a href="{% url 'view_gift' gift.id %}">
                     <li class="collection-item avatar">
-                        <i class="material-icons circle">cake</i>
+                        <i class="material-icons circle pink lighten-3">cake</i>
                         <span class="title">{{gift.receiver.first_name}} {{gift.receiver.last_name}} </span>
                         <p>Birthday: {{gift.receiver.profile.birth_date}}</p>
                         <p>Chosen gift: {% if gift.chosen_gift %}{{gift.chosen_gift.title}}{% else %}To be chosen
