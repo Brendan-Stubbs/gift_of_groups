@@ -40,10 +40,10 @@ class GiftGroup(models.Model):
         return Gift.objects.filter(gift_group=self, is_complete=False).exclude(receiver=user)
 
     def create_gift_relation_for_group(self,user):
-        print("Adding")
-
-    def remove_gift_relation_for_group(self,user):
-        print("Removing")
+        active_gifts = Gift.objects.filter(gift_group=self, is_complete=False).exclude(receiver=user)
+        for gift in active_gifts:
+            if not ContributorGiftRelation.objects.filter(contributor=user, gift=gift).exists():
+                ContributorGiftRelation.objects.create(contributor=user, gift=gift)
     
 
     def manage_user_change(sender, instance, action, pk_set, **kwargs):
@@ -52,8 +52,8 @@ class GiftGroup(models.Model):
         if action == 'post_add':
             for user in changed_users:
                 instance.create_gift_relation_for_group(user)
-        elif action == 'post_remove':
-            instance.remove_gift_relation_for_group(user)
+        # elif action == 'post_remove':
+        #     instance.remove_gift_relation_for_group(user)
 
 
     def __unicode__(self):
@@ -101,8 +101,13 @@ class Gift(models.Model):
     is_complete = models.BooleanField(default=False)
     chosen_gift = models.ForeignKey('GiftIdea', null=True, blank=True, on_delete=models.SET_NULL, related_name="chosen_gift")
 
+    def create_contributor_relationship_for_group(self):
+        contributors = self.gift_group.users.all().exclude(id=self.receiver.id)
+        for contributor in contributors:
+            ContributorGiftRelation.objects.create(contributor=contributor, gift=self)
+
     def save(self, *args, **kwargs):
-        self.wrap_up_date = self.receiver.profile.birth_date
+        self.wrap_up_date = self.receiver.profile.birth_date #TODO defend against Null value
         super(Gift, self).save(*args, **kwargs)
 
     def __unicode__(self):
@@ -110,6 +115,11 @@ class Gift(models.Model):
 
     def __str__(self):
         return self.__unicode__()
+
+@receiver(post_save, sender=Gift)
+def populate_gift_relations(sender, instance, created, **kwargs):
+    if created:
+        instance.create_contributor_relationship_for_group()
 
 
 class GiftIdea(models.Model):
