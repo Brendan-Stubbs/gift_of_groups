@@ -50,15 +50,23 @@
 
         <div class="col s12 offset-m2 m8 l5">
             <p>Gifts</p>
+            {% if not active_gifts %}
+            <p>You don't have any active gifts</p>
+            {% else %}
             <ul class="collection">
-                {% for member in members %}
-                <li class="collection-item avatar">
-                    <i class="material-icons circle">recycle</i>
-                    <span class="title"></span>
-                    <p></p>
-                </li>
+                {% for gift in active_gifts %}
+                <a href="{% url 'view_gift' gift.id %}">
+                    <li class="collection-item avatar">
+                        <i class="material-icons circle">cake</i>
+                        <span class="title">{{gift.receiver.first_name}} {{gift.receiver.last_name}} </span>
+                        <p>Birthday: {{gift.receiver.profile.birth_date}}</p>
+                        <p>Chosen gift: {% if gift.chosen_gift %}{{gift.chosen_gift.title}}{% else %}To be chosen
+                            {% endif %}</p>
+                    </li>
+                </a>
                 {% endfor %}
             </ul>
+            {% endif %}
         </div>
     </div>
 </div>

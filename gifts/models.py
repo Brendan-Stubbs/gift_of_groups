@@ -30,6 +30,10 @@ class GiftGroup(models.Model):
             GiftGroupInvitation.objects.create(gift_group=self, invitee_email=invitee_email, inviter=inviter)
             # TODO trigger an email here
 
+    def get_group_gifts_for_user(self, user):
+        '''Returns all active gifts for the group, excluding the one's pertaining to user'''
+        return Gift.objects.filter(gift_group=self, is_complete=False).exclude(receiver=user)
+
     def __unicode__(self):
         return self.name
 
@@ -73,19 +77,50 @@ class GiftGroupInvitation(models.Model):
 
 
 class Gift(models.Model):
-    gift_group = models.ForeignKey(GiftGroup, null=True, on_delete=models.SET_NULL)
+    gift_group = models.ForeignKey(GiftGroup, null=True, on_delete=models.CASCADE)
     receiver = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    item_title = models.CharField(max_length=100)
-    item_description = models.TextField(blank=True)
-    item_url = models.URLField(null=True, blank=True)
-    target_amount = models.FloatField(default=0)
+    wrap_up_date = models.DateField(null=True, blank=True)
+    is_complete = models.BooleanField(default=False)
+    chosen_gift = models.ForeignKey('GiftIdea', null=True, blank=True, on_delete=models.SET_NULL, related_name="chosen_gift")
+
+    def save(self, *args, **kwargs):
+        self.wrap_up_date = self.receiver.profile.birth_date
+        super(Gift, self).save(*args, **kwargs)
+
+    def __unicode__(self):
+        return "{}'s gift : {}".format(self.receiver, self.wrap_up_date.strftime("%d %b"))
+
+    def __str__(self):
+        return self.__unicode__()
+
+
+class GiftIdea(models.Model):
+    gift = models.ForeignKey(Gift, on_delete=models.CASCADE)
+    title = models.CharField(max_length=60)
+    description = models.TextField(blank=True)
+    url = models.URLField(null=True, blank=True)
+    price = models.FloatField()
+
+    def __unicode__(self):
+        return "{} for {}".format(self.title, self.gift)
+
+    def __str__(self):
+        return self.__unicode__()
 
 
 class ContributorGiftRelation(models.Model):
     contributor = models.ForeignKey(User, on_delete=models.CASCADE)
     gift = models.ForeignKey(Gift, on_delete=models.CASCADE)
     contribution = models.FloatField(default = 0)
-    has_made_payment = models.BooleanField(default=True)
-    payment_has_cleared = models.BooleanField(default=True)
+    has_made_payment = models.BooleanField(default=False)
+    payment_has_cleared = models.BooleanField(default=False)
 
-    # TODO change title, description, url to a gift idea foreign key
+    def save(self, *args, **kwargs):
+        if self.contributor != self.gift.receiver:
+            super(ContributorGiftRelation, self).save(*args, **kwargs)
+
+    def __unicode__(self):
+        return "{} - {}".format(self.contributor, self.gift)
+
+    def __str__(self):
+        return self.__unicode__()

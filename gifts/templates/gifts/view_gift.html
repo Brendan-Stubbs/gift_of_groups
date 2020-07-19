@@ -1,0 +1,6 @@
+{% extends 'gifts/base.html' %}
+
+{% block content %}
+<h1>{{gift.receiver.get_full_name}}</h1>
+<h4>{{gift.receiver.profile.birth_date}}</h4>
+{% endblock %}

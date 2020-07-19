@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 
 from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm
-from gifts.models import GiftGroup, GiftGroupInvitation
+from gifts.models import GiftGroup, GiftGroupInvitation, Gift, ContributorGiftRelation
 
 
 class Index(generic.View):
@@ -123,12 +123,14 @@ class ViewIndividualGroup(generic.View):
             member.is_admin = member in group.admins.all()
         user_is_admin = user in group.admins.all()
         invitation_form = GiftGroupInvitationForm()
+        active_gifts = group.get_group_gifts_for_user(user)
 
         context = {
             "members": members,
             "user_is_admin": user_is_admin,
             "group": group,
             "invitation_form": invitation_form,
+            "active_gifts":active_gifts,
         }
         return render(request, "gifts/view_individual_group.html", context)
 
@@ -141,7 +143,7 @@ class ViewIndividualGroup(generic.View):
         if not user in group.users.all():
             return redirect("view_groups")
         invitation_form = GiftGroupInvitationForm(request.POST)
-        # TODO simplify this validation
+        # TODO simplify this validation Move into model save method
         if invitation_form.is_valid():
             instance = invitation_form.save(commit=False)
             instance.gift_group = group
@@ -213,11 +215,25 @@ class LeaveGiftGroup(generic.View):
         return redirect("view_groups")
 
 
+class ViewGift(generic.View):
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('/login/?next=%s' % request.path)
+        user = request.user
+        if not Gift.objects.filter(pk=self.kwargs["id"]).exists():
+            redirect ('view_groups')
+        gift = Gift.objects.get(pk=self.kwargs["id"])
+        if not ContributorGiftRelation.objects.filter(contributor=user, gift=gift).exists():
+            redirect ('view_groups')
+        context = { "gift":gift }
+        return render(request, "gifts/view_gift.html", context)
+
+
+
 
 # TODO consider changing Reject Invite to an ajax function. Maybe just on rejection
 
 # Next Phases
-# TODO add birthdays to profile
 # TODO gifts
 # TODO gift comments
 # TODO notifications (ajax to mark as read)
