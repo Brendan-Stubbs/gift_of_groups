@@ -42,27 +42,33 @@
     <div class="row">
       <h4 class="center">Some Title</h4>
       <div class="col s12 m4">
-        <div class="card-panel">
-          <i class="fas fa-user-plus large teal-text"></i>
-          <h4>Sign up</h4>
-          <p>Create an account and complete your profile</p>
-        </div>
+        <a href="{% url 'register' %}">
+          <div class="card-panel">
+            <i class="fas fa-user-plus large teal-text"></i>
+            <h4>Sign up</h4>
+            <p>Create an account and complete your profile</p>
+          </div>
+        </a>
       </div>
       <div class="col s12 m4">
-        <div class="card-panel">
-          <i class="fas fa-users large teal-text"></i>
-          <h4>Join Groups</h4>
-          <p>View your groups and invite your friends</p>
-        </div>
+        <a href="{% url 'view_groups' %}">
+          <div class="card-panel">
+            <i class="fas fa-users large teal-text"></i>
+            <h4>Join Groups</h4>
+            <p>View your groups and invite your friends</p>
+          </div>
+        </a>
       </div>
       <div class="col s12 m4">
-        <div class="card-panel">
-          <i class="fas fa-gift large teal-text"></i>
-          <h4>Give a Gift</h4>
-          <p>
-            See the smile on your friend's face when they receive their gift
-          </p>
-        </div>
+        <a href="#">
+          <div class="card-panel">
+            <i class="fas fa-gift large teal-text"></i>
+            <h4>Give a Gift</h4>
+            <p>
+              See the smile on your friend's face when they receive their gift
+            </p>
+          </div>
+        </a>
       </div>
     </div>
   </div>
