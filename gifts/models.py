@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver
 
 
@@ -16,6 +16,11 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.__unicode__()
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
 
 
 class GiftGroup(models.Model):
@@ -34,17 +39,30 @@ class GiftGroup(models.Model):
         '''Returns all active gifts for the group, excluding the one's pertaining to user'''
         return Gift.objects.filter(gift_group=self, is_complete=False).exclude(receiver=user)
 
+    def create_gift_relation_for_group(self,user):
+        print("Adding")
+
+    def remove_gift_relation_for_group(self,user):
+        print("Removing")
+    
+
+    def manage_user_change(sender, instance, action, pk_set, **kwargs):
+        ids = list(pk_set)
+        changed_users = User.objects.filter(pk__in=ids)
+        if action == 'post_add':
+            for user in changed_users:
+                instance.create_gift_relation_for_group(user)
+        elif action == 'post_remove':
+            instance.remove_gift_relation_for_group(user)
+
+
     def __unicode__(self):
         return self.name
 
     def __str__(self):
         return self.__unicode__()
 
-
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
+m2m_changed.connect(GiftGroup.manage_user_change, sender=GiftGroup.users.through)
 
 
 class GiftGroupInvitation(models.Model):
