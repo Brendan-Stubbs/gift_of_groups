@@ -9,7 +9,7 @@ class Register(generic.View):
         if request.user.is_authenticated:
             return redirect("index")
         form = RegisterForm()
-        context = {"form": form}
+        context = {"form": form, "page_name": "register"}
         return render(request, "register/register.html", context)
 
     def post(self, request, *args, **kwargs):
@@ -24,6 +24,6 @@ class Register(generic.View):
             )
             login(request, new_user)
         else:
-            context = {"form": form}
+            context = {"form": form, "page_name" :"register"}
             return render(request, "register/register.html", context)
         return redirect("index")

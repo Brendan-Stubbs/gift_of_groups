@@ -18,7 +18,7 @@ class EditProfile(generic.View):
         if not request.user.is_authenticated:
             return redirect('/login/?next=%s' % request.path)
         form = ProfileForm(instance=request.user.profile)
-        context = {"form": form}
+        context = {"form": form, "page_name":"edit_profile"}
         return render(request, "gifts/edit_profile.html", context)
 
 
@@ -31,7 +31,7 @@ class EditProfile(generic.View):
             messages.success(request, 'Your profile was updated successfully!')
         else:
             messages.warning(request, "There was an error saving your changes, please try again!")
-        context={"form":form}
+        context = {"form": form, "page_name":"edit_profile"}
         return render(request, "gifts/edit_profile.html", context)
 
 

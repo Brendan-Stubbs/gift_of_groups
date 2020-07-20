@@ -25,11 +25,10 @@
         Giftly Groups</a>
       <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul class="left hide-on-med-and-down">
-        <li><a href="{% url 'view_groups' %}">Groups</a></li>
-        <li><a href="#">Gifts</a></li>
-        {% if gift_group_invitations.count > 0 %}
-        <li>
-          <a class="dropdown-trigger" href="#!" data-target="inviteDropdown">Invitations<i
+        <li {% if page_name == 'groups'%} class="active" {% endif %}><a href="{% url 'view_groups' %}">Groups</a></li>
+        <li {% if page_name == 'gifts'%} class="active" {% endif %}><a href="#">Gifts</a></li>
+        {% if gift_group_invitations.count > 0 %} <li>
+          <a class=" dropdown-trigger" href="#!" data-target="inviteDropdown">Invitations<i
               class="material-icons right">arrow_drop_down</i>
             <span class="new badge">{{gift_group_invitations.count}}</span></a>
         </li>
@@ -38,11 +37,12 @@
 
       <ul class="right hide-on-med-and-down">
         {% if user.is_authenticated %}
-        <li><a href="{% url 'edit_profile' %}">Edit Profile</a></li>
+        <li {% if page_name == 'edit_profile'%}class="active" {% endif %}><a href=" {% url 'edit_profile' %}">Edit
+            Profile</a></li>
         <li><a href="{% url 'logout' %}">Logout</a></li>
         {% else %}
-        <li><a href="{% url 'register' %}">Sign up</a></li>
-        <li><a href="{% url 'login' %}">Log in</a></li>
+        <li {% if page_name == "register" %} class="active" {% endif %}><a href="{% url 'register' %}">Sign up</a></li>
+        <li {% if "login" in request.path %}class="active" {% endif %}><a href="{% url 'login' %}">Log in</a></li>
         {% endif %}
       </ul>
     </div>
