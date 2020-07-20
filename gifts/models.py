@@ -29,6 +29,8 @@ class GiftGroup(models.Model):
     admins = models.ManyToManyField(User, related_name="admin")
     created_at = models.DateField(auto_now_add=True)
     standard_user_can_invite = models.BooleanField(default=False)
+    days_to_notify = models.IntegerField(default=14)
+
 
     def create_invitation(self, inviter, invitee_email):
         if not GiftGroupInvitation.objects.filter(gift_group=self, invitee=invitee_email, status=GiftGroupInvitation.STATUS_PENDING).exists() and not invitee in self.users.all():
@@ -108,7 +110,7 @@ class Gift(models.Model):
             ContributorGiftRelation.objects.create(contributor=contributor, gift=self)
 
     def save(self, *args, **kwargs):
-        self.wrap_up_date = self.receiver.profile.birth_date #TODO defend against Null value
+        self.wrap_up_date = self.receiver.profile.birth_date #TODO defend against Null value and make this the current year
         super(Gift, self).save(*args, **kwargs)
 
     def __unicode__(self):
