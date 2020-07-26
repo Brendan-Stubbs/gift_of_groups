@@ -30,7 +30,8 @@
 <script>
     $(document).ready(function () {
         $('.datepicker').datepicker({
-            format: "yyyy-mm-dd"
+            format: "yyyy-mm-dd",
+            yearRange: [new Date().getFullYear() - 70,new Date().getFullYear()],
         });
     });
 </script>

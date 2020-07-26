@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver
+from django.utils import timezone
+from gifts.utils import datehelper
 
 
 class Profile(models.Model):
@@ -10,6 +12,9 @@ class Profile(models.Model):
 
     def get_groups(self):
         return GiftGroup.objects.filter(user=self)
+
+    def get_next_birthday(self):
+        return datehelper.get_next_birthday(self)
 
     def __unicode__(self):
         return self.user.email

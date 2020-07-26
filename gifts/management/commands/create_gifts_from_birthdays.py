@@ -3,20 +3,36 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 import datetime
 from gifts.models import GiftGroup, Gift, Profile
+from datetime import datetime, timedelta
+import operator
+from django.db.models import Q
+from functools import reduce
 
+
+def birthdays_within(days):
+    now = datetime.now()
+    then = now + timedelta(days)
+
+    monthdays = [(now.month, now.day)]
+    while now <= then:
+        monthdays.append((now.month, now.day))
+        now += timedelta(days=1)
+
+    monthdays = (dict(zip(("profile__birth_date__month", "profile__birth_date__day"), t))
+                 for t in monthdays)
+
+    query = reduce(operator.or_, (Q(**d) for d in monthdays))
+    return User.objects.filter(query)
 
 
 def run():
-    # TODO take into consideration that the birthday is not the current year
-    today = timezone.now()
     groups = GiftGroup.objects.all()
     for group in groups:
-        notify_time = today + datetime.timedelta(days=group.days_to_notify)
-        birthdays_in_scope = group.users.filter(profile__birth_date__gte=today, profile__birth_date__lte=notify_time)
+        birthdays_in_scope = birthdays_within(group.days_to_notify)
+        print(birthdays_in_scope)
         for user in birthdays_in_scope:
-            if not Gift.objects.filter(gift_group=group, receiver=user, wrap_up_date=user.profile.birth_date).exists():
-                Gift.objects.create(gift_group=group, receiver=user, wrap_up_date=user.profile.birth_date)
-
+            if not Gift.objects.filter(gift_group=group, receiver=user, wrap_up_date=user.profile.get_next_birthday()).exists():
+                Gift.objects.create(gift_group=group, receiver=user, wrap_up_date=user.profile.get_next_birthday())
 
 
 class Command(BaseCommand):
