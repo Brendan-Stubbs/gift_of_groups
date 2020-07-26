@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import generic
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.http import HttpResponse, JsonResponse
 
 from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm
 from gifts.models import GiftGroup, GiftGroupInvitation, Gift, ContributorGiftRelation
@@ -192,14 +193,19 @@ class AcceptGiftGroupInvitation(generic.View):
 class RejectGiftGroupInvitation(generic.View):
     def get(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            return redirect('/login/?next=%s' % request.path)
-        if not GiftGroupInvitation.objects.filter(id=self.kwargs["id"]):
-            return #TODO appropriate redirect
+            response = JsonResponse({"error": "You are not logged in"})
+            return response
+        if not GiftGroupInvitation.objects.filter(id=self.kwargs["id"]).exists():
+            response = JsonResponse({"error": "This group doesn't exist"})
+            response.status_code = 403
+            return response
         invitation = GiftGroupInvitation.objects.get(id=self.kwargs["id"])
         if invitation.invitee_email != request.user.email:
-            return #TODO appropriate redirect
+            response = JsonResponse({"error": "You are not authorised to reject this invitation"})
+            response.status_code = 403
+            return response
         invitation.rejected()
-        return redirect("index") #TODO Ajax instead?
+        return JsonResponse({"message": "Invitation Rejected"})
 
 
 class LeaveGiftGroup(generic.View):

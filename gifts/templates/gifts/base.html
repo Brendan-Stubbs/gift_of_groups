@@ -11,6 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static 'gifts/css/main.css' %}">
+    <script src="{% static 'gifts/js/base.js'%}"></script>
     {% block head_links %} {% endblock %}
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -38,9 +39,7 @@
             <a href="{% url 'accept_invite' invitation.id %}"
                 class="modal-close waves-effect waves-green btn-flat green">Accept
             </a>
-            <a href="{% url 'reject_invite' invitation.id %}"
-                class="modal-close waves-effect waves-green btn-flat red">Reject
-            </a>
+            <button class="modal-close waves-effect waves-green btn-flat red" onclick="reject_invite('{{invitation.id}}')">Reject</button>
         </div>
     </div>
     {% endfor %}
