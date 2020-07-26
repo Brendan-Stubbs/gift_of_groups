@@ -13,4 +13,5 @@ urlpatterns = [
     path("reject_invite/<int:id>/", views.RejectGiftGroupInvitation.as_view(), name="reject_invite"),
     path("leave_group/<int:id>/", views.LeaveGiftGroup.as_view(), name="leave_group"),
     path("gift/<int:id>", views.ViewGift.as_view(), name="view_gift"),
+    path("claim_captain/<int:id>", views.ClaimGiftCaptaincy.as_view(), name="claim_captain"),
 ]

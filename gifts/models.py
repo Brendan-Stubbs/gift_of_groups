@@ -7,8 +7,18 @@ from gifts.utils import datehelper
 
 
 class Profile(models.Model):
+    ACCOUNT_TYPE_CHOICES = (
+        (1, "Cheque"),
+        (2, "Savings"),
+    )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     birth_date = models.DateField(null=True, blank=True)
+    bank_name = models.CharField(max_length=50, null=True, blank=True)
+    bank_account_number = models.CharField(max_length=30, null=True, blank=True)
+    bank_account_type = models.CharField(max_length=20, null=True, blank=True, choices=ACCOUNT_TYPE_CHOICES)
+    bank_branch_number = models.CharField(max_length=15, null=True, blank=True)
+    bank_branch_name = models.CharField(max_length=50, null=True, blank=True)
+
 
     def get_groups(self):
         return GiftGroup.objects.filter(user=self)
@@ -104,6 +114,7 @@ class GiftGroupInvitation(models.Model):
 
 class Gift(models.Model):
     gift_group = models.ForeignKey(GiftGroup, null=True, on_delete=models.CASCADE)
+    captain = models.ForeignKey(User, null=True, blank=True, related_name="group_captain", on_delete=models.SET_NULL)
     receiver = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     wrap_up_date = models.DateField(null=True, blank=True)
     is_complete = models.BooleanField(default=False)

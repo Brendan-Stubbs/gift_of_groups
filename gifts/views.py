@@ -240,11 +240,27 @@ class ViewGift(generic.View):
         return render(request, "gifts/view_gift.html", context)
 
 
+class ClaimGiftCaptaincy(generic.View):
+    def get(self, request, *args, **kwargs):
+        print("Claiming")
+        if not request.user.is_authenticated:
+            return redirect('/login/?next=%s' % request.path)
+        if not Gift.objects.filter(pk=self.kwargs["id"]).exists():
+            return redirect('view_groups')
+        gift = Gift.objects.get(pk=self.kwargs["id"])
+        if request.user in gift.gift_group.users.all() and not gift.captain:
+            gift.captain = request.user
+            gift.save()
+        return redirect("view_gift", gift.id)
 
 
-# TODO consider changing Reject Invite to an ajax function. Maybe just on rejection
+
+
+
 
 # Next Phases
+# TODO Add bank details to profile form
+# TODO Stop someone from becoming captain before they have given bank details
 # TODO gifts
 # TODO gift comments
 # TODO notifications (ajax to mark as read)
