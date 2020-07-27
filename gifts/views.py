@@ -19,9 +19,8 @@ class EditProfile(generic.View):
         if not request.user.is_authenticated:
             return redirect('/login/?next=%s' % request.path)
         form = ProfileForm(instance=request.user.profile)
-        context = {"form": form, "page_name":"edit_profile"}
+        context = {"form": form, "page_name": "edit_profile"}
         return render(request, "gifts/edit_profile.html", context)
-
 
     def post(self, request, *arg, **kwargs):
         if not request.user.is_authenticated:
@@ -31,8 +30,9 @@ class EditProfile(generic.View):
             form.save()
             messages.success(request, 'Your profile was updated successfully!')
         else:
-            messages.warning(request, "There was an error saving your changes, please try again!")
-        context = {"form": form, "page_name":"edit_profile"}
+            messages.warning(
+                request, "There was an error saving your changes, please try again!")
+        context = {"form": form, "page_name": "edit_profile"}
         return render(request, "gifts/edit_profile.html", context)
 
 
@@ -59,7 +59,6 @@ class CreateGroup(generic.View):
         context = {"form": form}
         return render(request, "gifts/create_group.html", context)
 
-
     def post(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect('/login/?next=%s' % request.path)
@@ -80,7 +79,7 @@ class EditGroup(generic.View):
         if not request.user.is_authenticated:
             return redirect('/login/?next=%s' % request.path)
         if not GiftGroup.objects.filter(id=self.kwargs["id"]).exists():
-            return  redirect("groups")
+            return redirect("groups")
         user = request.user
         group = GiftGroup.objects.get(id=self.kwargs["id"])
         if not user in group.admins.all():
@@ -89,7 +88,6 @@ class EditGroup(generic.View):
         form = GiftGroupForm(instance=group)
         context = {"form": form}
         return render(request, "gifts/edit_group.html", context)
-        
 
     def post(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
@@ -131,10 +129,9 @@ class ViewIndividualGroup(generic.View):
             "user_is_admin": user_is_admin,
             "group": group,
             "invitation_form": invitation_form,
-            "active_gifts":active_gifts,
+            "active_gifts": active_gifts,
         }
         return render(request, "gifts/view_individual_group.html", context)
-
 
     def post(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
@@ -152,9 +149,11 @@ class ViewIndividualGroup(generic.View):
             instance.status = GiftGroupInvitation.STATUS_PENDING
             if not GiftGroupInvitation.objects.filter(invitee_email=instance.invitee_email, gift_group=group, status=1) and not GiftGroup.objects.filter(id=group.id, users__email=instance.invitee_email).exists():
                 instance.save()
-                messages.success(request, "{} has been invited to the group".format(instance.invitee_email))
+                messages.success(request, "{} has been invited to the group".format(
+                    instance.invitee_email))
             else:
-                messages.warning(request, "{} has already been invited to this group".format(instance.invitee_email))
+                messages.warning(request, "{} has already been invited to this group".format(
+                    instance.invitee_email))
 
         return redirect("view_individual_group", group.id)
 
@@ -185,7 +184,7 @@ class AcceptGiftGroupInvitation(generic.View):
             return redirect("groups")
         invitation = GiftGroupInvitation.objects.get(id=self.kwargs["id"])
         if invitation.invitee_email != request.user.email:
-            return #TODO appropriate redirect
+            return  # TODO appropriate redirect
         invitation.accepted()
         return redirect("view_individual_group", invitation.gift_group.id)
 
@@ -201,7 +200,8 @@ class RejectGiftGroupInvitation(generic.View):
             return response
         invitation = GiftGroupInvitation.objects.get(id=self.kwargs["id"])
         if invitation.invitee_email != request.user.email:
-            response = JsonResponse({"error": "You are not authorised to reject this invitation"})
+            response = JsonResponse(
+                {"error": "You are not authorised to reject this invitation"})
             response.status_code = 403
             return response
         invitation.rejected()
@@ -227,19 +227,51 @@ class ViewGift(generic.View):
             return redirect('/login/?next=%s' % request.path)
         user = request.user
         if not Gift.objects.filter(pk=self.kwargs["id"]).exists():
-            redirect ('view_groups')
+            redirect('view_groups')
         gift = Gift.objects.get(pk=self.kwargs["id"])
         if not ContributorGiftRelation.objects.filter(contributor=user, gift=gift).exists():
-            redirect ('view_groups')
+            redirect('view_groups')
         gift_relations = ContributorGiftRelation.objects.filter(gift=gift)
         members = [x.contributor for x in gift_relations]
-        gift_idea_form = GiftIdeaForm(initial={"gift":gift, "suggested_by":request.user})
-        context = { 
-            "gift":gift,
+        gift_idea_form = GiftIdeaForm()
+        context = {
+            "gift": gift,
             "members": members,
             "captain": gift.captain,
             "gift_idea_form": gift_idea_form,
-            }
+        }
+        return render(request, "gifts/view_gift.html", context)
+
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return ('/login/?next=%s' % request.path)
+        user = request.user
+        if not Gift.objects.filter(pk=self.kwargs["id"]).exists():
+            redirect('view_groups')
+        gift = Gift.objects.get(pk=self.kwargs["id"])
+        if not ContributorGiftRelation.objects.filter(contributor=user, gift=gift).exists():
+            redirect('view_groups')
+        gift_relations = ContributorGiftRelation.objects.filter(gift=gift)
+        members = [x.contributor for x in gift_relations]
+
+        gift_idea_form = GiftIdeaForm(request.POST)
+        if gift_idea_form.is_valid():
+            instance = gift_idea_form.save(commit=False)
+            instance.requested_by = user
+            instance.gift = gift
+            instance.save()
+            messages.success(request, "Your suggestion was successful")
+            return redirect("view_gift", gift.id)
+        else:
+            messages.warning(
+                request, 'There was an error suggesting your gift')
+
+        context = {
+            "gift": gift,
+            "members": members,
+            "captain": gift.captain,
+            "gift_idea_form": gift_idea_form,
+        }
         return render(request, "gifts/view_gift.html", context)
 
 
@@ -257,10 +289,6 @@ class ClaimGiftCaptaincy(generic.View):
         return redirect("view_gift", gift.id)
 
 
-
-
-
-
 # Next Phases
 # TODO handle post on gift suggestion form
 # TODO Stop someone from becoming captain before they have given bank details
@@ -268,4 +296,3 @@ class ClaimGiftCaptaincy(generic.View):
 # TODO gift comments
 # TODO notifications (ajax to mark as read)
 # TODO functionality to invite non group members to a once off gift
-

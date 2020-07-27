@@ -57,8 +57,15 @@
 
       <!-- Gift Suggestion Form -->
       <div class="col s12 m12 l5">
-        <form action="POST">
+        <form method="POST">
           {% csrf_token %}
+          {% if messages %}
+          <ul class="messages">
+            {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
           <h5>Make a Suggestion</h5>
           <div class="input-field">
             {{ gift_idea_form.title }}
@@ -76,6 +83,7 @@
             {{ gift_idea_form.price }}
             {{ gift_idea_form.price.label_tag }}
           </div>
+          <button class="btn">Suggest</button>
         </form>
       </div>
       <!-- End Gift Suggestion Form -->

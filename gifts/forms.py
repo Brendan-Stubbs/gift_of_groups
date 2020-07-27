@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django.contrib.admin.widgets import AdminDateWidget
 
 
-
 class GiftGroupForm(forms.ModelForm):
     class Meta:
         model = GiftGroup
@@ -35,7 +34,8 @@ class GiftGroupInvitationForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ["birth_date", "bank_account_name", "bank_name", "bank_account_number", "bank_branch_name", "bank_branch_number", "bank_account_type"]
+        fields = ["birth_date", "bank_account_name", "bank_name", "bank_account_number",
+                  "bank_branch_name", "bank_branch_number", "bank_account_type"]
         labels = {
             "bank_account_name": "Account Name",
             "bank_name": "Bank Name",
@@ -45,17 +45,18 @@ class ProfileForm(forms.ModelForm):
             "bank_account_type": "Bank Account Type",
         }
 
-    birth_date = forms.DateField(widget=forms.DateInput(attrs={"class":"datepicker"}))
+    birth_date = forms.DateField(
+        widget=forms.DateInput(attrs={"class": "datepicker"}))
 
 
 class GiftIdeaForm(forms.ModelForm):
     class Meta:
-        model=GiftIdea
-        fields = ["title", "description", "url", "price", "suggested_by", "gift"]
+        model = GiftIdea
+        fields = ["title", "description", "url", "price"]
 
         labels = {
             "title": "Name",
-            "description": "Description", 
+            "description": "Description",
             "url": "Link",
-            "price" : "Price",
+            "price": "Price",
         }
