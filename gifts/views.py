@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import HttpResponse, JsonResponse
 
-from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm
+from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm, GiftIdeaForm
 from gifts.models import GiftGroup, GiftGroupInvitation, Gift, ContributorGiftRelation
 
 
@@ -233,9 +233,12 @@ class ViewGift(generic.View):
             redirect ('view_groups')
         gift_relations = ContributorGiftRelation.objects.filter(gift=gift)
         members = [x.contributor for x in gift_relations]
+        gift_idea_form = GiftIdeaForm(initial={"gift":gift, "suggested_by":request.user})
         context = { 
             "gift":gift,
             "members": members,
+            "captain": gift.captain,
+            "gift_idea_form": gift_idea_form,
             }
         return render(request, "gifts/view_gift.html", context)
 
@@ -259,7 +262,7 @@ class ClaimGiftCaptaincy(generic.View):
 
 
 # Next Phases
-# TODO Add bank details to profile form
+# TODO handle post on gift suggestion form
 # TODO Stop someone from becoming captain before they have given bank details
 # TODO gifts
 # TODO gift comments

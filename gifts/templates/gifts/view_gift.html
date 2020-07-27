@@ -6,61 +6,105 @@
 
 {% block content %}
 <div class="content container">
-    <h1>{{gift.receiver.first_name}}</h1>
-    <h4>{{gift.receiver.profile.birth_date}}</h4>
+  <h1>{{gift.receiver.first_name}}</h1>
+  <h4>{{gift.receiver.profile.birth_date}}</h4>
 
+  <div class="row">
 
-    {% if not gift.captain %}
-    <a href="{% url 'claim_captain' gift.id %}"><button class="btn">Become the Captain</button></a>
-    {% else %}
+    <!-- Target Stuff -->
+    <div class="col s12 m12 l6">
+      Put Progress Stuff Here
+    </div>
+    <!-- End Target Stuff -->
+
     <!-- Captain's Detail -->
-    <div class="row">
-        <div class="col s12 m6">
-          <div class="card blue lighten-1">
-            <div class="card-content white-text">
-                <div class="row valign-wrapper">
-                    <div class="col s2">
-                      <img src="{% static 'gifts/images/avatar_placeholder.png' %}" alt="" class="circle responsive-img">
-                    </div>
-                    <div class="col s10">
-                      <span class="black-text captain-identifier">
-                        <span class="amber-text">Your Captain</span> {{gift.captain.first_name}}
-                      </span>
-                    </div>
-                </div>
-                <h6>Bank Details:</h6>
+    <div class="col s12 m12 l6">
+      {% if not gift.captain %}
+      <a href="{% url 'claim_captain' gift.id %}"><button class="btn">Become the Captain</button></a>
+      {% else %}
+
+      <div class="card blue lighten-1">
+        <div class="card-content white-text">
+          <div class="row valign-wrapper">
+            <div class="col s2">
+              <img src="{% static 'gifts/images/avatar_placeholder.png' %}" alt="" class="circle responsive-img">
             </div>
+            <div class="col s10">
+              <span class="black-text captain-identifier">
+                <span class="purple-text">Your Captain:</span> {{gift.captain.first_name}}
+              </span>
+            </div>
+          </div>
+          <h6 class="purple-text">Bank Details</h6>
+          <p>Name: {{gift.captain.profile.bank_account_name}}</p>
+          <p>Bank Name: {{gift.captain.profile.bank_name}}</p>
+          <p>Account Number: {{gift.captain.profile.bank_account_number}}</p>
+          <p>Branch: {{gift.captain.profile.bank_branch_name}}</p>
+          <p>Branch Code: {{gift.captain.profile.bank_branch_number}}</p>
+          <p>Account Type: {{gift.captain.profile.get_bank_account_type_display}}</p>
         </div>
       </div>
     </div>
-    <!-- End Captain's Detail -->
     {% endif %}
-                
+    <!-- End Captain's Detail -->
+
+    <!-- Gift Suggestions -->
+    <div class="row">
+      <div class="col s12 m12 l7">
+        Gift Suggestions Go here
+      </div>
+      <!-- End Gift Suggestions -->
+
+      <!-- Gift Suggestion Form -->
+      <div class="col s12 m12 l5">
+        <form action="POST">
+          {% csrf_token %}
+          <h5>Make a Suggestion</h5>
+          <div class="input-field">
+            {{ gift_idea_form.title }}
+            {{ gift_idea_form.title.label_tag }}
+          </div>
+          <div class="input-field">
+            {{ gift_idea_form.description }}
+            {{ gift_idea_form.description.label_tag }}
+          </div>
+          <div class="input-field">
+            {{ gift_idea_form.url }}
+            {{ gift_idea_form.url.label_tag }}
+          </div>
+          <div class="input-field">
+            {{ gift_idea_form.price }}
+            {{ gift_idea_form.price.label_tag }}
+          </div>
+        </form>
+      </div>
+      <!-- End Gift Suggestion Form -->
+    </div>
 
 
     <div class="row">
-        <div class="col s12 offset-m2 m8 l7">
-            <p>Members</p>
-            <ul class="collection">
-                {% for member in members %}
-                <li class="collection-item avatar">
-                    <img src="{% static 'gifts/images/avatar_placeholder.png' %}" alt="" class="circle">
-                    <!-- <i class="material-icons circle">folder</i> -->
-                    <span class="title">{{member.first_name}} {{member.last_name}}</span>
-                    <p>First Line</p>
-                    {% if member.is_admin %}<i class="material-icons secondary-content yellow-text">verified</i>
-                    {% elif user_is_admin %}
-                    <a href="{% url 'group_grant_admin' group_id=group.id user_id=member.id %}">
-                        <i class="material-icons secondary-content green-text">add_circle</i>
-                    </a>
-                    {% else %}
-                    <i class="material-icons secondary-content teal-text">account_circle</i>
-                    {% endif %}
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
+      <div class="col s12 offset-m2 m8 l7">
+        <p>Members</p>
+        <ul class="collection">
+          {% for member in members %}
+          <li class="collection-item avatar">
+            <img src="{% static 'gifts/images/avatar_placeholder.png' %}" alt="" class="circle">
+            <!-- <i class="material-icons circle">folder</i> -->
+            <span class="title">{{member.first_name}} {{member.last_name}}</span>
+            <p>First Line</p>
+            {% if member.is_admin %}<i class="material-icons secondary-content yellow-text">verified</i>
+            {% elif user_is_admin %}
+            <a href="{% url 'group_grant_admin' group_id=group.id user_id=member.id %}">
+              <i class="material-icons secondary-content green-text">add_circle</i>
+            </a>
+            {% else %}
+            <i class="material-icons secondary-content teal-text">account_circle</i>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
     </div>
 
-</div>
-{% endblock %}
+  </div>
+  {% endblock %}

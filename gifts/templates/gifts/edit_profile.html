@@ -19,7 +19,12 @@
                         {% endfor %}
                     </ul>
                     {% endif %}
-                    {{form}}
+                    {% for field in form %}
+                    <div class="input-field">
+                        {{field}}
+                        {{field.label_tag}}
+                    </div>
+                    {% endfor %}
                     <button type="submit" class="btn btn-success">Save Changes</button>
                 </form>
             </div>
@@ -34,6 +39,9 @@
             yearRange: [new Date().getFullYear() - 70,new Date().getFullYear()],
         });
     });
+    $(document).ready(function(){
+    $('select').formSelect();
+  });
 </script>
 
 {% endblock %}

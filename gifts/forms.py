@@ -1,5 +1,5 @@
 from django import forms
-from .models import GiftGroup, Profile, GiftGroupInvitation
+from .models import GiftGroup, Profile, GiftGroupInvitation, GiftIdea
 from django.contrib.auth.models import User
 from django.contrib.admin.widgets import AdminDateWidget
 
@@ -35,6 +35,27 @@ class GiftGroupInvitationForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ["birth_date"]
+        fields = ["birth_date", "bank_account_name", "bank_name", "bank_account_number", "bank_branch_name", "bank_branch_number", "bank_account_type"]
+        labels = {
+            "bank_account_name": "Account Name",
+            "bank_name": "Bank Name",
+            "bank_account_number": "Account Number",
+            "bank_branch_name": "Branch Name",
+            "bank_branch_number": "Branch Number",
+            "bank_account_type": "Bank Account Type",
+        }
 
     birth_date = forms.DateField(widget=forms.DateInput(attrs={"class":"datepicker"}))
+
+
+class GiftIdeaForm(forms.ModelForm):
+    class Meta:
+        model=GiftIdea
+        fields = ["title", "description", "url", "price", "suggested_by", "gift"]
+
+        labels = {
+            "title": "Name",
+            "description": "Description", 
+            "url": "Link",
+            "price" : "Price",
+        }

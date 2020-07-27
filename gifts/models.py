@@ -8,11 +8,12 @@ from gifts.utils import datehelper
 
 class Profile(models.Model):
     ACCOUNT_TYPE_CHOICES = (
-        (1, "Cheque"),
-        (2, "Savings"),
+        ("Cheque", "Cheque"),
+        ("Savings", "Savings"),
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     birth_date = models.DateField(null=True, blank=True)
+    bank_account_name = models.CharField(max_length=50, null=True, blank=True)
     bank_name = models.CharField(max_length=50, null=True, blank=True)
     bank_account_number = models.CharField(max_length=30, null=True, blank=True)
     bank_account_type = models.CharField(max_length=20, null=True, blank=True, choices=ACCOUNT_TYPE_CHOICES)
@@ -147,6 +148,7 @@ class GiftIdea(models.Model):
     description = models.TextField(blank=True)
     url = models.URLField(null=True, blank=True)
     price = models.FloatField()
+    suggested_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
 
     def __unicode__(self):
         return "{} for {}".format(self.title, self.gift)
