@@ -60,3 +60,5 @@ class GiftIdeaForm(forms.ModelForm):
             "url": "Link",
             "price": "Price",
         }
+
+    description = forms.CharField(widget=forms.Textarea(attrs={'class': 'materialize-textarea'}))

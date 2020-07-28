@@ -10,3 +10,11 @@
 .idea-description {
     font-size: 10px !important;
 }
+
+.suggestion-form {
+    padding: 1px 30px;
+}
+
+label {
+    color: white !important;
+}

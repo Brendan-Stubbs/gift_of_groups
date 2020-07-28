@@ -54,14 +54,14 @@
         <h5 class="center-align">Gift Suggestions</h5>
 
         {% if gift_ideas|length > 0 %}
-        <ul class="collection purple darken-2">
+        <ul class="collection blue lighten-1 white-text">
           {% for idea in gift_ideas %}
-          <li class="collection-item idea-item avatar purple lighten-2">
+          <li class="collection-item idea-item avatar blue lighten-1">
             <span class="title">{{idea.title}}</span>
             <p class="idea-description">{{idea.description}}</p>
             <div class="secondary-content">
-              <a href="#"><i class="material-icons teal-text">thumb_up</i></a>
-              <span>{{idea.votes|length}}</span>
+              <a href="#"><i class="material-icons white-text">thumb_up</i></a>
+              <span class="white-text">{{idea.votes|length}}</span>
             </div>
           </li>
           {% endfor %}
@@ -88,7 +88,7 @@
       <!-- Gift Suggestion Form -->
       <div class="col s12 m12 l6">
         <h5>Make a Suggestion</h5>
-        <form method="POST">
+        <form method="POST" class="blue lighten-1 suggestion-form">
           {% csrf_token %}
           {% if messages %}
           <ul class="messages">
@@ -102,8 +102,12 @@
             {{ gift_idea_form.title.label_tag }}
           </div>
           <div class="input-field">
-            {{ gift_idea_form.description }}
+            <label for="textarea1">Textarea</label>
+            <textarea id="textarea1" class="materialize-textarea"></textarea>
+          </div>
+          <div class="input-field">
             {{ gift_idea_form.description.label_tag }}
+            {{ gift_idea_form.description }}
           </div>
           <div class="input-field">
             {{ gift_idea_form.url }}
@@ -142,6 +146,11 @@
         </ul>
       </div>
     </div>
-
   </div>
-  {% endblock %}
+
+</div>
+
+<script>
+  // $('body').css("background", "white")
+</script>
+{% endblock %}
