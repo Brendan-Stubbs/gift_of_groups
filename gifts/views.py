@@ -297,7 +297,7 @@ class ClaimGiftCaptaincy(generic.View):
 
 # Next Phases
 # TODO Ajax for voting on an idea
-# TODO Nav dropdown of all gifts
+# TODO Nav dropdown of all active gifts
 # TODO Stop someone from becoming captain before they have given bank details
 # TODO gifts
 # TODO gift comments
