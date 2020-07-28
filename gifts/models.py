@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, m2m_changed
+from django.db.models import Count
 from django.dispatch import receiver
 from django.utils import timezone
 from gifts.utils import datehelper
@@ -130,6 +131,9 @@ class Gift(models.Model):
         self.wrap_up_date = self.receiver.profile.birth_date #TODO defend against Null value and make this the current year
         super(Gift, self).save(*args, **kwargs)
 
+    def get_all_gift_suggestions(self):
+        return GiftIdea.objects.filter(gift=self).annotate(vote_count=Count('votes')).order_by('vote_count')
+
     def __unicode__(self):
         return "{}'s gift : {}".format(self.receiver, self.wrap_up_date.strftime("%d %b"))
 
@@ -149,6 +153,7 @@ class GiftIdea(models.Model):
     url = models.URLField(null=True, blank=True)
     price = models.FloatField()
     suggested_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    votes = models.ManyToManyField(User, related_name="votes")
 
     def __unicode__(self):
         return "{} for {}".format(self.title, self.gift)

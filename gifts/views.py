@@ -233,12 +233,16 @@ class ViewGift(generic.View):
             redirect('view_groups')
         gift_relations = ContributorGiftRelation.objects.filter(gift=gift)
         members = [x.contributor for x in gift_relations]
+        gift_ideas = gift.get_all_gift_suggestions()
+
         gift_idea_form = GiftIdeaForm()
+
         context = {
             "gift": gift,
             "members": members,
             "captain": gift.captain,
             "gift_idea_form": gift_idea_form,
+            "gift_ideas": gift_ideas,
         }
         return render(request, "gifts/view_gift.html", context)
 
@@ -253,6 +257,7 @@ class ViewGift(generic.View):
             redirect('view_groups')
         gift_relations = ContributorGiftRelation.objects.filter(gift=gift)
         members = [x.contributor for x in gift_relations]
+        gift_ideas = gift.get_all_gift_suggestions()
 
         gift_idea_form = GiftIdeaForm(request.POST)
         if gift_idea_form.is_valid():
@@ -271,6 +276,7 @@ class ViewGift(generic.View):
             "members": members,
             "captain": gift.captain,
             "gift_idea_form": gift_idea_form,
+            "gift_ideas": gift_ideas,
         }
         return render(request, "gifts/view_gift.html", context)
 
@@ -290,7 +296,8 @@ class ClaimGiftCaptaincy(generic.View):
 
 
 # Next Phases
-# TODO handle post on gift suggestion form
+# TODO Ajax for voting on an idea
+# TODO Nav dropdown of all gifts
 # TODO Stop someone from becoming captain before they have given bank details
 # TODO gifts
 # TODO gift comments
