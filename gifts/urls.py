@@ -10,8 +10,10 @@ urlpatterns = [
     path("groups/<int:id>/", views.ViewIndividualGroup.as_view(), name="view_individual_group"),
     path("group_grant_admin/<int:group_id>/<int:user_id>/", views.GrantAdminAccess.as_view(), name="group_grant_admin"),
     path("accept_invite/<int:id>/", views.AcceptGiftGroupInvitation.as_view(), name="accept_invite"),
-    path("reject_invite/<int:id>/", views.RejectGiftGroupInvitation.as_view(), name="reject_invite"),
     path("leave_group/<int:id>/", views.LeaveGiftGroup.as_view(), name="leave_group"),
     path("gift/<int:id>", views.ViewGift.as_view(), name="view_gift"),
     path("claim_captain/<int:id>", views.ClaimGiftCaptaincy.as_view(), name="claim_captain"),
+
+    path("reject_invite/<int:id>/", views.RejectGiftGroupInvitation.as_view(), name="reject_invite"),
+    path("ajax/vote_for_gift/<int:id>/", views.VoteForGift.as_view(), name="vote_for_gift"),
 ]

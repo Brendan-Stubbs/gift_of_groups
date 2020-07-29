@@ -18,3 +18,7 @@
 label {
     color: white !important;
 }
+
+.clickable{
+    cursor: pointer;
+}

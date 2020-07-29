@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import HttpResponse, JsonResponse
 
-from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm, GiftIdeaForm
+from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm, GiftIdeaForm, GiftIdea
 from gifts.models import GiftGroup, GiftGroupInvitation, Gift, ContributorGiftRelation
 
 
@@ -233,7 +233,7 @@ class ViewGift(generic.View):
             redirect('view_groups')
         gift_relations = ContributorGiftRelation.objects.filter(gift=gift)
         members = [x.contributor for x in gift_relations]
-        gift_ideas = gift.get_all_gift_suggestions()
+        gift_ideas = gift.get_all_gift_suggestions_with_vote_info(user)
 
         gift_idea_form = GiftIdeaForm()
 
@@ -257,13 +257,14 @@ class ViewGift(generic.View):
             redirect('view_groups')
         gift_relations = ContributorGiftRelation.objects.filter(gift=gift)
         members = [x.contributor for x in gift_relations]
-        gift_ideas = gift.get_all_gift_suggestions()
+        gift_ideas = gift.get_all_gift_suggestions_with_vote_info(user)
 
         gift_idea_form = GiftIdeaForm(request.POST)
         if gift_idea_form.is_valid():
             instance = gift_idea_form.save(commit=False)
             instance.requested_by = user
             instance.gift = gift
+            instance.suggested_by = user
             instance.save()
             messages.success(request, "Your suggestion was successful")
             return redirect("view_gift", gift.id)
@@ -283,7 +284,6 @@ class ViewGift(generic.View):
 
 class ClaimGiftCaptaincy(generic.View):
     def get(self, request, *args, **kwargs):
-        print("Claiming")
         if not request.user.is_authenticated:
             return redirect('/login/?next=%s' % request.path)
         if not Gift.objects.filter(pk=self.kwargs["id"]).exists():
@@ -295,8 +295,27 @@ class ClaimGiftCaptaincy(generic.View):
         return redirect("view_gift", gift.id)
 
 
+class VoteForGift(generic.View):
+    def get(self, request, *args, **kwargs):
+        print("VOTING")
+        if not request.user.is_authenticated:
+            response = JsonResponse({"error": "You are not logged in"})
+            response.status_code = 403
+            return response
+        if not GiftIdea.objects.filter(pk=self.kwargs["id"]).exists():
+            return redirect('view_groups')
+        idea = GiftIdea.objects.get(pk=self.kwargs["id"])
+        if ContributorGiftRelation.objects.filter(gift=idea.gift, contributor=request.user).exists():
+            idea.votes.add(request.user)
+            idea.save()
+        total_votes = len(idea.votes.all())
+        return JsonResponse({"total_votes": total_votes})
+
+
+
+
+
 # Next Phases
-# TODO Ajax for voting on an idea
 # TODO Nav dropdown of all active gifts
 # TODO Stop someone from becoming captain before they have given bank details
 # TODO gifts

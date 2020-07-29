@@ -131,8 +131,11 @@ class Gift(models.Model):
         self.wrap_up_date = self.receiver.profile.birth_date #TODO defend against Null value and make this the current year
         super(Gift, self).save(*args, **kwargs)
 
-    def get_all_gift_suggestions(self):
-        return GiftIdea.objects.filter(gift=self).annotate(vote_count=Count('votes')).order_by('vote_count')
+    def get_all_gift_suggestions_with_vote_info(self, user):
+        gift_ideas = GiftIdea.objects.filter(gift=self).annotate(vote_count=Count('votes')).order_by('-vote_count')
+        for idea in gift_ideas:
+            idea.user_has_voted = user in idea.votes.all()
+        return gift_ideas
 
     def __unicode__(self):
         return "{}'s gift : {}".format(self.receiver, self.wrap_up_date.strftime("%d %b"))
