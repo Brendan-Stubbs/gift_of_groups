@@ -234,7 +234,8 @@ class ViewGift(generic.View):
         gift_relations = ContributorGiftRelation.objects.filter(gift=gift)
         members = [x.contributor for x in gift_relations]
         gift_ideas = gift.get_all_gift_suggestions_with_vote_info(user)
-
+        total_pledged = gift.get_total_pledged_amount()
+        total_contributed = gift.get_total_contribution_amount
         gift_idea_form = GiftIdeaForm()
 
         context = {
@@ -243,6 +244,8 @@ class ViewGift(generic.View):
             "captain": gift.captain,
             "gift_idea_form": gift_idea_form,
             "gift_ideas": gift_ideas,
+            "total_pledged":total_pledged,
+            "total_contributed": total_contributed,
         }
         return render(request, "gifts/view_gift.html", context)
 
@@ -258,6 +261,9 @@ class ViewGift(generic.View):
         gift_relations = ContributorGiftRelation.objects.filter(gift=gift)
         members = [x.contributor for x in gift_relations]
         gift_ideas = gift.get_all_gift_suggestions_with_vote_info(user)
+        total_pledged = gift.get_total_pledged_amount()
+        total_contributed = gift.get_total_contribution_amount
+
 
         gift_idea_form = GiftIdeaForm(request.POST)
         if gift_idea_form.is_valid():
@@ -278,6 +284,8 @@ class ViewGift(generic.View):
             "captain": gift.captain,
             "gift_idea_form": gift_idea_form,
             "gift_ideas": gift_ideas,
+            "total_pledged": total_pledged,
+            "total_contributed": total_contributed,
         }
         return render(request, "gifts/view_gift.html", context)
 
@@ -322,3 +330,4 @@ class VoteForGift(generic.View):
 # TODO gift comments
 # TODO notifications (ajax to mark as read)
 # TODO functionality to invite non group members to a once off gift
+# TODO Captain must be able to change pledged values

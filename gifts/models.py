@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, m2m_changed
-from django.db.models import Count
+from django.db.models import Count, Sum
 from django.dispatch import receiver
 from django.utils import timezone
 from gifts.utils import datehelper
@@ -127,8 +127,14 @@ class Gift(models.Model):
         for contributor in contributors:
             ContributorGiftRelation.objects.create(contributor=contributor, gift=self)
 
+    def get_total_pledged_amount(self):
+        return ContributorGiftRelation.objects.filter(gift=self).aggregate(Sum('contribution'))['contribution__sum']
+
+    def get_total_contribution_amount(self):
+        return ContributorGiftRelation.objects.filter(gift=self, payment_has_cleared=True).aggregate(Sum('contribution'))['contribution__sum']
+
     def save(self, *args, **kwargs):
-        self.wrap_up_date = self.receiver.profile.birth_date #TODO defend against Null value and make this the current year
+        self.wrap_up_date = self.receiver.get_next_birthday()
         super(Gift, self).save(*args, **kwargs)
 
     def get_all_gift_suggestions_with_vote_info(self, user):
