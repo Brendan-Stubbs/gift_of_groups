@@ -134,7 +134,7 @@ class Gift(models.Model):
         return ContributorGiftRelation.objects.filter(gift=self, payment_has_cleared=True).aggregate(Sum('contribution'))['contribution__sum']
 
     def save(self, *args, **kwargs):
-        self.wrap_up_date = self.receiver.get_next_birthday()
+        self.wrap_up_date = self.receiver.profile.get_next_birthday()
         super(Gift, self).save(*args, **kwargs)
 
     def get_all_gift_suggestions_with_vote_info(self, user):
