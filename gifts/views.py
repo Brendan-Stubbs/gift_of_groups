@@ -3,6 +3,7 @@ from django.views import generic
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import HttpResponse, JsonResponse
+from django.utils import timezone
 
 from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm, GiftIdeaForm, GiftIdea
 from gifts.models import GiftGroup, GiftGroupInvitation, Gift, ContributorGiftRelation
@@ -147,7 +148,8 @@ class ViewIndividualGroup(generic.View):
             instance.gift_group = group
             instance.inviter = user
             instance.status = GiftGroupInvitation.STATUS_PENDING
-            if not GiftGroupInvitation.objects.filter(invitee_email=instance.invitee_email, gift_group=group, status=1) and not GiftGroup.objects.filter(id=group.id, users__email=instance.invitee_email).exists():
+            if (not GiftGroupInvitation.objects.filter(invitee_email=instance.invitee_email, gift_group=group, status=1) 
+                and not GiftGroup.objects.filter(id=group.id, users__email=instance.invitee_email).exists()):
                 instance.save()
                 messages.success(request, "{} has been invited to the group".format(
                     instance.invitee_email))
@@ -237,6 +239,7 @@ class ViewGift(generic.View):
         total_pledged = gift.get_total_pledged_amount()
         total_contributed = gift.get_total_contribution_amount
         gift_idea_form = GiftIdeaForm()
+        birthday_has_passed = timezone.now().date() > gift.wrap_up_date
 
         context = {
             "gift": gift,
@@ -247,49 +250,10 @@ class ViewGift(generic.View):
             "total_pledged":total_pledged,
             "total_contributed": total_contributed,
             "user": user,
+            "birthday_has_passed": birthday_has_passed, # TODO Use this to hide the mark complete button
         }
         return render(request, "gifts/view_gift.html", context)
 
-    # def post(self, request, *args, **kwargs):
-    #     if not request.user.is_authenticated:
-    #         return ('/login/?next=%s' % request.path)
-    #     user = request.user
-    #     if not Gift.objects.filter(pk=self.kwargs["id"]).exists():
-    #         redirect('view_groups')
-    #     gift = Gift.objects.get(pk=self.kwargs["id"])
-    #     if not ContributorGiftRelation.objects.filter(contributor=user, gift=gift).exists():
-    #         redirect('view_groups')
-    #     gift_relations = ContributorGiftRelation.objects.filter(gift=gift)
-    #     members = [x.contributor for x in gift_relations]
-    #     gift_ideas = gift.get_all_gift_suggestions_with_vote_info(user)
-    #     total_pledged = gift.get_total_pledged_amount()
-    #     total_contributed = gift.get_total_contribution_amount
-
-
-    #     gift_idea_form = GiftIdeaForm(request.POST)
-    #     if gift_idea_form.is_valid():
-    #         instance = gift_idea_form.save(commit=False)
-    #         instance.requested_by = user
-    #         instance.gift = gift
-    #         instance.suggested_by = user
-    #         instance.save()
-    #         messages.success(request, "Your suggestion was successful")
-    #         return redirect("view_gift", gift.id)
-    #     else:
-    #         messages.warning(
-    #             request, 'There was an error suggesting your gift')
-
-    #     context = {
-    #         "gift": gift,
-    #         "members": members,
-    #         "captain": gift.captain,
-    #         "gift_idea_form": gift_idea_form,
-    #         "gift_ideas": gift_ideas,
-    #         "total_pledged": total_pledged,
-    #         "total_contributed": total_contributed,
-    #         "user": user,
-    #     }
-    #     return render(request, "gifts/view_gift.html", context)
 
 
 class ClaimGiftCaptaincy(generic.View):
@@ -355,6 +319,7 @@ class SuggestIdea(generic.View):
             response.status_code = 403
             return response
 
+
 class SetGift(generic.View):
     def post(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
@@ -372,6 +337,20 @@ class SetGift(generic.View):
         return redirect("view_gift", gift.pk)
 
 
+class MarkGiftComplete(generic.View):
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('/login/?next=%s' % request.path)
+        self.kwargs.get("id")
+        if Gift.objects.filter(id=self.kwargs.get("id")).exists():
+            gift = Gift.objects.get(id=self.kwargs.get("id"))
+            gift.is_complete = True
+            gift.save()
+            return redirect("view_individual_group", gift.gift_group.id)
+        return redirect("view_groups")
+
+
+
 
 
 
@@ -387,3 +366,4 @@ class SetGift(generic.View):
 # TODO notifications (ajax to mark as read)
 # TODO functionality to invite non group members to a once off gift
 # TODO Captain must be able to change pledged values
+# TODO cron job to mark old gifts complete (3 weeks after wrap up date)

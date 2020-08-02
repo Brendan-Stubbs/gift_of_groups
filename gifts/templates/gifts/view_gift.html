@@ -26,10 +26,13 @@
           {% endfor %}
           {% endif %}
         </select>
-        <label>Materialize Select</label>
+        <label>Select a Gift</label>
+        <button class="btn">Set the gift</button>
       </div>
-      <button class="btn">Set the gift</button>
     </form>
+    <div class="col s3">
+      <button class="btn red lighten-1" onclick="mark_gift_complete('{{gift.id}}');">Mark Gift as Complete</button>
+    </div>
   </div>
   {% endif %}
 
@@ -71,6 +74,7 @@
     </div>
     {% endif %}
     <!-- End Captain's Detail -->
+  </div>
 
     <!-- Gift Suggestions -->
     <div class="row">

@@ -67,6 +67,12 @@ function clearForm(form_id){
     $('textarea', '#suggestionForm').val('');
 }
 
+
+function mark_gift_complete(gift_id){
+    window.location.replace(`/mark_gift_complete/${gift_id}`);
+}
+
+
 $(document).ready(function() { 
     $('select').formSelect();
     $("#suggestionForm").submit(function(event) { 
