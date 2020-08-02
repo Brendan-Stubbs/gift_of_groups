@@ -13,6 +13,7 @@ urlpatterns = [
     path("leave_group/<int:id>/", views.LeaveGiftGroup.as_view(), name="leave_group"),
     path("gift/<int:id>", views.ViewGift.as_view(), name="view_gift"),
     path("claim_captain/<int:id>", views.ClaimGiftCaptaincy.as_view(), name="claim_captain"),
+    path("set_gift/<int:gift_id>", views.SetGift.as_view(), name="set_gift"),
 
     path("reject_invite/<int:id>/", views.RejectGiftGroupInvitation.as_view(), name="reject_invite"),
     path("ajax/vote_for_gift/<int:id>/", views.VoteForGift.as_view(), name="vote_for_gift"),

@@ -51,6 +51,7 @@ function add_new_suggestion_to_list(resp){
     $('#ideas-collection').append(`
         <li class="collection-item idea-item avatar blue lighten-1">
             <span class="title">${resp.title}</span>
+            <span class="amber-text">R${resp.price}</span>
             <p class="idea-description">${resp.description}</p>
             <div class="secondary-content">
               <i id="vote_button${resp.id}" onclick="vote_for_gift_ajax('${resp.id}');" class="material-icons white-text clickable">thumb_up</i>
@@ -67,7 +68,8 @@ function clearForm(form_id){
 }
 
 $(document).ready(function() { 
+    $('select').formSelect();
     $("#suggestionForm").submit(function(event) { 
-        event.preventDefault(); 
-    }); 
+        event.preventDefault();
+    })
 });

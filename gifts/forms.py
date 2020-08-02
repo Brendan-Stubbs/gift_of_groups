@@ -1,5 +1,5 @@
 from django import forms
-from .models import GiftGroup, Profile, GiftGroupInvitation, GiftIdea
+from .models import GiftGroup, Profile, GiftGroupInvitation, GiftIdea, Gift
 from django.contrib.auth.models import User
 from django.contrib.admin.widgets import AdminDateWidget
 

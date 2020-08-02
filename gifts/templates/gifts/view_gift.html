@@ -9,6 +9,30 @@
   <h1>{{gift.receiver.first_name}}</h1>
   <h4>{{gift.receiver.profile.birth_date}}</h4>
 
+  {% if user == captain %}
+  <div class="row">
+    <form method="POST" action="/set_gift/{{gift.id}}">
+      {% csrf_token %}
+      <div class="input-field col s12 m6 l4">
+        <select name="idea_id" id="idea_id">
+          {% if not gift.chosen_gift %}
+            <option value="" disabled selected>Select the Gift</option>
+          {% else %}
+            <option value="{{gift.chosen_gift.id}}">{{gift.chosen_gift.title}}</option>
+          {% endif %}
+          {% if gift_ideas|length > 0 %}
+          {% for idea in gift_ideas %}
+            <option value="{{idea.id}}">{{idea.title}}</option>
+          {% endfor %}
+          {% endif %}
+        </select>
+        <label>Materialize Select</label>
+      </div>
+      <button class="btn">Set the gift</button>
+    </form>
+  </div>
+  {% endif %}
+
   <div class="row">
 
     <!-- Target Stuff -->
@@ -57,7 +81,8 @@
         <ul id="ideas-collection" class="collection blue lighten-1 white-text">
           {% for idea in gift_ideas %}
           <li class="collection-item idea-item avatar blue lighten-1">
-            <span class="title">{{idea.title}}</span>
+            <span class="title">{{idea.title}}</span> 
+            <span class="amber-text">R{{idea.price}}</span>
             <p class="idea-description">{{idea.description}}</p>
             <div class="secondary-content">
               <i id="vote_button{{idea.id}}" {% if not idea.user_has_voted %} onclick="vote_for_gift_ajax('{{idea.id}}');"{% endif %} class="material-icons {% if not idea.user_has_voted %}white-text clickable{% else %} grey-text{% endif %}">thumb_up</i>
@@ -87,7 +112,7 @@
 
       <!-- Gift Suggestion Form -->
       <div class="col s12 m12 l6">
-        <h5>Make a Suggestion</h5>
+        <h5>Suggest a Gift</h5>
         <form onsubmit="add_suggestion_ajax('{{gift.id}}', '{{user.id}}')" id="suggestionForm" method="POST" class="blue lighten-1 suggestion-form">
           {% csrf_token %}
 

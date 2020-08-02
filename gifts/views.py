@@ -355,8 +355,31 @@ class SuggestIdea(generic.View):
             response.status_code = 403
             return response
 
+class SetGift(generic.View):
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('/login/?next=%s' % request.path)
+        user = request.user
+        if not Gift.objects.filter(pk=self.kwargs["gift_id"]).exists():
+            return redirect('view_groups')
+        gift = Gift.objects.get(pk=self.kwargs["gift_id"])
+        idea_id = request.POST.get('idea_id')
+        if user == gift.captain and idea_id:
+            if GiftIdea.objects.filter(gift=gift, pk=idea_id).exists():
+                idea = GiftIdea.objects.get(pk=idea_id)
+                gift.chosen_gift = idea
+                gift.save()
+        return redirect("view_gift", gift.pk)
+
+
+
+
+
+
+
 
 # Next Phases
+# TODO make gift suggestion form a modal
 # TODO Nav dropdown of all active gifts
 # TODO Stop someone from becoming captain before they have given bank details
 # TODO gifts
