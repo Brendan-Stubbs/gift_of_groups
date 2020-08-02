@@ -170,13 +170,18 @@ class GiftIdea(models.Model):
     def __str__(self):
         return self.__unicode__()
 
-
 class ContributorGiftRelation(models.Model):
+    PARICIPATION_CHOICES = (
+        ("approved", "Yes, I will be contributing!"),
+        ("rejected", "No, I am sitting this one out."),
+    )
+
     contributor = models.ForeignKey(User, on_delete=models.CASCADE)
     gift = models.ForeignKey(Gift, on_delete=models.CASCADE)
     contribution = models.FloatField(default = 0)
     has_made_payment = models.BooleanField(default=False)
     payment_has_cleared = models.BooleanField(default=False)
+    participation_status = models.CharField(max_length=15, null=True, blank=True, choices=PARICIPATION_CHOICES, default=None)
 
     def save(self, *args, **kwargs):
         if self.contributor != self.gift.receiver:

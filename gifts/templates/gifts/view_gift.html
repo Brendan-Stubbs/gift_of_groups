@@ -27,14 +27,41 @@
           {% endif %}
         </select>
         <label>Select a Gift</label>
-        <button class="btn">Set the gift</button>
+        <button class="btn">Set the confirmed gift</button>
       </div>
     </form>
-    <div class="col s3">
+    <div class="col s5">
       <button class="btn red lighten-1" onclick="mark_gift_complete('{{gift.id}}');">Mark Gift as Complete</button>
     </div>
   </div>
   {% endif %}
+
+<!-- User gift details -->
+  <div class="row">
+    <p id="user_gift_detail_success" class="hidden-message green-text">Updated Succesfully</p>
+    <form id="user_gift_detail_form" onchange="ajax_update_user_gift_form('{{user_gift_relation.id}}');">
+      {% csrf_token %}
+    <div class="col s12 m6 l4">
+      {{gift_relation_form.participation_status.label_tag}}
+      {{gift_relation_form.participation_status}}
+    </div>
+    <div class="col s12 m6 l4">
+      <label>How much are you contributing?</label>
+      {{gift_relation_form.contribution}}
+    </div>
+    <div class="col s12 m6 offset-m3 l4 center-align">
+      {% if user_gift_relation.payment_has_cleared %}
+      <button class="btn disabled">Payment Confirmed</button>
+      {% elif user_gift_relation.has_made_payment %}
+      <button class="btn disabled tooltipped" data-position="bottom" data-tooltip="Your Captain will update this status when your payment has cleared">Payment Pending</button>
+      {% else %}
+      <button onclick="mark_as_paid()"class="btn green tooltipped" data-position="bottom" data-tooltip="Let your captain know that you have made payment">Notify of Payment</button>
+      {% endif %}
+        <div style="">{{gift_relation_form.has_made_payment}}</div>
+    </div>
+  </form>
+  </div>
+<!-- END User gift Details -->
 
   <div class="row">
 
@@ -177,6 +204,6 @@
 <script src="{% static 'gifts/js/viewGifts.js'%}"></script>
 {% endblock %}
 <script>
-  $('body').css("background", "white")
+  // $('body').css("background", "white")
 </script>
 {% endblock %}

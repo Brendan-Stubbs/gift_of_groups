@@ -73,9 +73,39 @@ function mark_gift_complete(gift_id){
 }
 
 
+function mark_as_paid(){
+    $('#id_has_made_payment').prop("checked", true).trigger('change')
+}
+
+
+function ajax_update_user_gift_form(gift_relation_id){
+    $('#user_gift_detail_success').attr('class', 'hidden-message green-text')
+    let data = new FormData(document.getElementById('user_gift_detail_form'));
+    data.append('gift_relation_id', gift_relation_id)
+    $.ajax({
+        type: 'POST',
+        url: `/ajax/update_user_gift_relation/`,
+        dataType: 'json',
+        data:data,
+        contentType: false,
+        processData: false,
+        enctype: 'multipart/form-data',
+        success: function(resp){
+            $('#user_gift_detail_success').removeClass('hidden-message')
+        },
+        error: function(resp){
+            alert("There was an error saving your changes, please refresh the page")
+        }
+    })
+}
+
+
 $(document).ready(function() { 
     $('select').formSelect();
     $("#suggestionForm").submit(function(event) { 
+        event.preventDefault();
+    })
+    $("#user_gift_detail_form").submit(function(event) { 
         event.preventDefault();
     })
 });

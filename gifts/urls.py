@@ -20,4 +20,5 @@ urlpatterns = [
     path("reject_invite/<int:id>/", views.RejectGiftGroupInvitation.as_view(), name="reject_invite"),
     path("ajax/vote_for_gift/<int:id>/", views.VoteForGift.as_view(), name="vote_for_gift"),
     path("ajax/add_gift_suggestion/", views.SuggestIdea.as_view(), name="suggest_gift_idea"),
+    path("ajax/update_user_gift_relation/", views.UpdateUserGiftRelation.as_view(), name="update_user_gift_relation"),
 ]

@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.http import HttpResponse, JsonResponse
 from django.utils import timezone
 
-from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm, GiftIdeaForm, GiftIdea
+from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm, GiftIdeaForm, GiftIdea, GiftManagementUserForm
 from gifts.models import GiftGroup, GiftGroupInvitation, Gift, ContributorGiftRelation
 
 
@@ -239,6 +239,8 @@ class ViewGift(generic.View):
         total_pledged = gift.get_total_pledged_amount()
         total_contributed = gift.get_total_contribution_amount
         gift_idea_form = GiftIdeaForm()
+        user_gift_relation = gift_relations.get(contributor=user)
+        gift_relation_form = GiftManagementUserForm(instance=user_gift_relation)
         birthday_has_passed = timezone.now().date() > gift.wrap_up_date
 
         context = {
@@ -246,10 +248,12 @@ class ViewGift(generic.View):
             "members": members,
             "captain": gift.captain,
             "gift_idea_form": gift_idea_form,
+            "gift_relation_form": gift_relation_form,
             "gift_ideas": gift_ideas,
             "total_pledged":total_pledged,
             "total_contributed": total_contributed,
             "user": user,
+            "user_gift_relation": user_gift_relation,
             "birthday_has_passed": birthday_has_passed, # TODO Use this to hide the mark complete button
         }
         return render(request, "gifts/view_gift.html", context)
@@ -348,6 +352,22 @@ class MarkGiftComplete(generic.View):
             gift.save()
             return redirect("view_individual_group", gift.gift_group.id)
         return redirect("view_groups")
+
+
+class UpdateUserGiftRelation(generic.View):
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return JsonResponse({}, status=403)
+        try:
+            gift_relation = ContributorGiftRelation.objects.get(pk=request.POST.get('gift_relation_id'))
+            form = GiftManagementUserForm(request.POST, instance=gift_relation)
+            if form.is_valid():
+                instance = form.save()
+            return JsonResponse({})
+        except Exception as e:
+            print(e)
+            return JsonResponse({}, status=403)
+
 
 
 

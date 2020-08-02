@@ -1,5 +1,5 @@
 from django import forms
-from .models import GiftGroup, Profile, GiftGroupInvitation, GiftIdea, Gift
+from .models import GiftGroup, Profile, GiftGroupInvitation, GiftIdea, Gift, ContributorGiftRelation
 from django.contrib.auth.models import User
 from django.contrib.admin.widgets import AdminDateWidget
 
@@ -62,3 +62,14 @@ class GiftIdeaForm(forms.ModelForm):
         }
 
     description = forms.CharField(widget=forms.Textarea(attrs={'class': 'materialize-textarea'}))
+
+
+class GiftManagementUserForm(forms.ModelForm):
+    class Meta:
+        model = ContributorGiftRelation
+        fields = ["contribution", 'has_made_payment', 'participation_status']
+        labels = {
+            "contribution": "How much are you contributing?",
+            "has_made_payment": "Let your captain know you have paid",
+            "participation_status": "Will you be participating?"
+        }

@@ -22,3 +22,7 @@ label {
 .clickable{
     cursor: pointer;
 }
+
+.hidden-message{
+    opacity: 0 !important;
+}
