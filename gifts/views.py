@@ -246,48 +246,50 @@ class ViewGift(generic.View):
             "gift_ideas": gift_ideas,
             "total_pledged":total_pledged,
             "total_contributed": total_contributed,
+            "user": user,
         }
         return render(request, "gifts/view_gift.html", context)
 
-    def post(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return ('/login/?next=%s' % request.path)
-        user = request.user
-        if not Gift.objects.filter(pk=self.kwargs["id"]).exists():
-            redirect('view_groups')
-        gift = Gift.objects.get(pk=self.kwargs["id"])
-        if not ContributorGiftRelation.objects.filter(contributor=user, gift=gift).exists():
-            redirect('view_groups')
-        gift_relations = ContributorGiftRelation.objects.filter(gift=gift)
-        members = [x.contributor for x in gift_relations]
-        gift_ideas = gift.get_all_gift_suggestions_with_vote_info(user)
-        total_pledged = gift.get_total_pledged_amount()
-        total_contributed = gift.get_total_contribution_amount
+    # def post(self, request, *args, **kwargs):
+    #     if not request.user.is_authenticated:
+    #         return ('/login/?next=%s' % request.path)
+    #     user = request.user
+    #     if not Gift.objects.filter(pk=self.kwargs["id"]).exists():
+    #         redirect('view_groups')
+    #     gift = Gift.objects.get(pk=self.kwargs["id"])
+    #     if not ContributorGiftRelation.objects.filter(contributor=user, gift=gift).exists():
+    #         redirect('view_groups')
+    #     gift_relations = ContributorGiftRelation.objects.filter(gift=gift)
+    #     members = [x.contributor for x in gift_relations]
+    #     gift_ideas = gift.get_all_gift_suggestions_with_vote_info(user)
+    #     total_pledged = gift.get_total_pledged_amount()
+    #     total_contributed = gift.get_total_contribution_amount
 
 
-        gift_idea_form = GiftIdeaForm(request.POST)
-        if gift_idea_form.is_valid():
-            instance = gift_idea_form.save(commit=False)
-            instance.requested_by = user
-            instance.gift = gift
-            instance.suggested_by = user
-            instance.save()
-            messages.success(request, "Your suggestion was successful")
-            return redirect("view_gift", gift.id)
-        else:
-            messages.warning(
-                request, 'There was an error suggesting your gift')
+    #     gift_idea_form = GiftIdeaForm(request.POST)
+    #     if gift_idea_form.is_valid():
+    #         instance = gift_idea_form.save(commit=False)
+    #         instance.requested_by = user
+    #         instance.gift = gift
+    #         instance.suggested_by = user
+    #         instance.save()
+    #         messages.success(request, "Your suggestion was successful")
+    #         return redirect("view_gift", gift.id)
+    #     else:
+    #         messages.warning(
+    #             request, 'There was an error suggesting your gift')
 
-        context = {
-            "gift": gift,
-            "members": members,
-            "captain": gift.captain,
-            "gift_idea_form": gift_idea_form,
-            "gift_ideas": gift_ideas,
-            "total_pledged": total_pledged,
-            "total_contributed": total_contributed,
-        }
-        return render(request, "gifts/view_gift.html", context)
+    #     context = {
+    #         "gift": gift,
+    #         "members": members,
+    #         "captain": gift.captain,
+    #         "gift_idea_form": gift_idea_form,
+    #         "gift_ideas": gift_ideas,
+    #         "total_pledged": total_pledged,
+    #         "total_contributed": total_contributed,
+    #         "user": user,
+    #     }
+    #     return render(request, "gifts/view_gift.html", context)
 
 
 class ClaimGiftCaptaincy(generic.View):
@@ -305,7 +307,6 @@ class ClaimGiftCaptaincy(generic.View):
 
 class VoteForGift(generic.View):
     def get(self, request, *args, **kwargs):
-        print("VOTING")
         if not request.user.is_authenticated:
             response = JsonResponse({"error": "You are not logged in"})
             response.status_code = 403
@@ -319,8 +320,40 @@ class VoteForGift(generic.View):
         total_votes = len(idea.votes.all())
         return JsonResponse({"total_votes": total_votes})
 
+class SuggestIdea(generic.View):
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            response = JsonResponse({"message": "Please make sure you are logged in"})
+            response.status_code = 403
+            return response
 
+        try:
+            user = User.objects.get(pk=request.POST.get('user_id'))
+            gift = Gift.objects.get(pk=request.POST.get('gift_id'))
+            ContributorGiftRelation.objects.get(contributor__pk=user.pk, gift__pk=gift.pk)
+            gift_idea_form = GiftIdeaForm(request.POST)
 
+            if gift_idea_form.is_valid():
+                instance = gift_idea_form.save(commit=False)
+                instance.gift = gift
+                instance.suggested_by = user
+                instance.save()
+
+                response = JsonResponse({
+                    "title": instance.title,
+                    "description": instance.description,
+                    "id": instance.pk,
+                    "price": instance.price,
+                    "message": "Suggestion submitted succesfully"
+
+                })
+                return response
+
+        except Exception as e:
+            print(e)
+            response = JsonResponse({"message": "There was an error submitting your idea"})
+            response.status_code = 403
+            return response
 
 
 # Next Phases

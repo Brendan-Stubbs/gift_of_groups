@@ -54,7 +54,7 @@
         <h5 class="center-align">Gift Suggestions</h5>
 
         {% if gift_ideas|length > 0 %}
-        <ul class="collection blue lighten-1 white-text">
+        <ul id="ideas-collection" class="collection blue lighten-1 white-text">
           {% for idea in gift_ideas %}
           <li class="collection-item idea-item avatar blue lighten-1">
             <span class="title">{{idea.title}}</span>
@@ -88,15 +88,13 @@
       <!-- Gift Suggestion Form -->
       <div class="col s12 m12 l6">
         <h5>Make a Suggestion</h5>
-        <form method="POST" class="blue lighten-1 suggestion-form">
+        <form onsubmit="add_suggestion_ajax('{{gift.id}}', '{{user.id}}')" id="suggestionForm" method="POST" class="blue lighten-1 suggestion-form">
           {% csrf_token %}
-          {% if messages %}
+
           <ul class="messages">
-            {% for message in messages %}
-            <li class="{{ message.tags }}">{{ message }}</li>
-            {% endfor %}
+            <li id="suggestion-messages"></li>
           </ul>
-          {% endif %}
+          
           <div class="input-field">
             {{ gift_idea_form.title }}
             {{ gift_idea_form.title.label_tag }}
