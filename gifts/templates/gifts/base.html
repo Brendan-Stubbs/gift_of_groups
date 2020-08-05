@@ -53,9 +53,14 @@
     });
     $(document).ready(function () {
         $('.modal').modal();
-        $(".dropdown-trigger").dropdown();
-        $('.tooltipped').tooltip();
+        $(".dropdown-trigger").dropdown({coverTrigger: false,})
+        $("#gift_drop_trigger").dropdown({
+            constrainWidth: false,
+            coverTrigger: false,
+            hover: true,
+        });
 
+        $('.tooltipped').tooltip();
 
     });
 </script>

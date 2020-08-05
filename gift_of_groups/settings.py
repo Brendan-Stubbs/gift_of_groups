@@ -67,6 +67,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "utils.custom_context_processors.check_invitations",
+                "utils.custom_context_processors.get_active_gifts",
             ],
         },
     },

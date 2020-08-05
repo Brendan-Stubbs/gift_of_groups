@@ -373,17 +373,14 @@ class UpdateUserGiftRelation(generic.View):
 
 
 
-
-
-
-
-# Next Phases
-# TODO make gift suggestion form a modal
-# TODO Nav dropdown of all active gifts
+# TODO captain only members section with individual gift details (who's participating, how much contributing etc.)
+# TODO Progress bars for confirmed and pledged payments
 # TODO Stop someone from becoming captain before they have given bank details
-# TODO gifts
 # TODO gift comments
-# TODO notifications (ajax to mark as read)
+# TODO notifications (ajax to mark as read) -- Comments, payment notifications (captain only), new gift
 # TODO functionality to invite non group members to a once off gift
 # TODO Captain must be able to change pledged values
 # TODO cron job to mark old gifts complete (3 weeks after wrap up date)
+# TODO select profile avatar from edit profile
+# TODO Option to Change Group icon?
+# TODO Look at possibilities of Patreon Webhook (for accessing bonus avatars)

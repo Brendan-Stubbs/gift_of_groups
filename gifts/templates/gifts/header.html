@@ -16,8 +16,42 @@
   </li>
   {% endfor %}
 </ul>
-
 <!-- End Invitation Dropdowns -->
+
+<!-- Gift Dropdowns -->
+<ul id="giftDropdown" class="dropdown-content">
+  {% if active_gifts %}
+  {% for gift in active_gifts %}
+  <li id="giftDropdownItem{{gift.id}}">
+    <a href="{% url 'view_gift' gift.id %}">{{ gift.receiver.first_name }} {{gift.receiver.last_name}}</a>
+  </li>
+  {% endfor %}
+  {% elif not request.user.is_authenticated %}
+  <li>
+    <a href="{% url 'register' %}">Create an account</a>
+  </li>
+  {% else %}
+  <li><a>No active gifts</a></li>
+  {% endif %}
+</ul>
+
+<ul id="giftDropdownMobile" class="dropdown-content">
+  {% if active_gifts %}
+  {% for gift in active_gifts %}
+  <li id="giftDropdownItem{{gift.id}}">
+    <a href="{% url 'view_gift' gift.id %}">{{ gift.receiver.first_name }} {{gift.receiver.last_name}}</a>
+  </li>
+  {% endfor %}
+  {% elif not request.user.is_authenticated %}
+  <li>
+    <a href="{% url 'register' %}">Create an account</a>
+  </li>
+  {% else %}
+  <li><a>No active gifts</a></li>
+  {% endif %}
+</ul>
+<!-- End Gift Dropdowns -->
+
 <div class="navbar-fixed">
   <nav class="grey darken-2">
     <div class="nav-wrapper">
@@ -26,9 +60,10 @@
       <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul class="left hide-on-med-and-down">
         <li {% if page_name == 'groups'%} class="active" {% endif %}><a href="{% url 'view_groups' %}">Groups</a></li>
-        <li {% if page_name == 'gifts'%} class="active" {% endif %}><a href="#">Gifts</a></li>
-        {% if gift_group_invitations.count > 0 %} <li>
-          <a class=" dropdown-trigger" href="#!" data-target="inviteDropdown">Invitations<i
+        <li {% if page_name == 'gifts'%} class="active" {% endif %}><a id="gift_drop_trigger" class="dropdown-trigger" data-target="giftDropdown">Gifts</a></li>
+        {% if gift_group_invitations.count > 0 %} 
+        <li>
+          <a class="dropdown-trigger" href="#!" data-target="inviteDropdown">Invitations<i
               class="material-icons right">arrow_drop_down</i>
             <span id="invitationCounter" class="new badge">{{gift_group_invitations.count}}</span></a>
         </li>
@@ -60,8 +95,7 @@
   </li>
   {% endif %}
   <li><a href="{% url 'view_groups' %}">Groups</a></li>
-  <li><a href="Gifts">Gifts</a></li>
-  <li><a href="#">Something</a></li>
+  <li><a class="dropdown-trigger" data-target="giftDropdownMobile">Gifts</a></li>
   {% if user.is_authenticated %}
   <li><a href="{% url 'logout' %}">Logout</a></li>
   {% endif %}
