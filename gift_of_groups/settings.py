@@ -24,8 +24,9 @@ SECRET_KEY = "fe1769t_=18)kl@p-hq97&id3l&r=c1zrn8zy#7!zv-2gtks0_"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+ENVIRONMENT = "local"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["giftly.pythonanywhere.com", "localhost", "127.0.0.1"]
 # ALLOWED_HOSTS = ["0123a2e4d7fa.ngrok.io", "127.0.0.1:4040", "localhost"]
 
 
@@ -86,6 +87,14 @@ DATABASES = {
     }
 }
 
+if ENVIRONMENT == "staging":
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'mydatabase',
+    }
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -118,6 +127,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = "/static/"
+if ENVIRONMENT == "staging":
+    STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
