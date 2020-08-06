@@ -136,7 +136,7 @@ if ENVIRONMENT == "staging":
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
-]
+] if ENVIRONMENT == "local" else []
 
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
