@@ -5,6 +5,7 @@
 __pycache__
 db.sqlite3
 media
+/gift_of_groups/local_settings.py
 
 # Backup files # 
 *.bak 

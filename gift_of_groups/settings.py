@@ -23,11 +23,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = "fe1769t_=18)kl@p-hq97&id3l&r=c1zrn8zy#7!zv-2gtks0_"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-ENVIRONMENT = "local"
+try:
+    from gift_of_groups import local_settings
+    DEBUG = local_settings.DEBUG
+    ENVIRONMENT = local_settings.ENVIRONMENT
+except:
+    DEBUG = True
+    ENVIRONMENT = "local"
 
 ALLOWED_HOSTS = ["giftly.pythonanywhere.com", "localhost", "127.0.0.1"]
-# ALLOWED_HOSTS = ["0123a2e4d7fa.ngrok.io", "127.0.0.1:4040", "localhost"]
 
 
 # Application definition
@@ -91,7 +95,7 @@ if ENVIRONMENT == "staging":
     DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'mydatabase',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
