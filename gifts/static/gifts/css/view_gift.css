@@ -26,3 +26,22 @@ label {
 .hidden-message{
     opacity: 0 !important;
 }
+
+.gift-countdown{
+    height: 25px;
+    margin-bottom: 4px;
+    margin-top: 4px;
+}
+
+.gift-countdown-text{
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+#target-details {
+    padding-bottom: 20px;
+}
+
+#target-details p{
+    margin:0;
+}

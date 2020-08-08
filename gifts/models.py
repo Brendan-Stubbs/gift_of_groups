@@ -128,10 +128,22 @@ class Gift(models.Model):
             ContributorGiftRelation.objects.create(contributor=contributor, gift=self)
 
     def get_total_pledged_amount(self):
-        return ContributorGiftRelation.objects.filter(gift=self).aggregate(Sum('contribution'))['contribution__sum']
+        pledged_total = ContributorGiftRelation.objects.filter(gift=self).aggregate(Sum('contribution'))['contribution__sum']
+        return pledged_total if pledged_total else 0
 
     def get_total_contribution_amount(self):
-        return ContributorGiftRelation.objects.filter(gift=self, payment_has_cleared=True).aggregate(Sum('contribution'))['contribution__sum']
+        contribution_total = ContributorGiftRelation.objects.filter(gift=self, payment_has_cleared=True).aggregate(Sum('contribution'))['contribution__sum']
+        return contribution_total if contribution_total else 0
+
+    def get_total_pledged_percentage(self):
+        if self.chosen_gift:
+            return (self.get_total_pledged_amount() / self.chosen_gift.price) * 100
+        return 0
+
+    def get_total_contribution_percentage(self):
+        if self.chosen_gift:
+            return (self.get_total_contribution_amount() / self.chosen_gift.price) * 100
+        return 0
 
     def save(self, *args, **kwargs):
         self.wrap_up_date = self.receiver.profile.get_next_birthday()

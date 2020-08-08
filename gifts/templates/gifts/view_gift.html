@@ -63,12 +63,34 @@
   </div>
 <!-- END User gift Details -->
 
+<!-- Target Stuff -->
   <div class="row">
-
-    <!-- Target Stuff -->
-    <div class="col s12 m12 l6">
-      Put Progress Stuff Here
+    <div id="target-details" class="col s12 m12 l6 card-panel blue lighten-1">
+      <!-- No gift selected -->
+      <div class="row">
+      <div class="col s12 offset-m1 m10">
+        {% if gift.chosen_gift %}
+        <h5 class="white-text center-align">{{gift.chosen_gift.title}}</h5>
+        <h6 class="white-text center-align">Target: R{{gift.chosen_gift.price}}</h6>
+        <p class="white-text center-align">{{gift.chosen_gift.description}}</p>
+        {% else %}
+          <span class="white-text">No gift has been selected. Your Gift Captain will need to take care of this. In the meantime you can suggest and vote for your favourite gifts below.
+          </span>
+        {% endif %}
+      </div>
     </div>
+    <!-- End no gift selected -->
+    <div class="col m10 offset-m1">
+      <div class="progress gift-countdown">
+        <div class="determinate" style="width: {{gift.get_total_pledged_percentage}}%"></div>
+      </div>
+      <p class="center-align gift-countdown-text">R{{gift.get_total_pledged_amount|floatformat:2}} Pledged</p>
+      <div class="progress gift-countdown">
+        <div class="determinate" style="width: {{gift.get_total_contribution_percentage}}%"></div>
+      </div>
+      <p class="center-align gift-countdown-text">R{{gift.get_total_pledged_amount|floatformat:2}} Confirmed</p>
+    </div>
+  </div>
     <!-- End Target Stuff -->
 
     <!-- Captain's Detail -->

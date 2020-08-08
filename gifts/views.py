@@ -374,7 +374,6 @@ class UpdateUserGiftRelation(generic.View):
 
 
 # TODO captain only members section with individual gift details (who's participating, how much contributing etc.)
-# TODO Progress bars for confirmed and pledged payments
 # TODO Stop someone from becoming captain before they have given bank details
 # TODO gift comments
 # TODO notifications (ajax to mark as read) -- Comments, payment notifications (captain only), new gift
