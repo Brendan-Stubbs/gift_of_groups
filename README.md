@@ -55,3 +55,16 @@ Run local server
 ```
 python mange.py runserver
 ```
+
+### Set up local_settings.py in the same directory as settings.py
+```
+DEBUG = True
+ENVIRONMENT = "local"
+SECRET_KEY = <See below>
+```
+
+Set the value of secret key as the result of
+```
+from django.core.management.utils import get_random_secret_key
+get_random_secret_key()
+```
