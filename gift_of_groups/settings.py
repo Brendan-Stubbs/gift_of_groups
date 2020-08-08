@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -20,16 +21,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "fe1769t_=18)kl@p-hq97&id3l&r=c1zrn8zy#7!zv-2gtks0_"
-
 # SECURITY WARNING: don't run with debug turned on in production!
 try:
     from gift_of_groups import local_settings
     DEBUG = local_settings.DEBUG
     ENVIRONMENT = local_settings.ENVIRONMENT
+    SECRET_KEY = local_settings.SECRET_KEY
 except:
     DEBUG = True
     ENVIRONMENT = "local"
+    SECRET_KEY = "fe1769t_=18)kl@p-hq97&id3l&r=c1zrn8zy#7!zv-2gtks0_"
 
 ALLOWED_HOSTS = ["giftly.pythonanywhere.com", "localhost", "127.0.0.1"]
 
