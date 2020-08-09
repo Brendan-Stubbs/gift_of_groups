@@ -8,6 +8,14 @@ import operator
 from django.db.models import Q
 from functools import reduce
 
+def mark_old_gifts_as_complete():
+    expiry_date = datetime.now() - timedelta(days=25)
+    old_gifts = Gift.objects.filter(wrap_up_date__lt=expiry_date)
+    for gift in old_gifts:
+        gift.is_complete = True
+        gift.save()
+    print("{} gifts marked as complete!".format(len(old_gifts)))
+
 
 def birthdays_within(days):
     now = datetime.now()
@@ -24,14 +32,22 @@ def birthdays_within(days):
     query = reduce(operator.or_, (Q(**d) for d in monthdays))
     return User.objects.filter(query)
 
-
-def run():
+def create_gifts():
     groups = GiftGroup.objects.all()
+    gifts_created = 0
     for group in groups:
         birthdays_in_scope = birthdays_within(group.days_to_notify)
         for user in birthdays_in_scope:
             if not Gift.objects.filter(gift_group=group, receiver=user, wrap_up_date=user.profile.get_next_birthday()).exists():
                 Gift.objects.create(gift_group=group, receiver=user, wrap_up_date=user.profile.get_next_birthday())
+                gifts_created += 1
+    print("{} gifts created!".format(gifts_created))
+
+
+
+def run():
+    mark_old_gifts_as_complete()
+    create_gifts()
 
 
 class Command(BaseCommand):
