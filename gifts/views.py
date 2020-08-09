@@ -379,7 +379,6 @@ class UpdateUserGiftRelation(generic.View):
 # TODO notifications (ajax to mark as read) -- Comments, payment notifications (captain only), new gift
 # TODO functionality to invite non group members to a once off gift
 # TODO Captain must be able to change pledged values
-# TODO cron job to mark old gifts complete (3 weeks after wrap up date)
 # TODO select profile avatar from edit profile
 # TODO Option to Change Group icon?
 # TODO Look at possibilities of Patreon Webhook (for accessing bonus avatars)

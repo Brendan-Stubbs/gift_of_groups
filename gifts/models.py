@@ -204,3 +204,23 @@ class ContributorGiftRelation(models.Model):
 
     def __str__(self):
         return self.__unicode__()
+
+
+class GiftComment(models.Model):
+    gift = models.ForeignKey(Gift, on_delete=models.CASCADE)
+    content = models.TextField()
+    poster = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+@receiver(post_save, sender=GiftComment)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        gift_relations = ContributorGiftRelation.objects.filter(gift=instance.gift).exclude(participation_status='rejected').exclude(contributor=instance.poster)
+        for relation in gift_relations:
+            GiftCommentNotification.objects.create(user=relation.contributor, comment=instance)
+
+
+class GiftCommentNotification(models.Model):
+    comment = models.ForeignKey(GiftComment, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    read = models.BooleanField(default=False)
