@@ -229,7 +229,7 @@
       {{comment_form.content}}
       <button class="btn" onclick="ajax_post_comment('{{gift.id}}')">Comment</button>
     </form>
-    <ul class="collection">
+    <ul class="collection" id="comment-list">
       {% for comment in gift.get_all_comments %}
       <li id="comment{{comment.id}}"class="collection-item avatar">
         <img src="{% static 'gifts/images/avatar_placeholder.png' %}" alt="" class="circle">
