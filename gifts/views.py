@@ -389,7 +389,7 @@ class PostGiftComment(generic.View):
         instance.gift = gift
         instance.save()
 
-        comments = gift.get_all_comments().values("id", "content", "created_at", first_name=F("poster__first_name"), last_name=F("poster__last_name"))
+        comments = gift.get_all_comments().values("id", "content", "created_at", first_name=F("poster__first_name"), last_name=F("poster__last_name")).order_by('created_at')
         return JsonResponse({"comments":list(comments)})
 
 
@@ -397,7 +397,6 @@ class PostGiftComment(generic.View):
 
 # TODO captain only members section with individual gift details (who's participating, how much contributing etc.)
 # TODO Stop someone from becoming captain before they have given bank details
-# TODO gift comments
 # TODO notifications (ajax to mark as read) -- Comments, payment notifications (captain only), new gift
 # TODO functionality to invite non group members to a once off gift
 # TODO Captain must be able to change pledged values

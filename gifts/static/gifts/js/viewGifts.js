@@ -124,7 +124,7 @@ function ajax_post_comment(gift_id) {
 function update_comments(comments){
     let existing_comments = []
     $('#comment-list li').each(function(){
-        existing_comments.unshift(this.id);
+        existing_comments.push(this.id);
     })
 
     comments.forEach(function(comment){
