@@ -4,8 +4,10 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import HttpResponse, JsonResponse
 from django.utils import timezone
+from django.core import serializers
+from django.db.models import F
 
-from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm, GiftIdeaForm, GiftIdea, GiftManagementUserForm
+from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm, GiftIdeaForm, GiftIdea, GiftManagementUserForm, GiftCommentForm
 from gifts.models import GiftGroup, GiftGroupInvitation, Gift, ContributorGiftRelation
 
 
@@ -242,6 +244,7 @@ class ViewGift(generic.View):
         user_gift_relation = gift_relations.get(contributor=user)
         gift_relation_form = GiftManagementUserForm(instance=user_gift_relation)
         birthday_has_passed = timezone.now().date() > gift.wrap_up_date
+        comment_form = GiftCommentForm()
 
         context = {
             "gift": gift,
@@ -255,6 +258,7 @@ class ViewGift(generic.View):
             "user": user,
             "user_gift_relation": user_gift_relation,
             "birthday_has_passed": birthday_has_passed, # TODO Use this to hide the mark complete button
+            "comment_form": comment_form,
         }
         return render(request, "gifts/view_gift.html", context)
 
@@ -369,6 +373,24 @@ class UpdateUserGiftRelation(generic.View):
             return JsonResponse({}, status=403)
 
 
+class PostGiftComment(generic.View):
+    def post(self, request, *args, **kwargs):
+        try:
+            gift = Gift.objects.get(pk=request.POST.get('gift_id'))
+            if not request.user.is_authenticated or not ContributorGiftRelation.objects.filter(gift=gift, contributor=request.user).exists():
+                return JsonResponse({}, status=403)
+        except Exception as e:
+            print(e)
+            return JsonResponse({}, status=403)
+
+        comment_form = GiftCommentForm(request.POST)
+        instance = comment_form.save(commit=False)
+        instance.poster = request.user
+        instance.gift = gift
+        instance.save()
+
+        comments = gift.get_all_comments().values("id", "content", "created_at", first_name=F("poster__first_name"), last_name=F("poster__last_name"))
+        return JsonResponse({"comments":list(comments)})
 
 
 

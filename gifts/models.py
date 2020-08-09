@@ -155,6 +155,9 @@ class Gift(models.Model):
             idea.user_has_voted = user in idea.votes.all()
         return gift_ideas
 
+    def get_all_comments(self):
+        return GiftComment.objects.filter(gift=self).order_by('-created_at')
+
     def __unicode__(self):
         return "{}'s gift : {}".format(self.receiver, self.wrap_up_date.strftime("%d %b"))
 

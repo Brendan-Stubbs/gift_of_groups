@@ -100,12 +100,40 @@ function ajax_update_user_gift_form(gift_relation_id){
 }
 
 
+function ajax_post_comment(gift_id) {
+    let data = new FormData(document.getElementById('comment_form'));
+    data.append('gift_id', gift_id)
+    $.ajax({
+        type: 'POST',
+        url: `/ajax/post_gift_comment/${gift_id}/`,
+        dataType: 'json',
+        data:data,
+        contentType: false,
+        processData: false,
+        enctype: 'multipart/form-data',
+        success: function(resp){
+            update_comments(resp)
+        },
+        error: function(resp){
+            alert("There was an error posting you comment, please refresh the page or try again later")
+        }
+    })
+}
+
+function update_comments(resp){
+    
+}
+
+
 $(document).ready(function() { 
     $('select').formSelect();
     $("#suggestionForm").submit(function(event) { 
         event.preventDefault();
     })
     $("#user_gift_detail_form").submit(function(event) { 
+        event.preventDefault();
+    })
+    $("#comment_form").submit(function(event) {
         event.preventDefault();
     })
 });

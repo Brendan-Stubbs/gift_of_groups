@@ -1,5 +1,5 @@
 from django import forms
-from .models import GiftGroup, Profile, GiftGroupInvitation, GiftIdea, Gift, ContributorGiftRelation
+from .models import GiftGroup, Profile, GiftGroupInvitation, GiftIdea, Gift, ContributorGiftRelation, GiftComment
 from django.contrib.auth.models import User
 from django.contrib.admin.widgets import AdminDateWidget
 
@@ -73,3 +73,8 @@ class GiftManagementUserForm(forms.ModelForm):
             "has_made_payment": "Let your captain know you have paid",
             "participation_status": "Will you be participating?"
         }
+
+class GiftCommentForm(forms.ModelForm):
+    class Meta:
+        model = GiftComment
+        fields = ["content"]

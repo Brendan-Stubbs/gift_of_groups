@@ -222,6 +222,25 @@
 <!-- End Captain Gift Management section -->
 
 <!-- Comments section -->
+<div class="row">
+  <div class="col s12 offset-m2 m8 offset-l3 l6">
+    <form id="comment_form" class="white">
+      {% csrf_token %}
+      {{comment_form.content}}
+      <button class="btn" onclick="ajax_post_comment('{{gift.id}}')">Comment</button>
+    </form>
+    <ul class="collection">
+      {% for comment in gift.get_all_comments %}
+      <li id="comment{{comment.id}}"class="collection-item avatar">
+        <img src="{% static 'gifts/images/avatar_placeholder.png' %}" alt="" class="circle">
+        <p>{{ comment.content }}.</p>
+        <small>{{comment.poster.first_name}} {{comment.poster.last_name}} {{comment.created_at}}</small>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+<!-- End Comments Section -->
 
 </div>
 
