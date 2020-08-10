@@ -121,6 +121,24 @@ function ajax_post_comment(gift_id) {
     })
 }
 
+function refresh_comments(gift_id) {
+    $.ajax({
+        type: 'GET',
+        url: `/ajax/get_comments/${gift_id}/`,
+        beforeSend: function(){
+            $("#comments-refresh").hide()
+            $("#comments-loading").show()
+        },
+        complete: setTimeout(function(){
+            $("#comments-loading").hide()
+            $("#comments-refresh").show()
+        }, 1000),
+        success: function(resp){
+            update_comments(resp.comments)
+        },
+    })
+}
+
 function update_comments(comments){
     let existing_comments = []
     $('#comment-list li').each(function(){

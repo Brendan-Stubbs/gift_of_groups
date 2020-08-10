@@ -392,6 +392,15 @@ class PostGiftComment(generic.View):
         comments = gift.get_all_comments().values("id", "content", "created_at", first_name=F("poster__first_name"), last_name=F("poster__last_name")).order_by('created_at')
         return JsonResponse({"comments":list(comments)})
 
+
+class GetComments(generic.View):
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated or not ContributorGiftRelation.objects.filter(gift__id=self.kwargs.get("gift_id"), contributor=request.user).exists():
+            return JsonResponse(status=403)
+        gift = Gift.objects.get(pk=self.kwargs.get("gift_id"))
+        comments = gift.get_all_comments().values("id", "content", "created_at", first_name=F("poster__first_name"), last_name=F("poster__last_name")).order_by('created_at')
+        return JsonResponse({"comments":list(comments)})
+
 class MarkNotificationsRead(generic.View):
     def get(self, request, *args, **kwargs):
         if not request.user.is_authenticated:

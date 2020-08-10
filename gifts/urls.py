@@ -21,6 +21,7 @@ urlpatterns = [
     path("ajax/vote_for_gift/<int:id>/", views.VoteForGift.as_view(), name="vote_for_gift"),
     path("ajax/add_gift_suggestion/", views.SuggestIdea.as_view(), name="suggest_gift_idea"),
     path("ajax/update_user_gift_relation/", views.UpdateUserGiftRelation.as_view(), name="update_user_gift_relation"),
-    path("ajax/post_gift_comment/<int:group_id>/", views.PostGiftComment.as_view(), name="post_gift_comment"),
+    path("ajax/post_gift_comment/<int:gift_id>/", views.PostGiftComment.as_view(), name="post_gift_comment"),
     path("ajax/mark_notifications_read/", views.MarkNotificationsRead.as_view(), name="mark_notfications_read"),
+    path("ajax/get_comments/<int:gift_id>/", views.GetComments.as_view(), name="get_comments"),
 ]
