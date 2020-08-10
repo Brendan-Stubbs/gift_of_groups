@@ -8,7 +8,7 @@ from django.core import serializers
 from django.db.models import F
 
 from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm, GiftIdeaForm, GiftIdea, GiftManagementUserForm, GiftCommentForm
-from gifts.models import GiftGroup, GiftGroupInvitation, Gift, ContributorGiftRelation
+from gifts.models import GiftGroup, GiftGroupInvitation, Gift, ContributorGiftRelation, GiftCommentNotification
 
 
 class Index(generic.View):
@@ -392,10 +392,18 @@ class PostGiftComment(generic.View):
         comments = gift.get_all_comments().values("id", "content", "created_at", first_name=F("poster__first_name"), last_name=F("poster__last_name")).order_by('created_at')
         return JsonResponse({"comments":list(comments)})
 
+class MarkNotificationsRead(generic.View):
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return JsonResponse({}, status=403)
+        notfications = GiftCommentNotification.objects.filter(user=request.user, read=False)
+        for notfication in notfications:
+            notfication.read = True
+            notfication.save()
+        return JsonResponse({})
 
 # TODO captain only members section with individual gift details (who's participating, how much contributing etc.)
 # TODO Stop someone from becoming captain before they have given bank details
-# TODO notifications (ajax to mark as read) -- Comments, payment notifications (captain only), new gift
 # TODO functionality to invite non group members to a once off gift
 # TODO Captain must be able to change pledged values
 # TODO select profile avatar from edit profile

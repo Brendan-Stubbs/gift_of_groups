@@ -30,10 +30,7 @@ form {
     font-size: 14px !important;
 }
 
-.mark-read-icon{
+.dropdown-icon{
     font-size: 20px;
-}
-
-.mark-read-icon:hover{
-    background: grey;
+    margin-left: 6px;
 }
