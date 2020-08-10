@@ -1,4 +1,4 @@
-from gifts.models import GiftGroupInvitation, Gift, ContributorGiftRelation
+from gifts.models import GiftGroupInvitation, Gift, ContributorGiftRelation, GiftCommentNotification
 
 
 def check_invitations(request):
@@ -16,3 +16,17 @@ def get_active_gifts(request):
         active_gifts = [x.gift for x in gift_relations]
         return {"active_gifts":active_gifts}
     return {}
+
+def get_notfications(request):
+    if request.user.is_authenticated:
+        notfications = GiftCommentNotification.objects.filter(user=request.user, read=False)
+        return {"notifications": notfications}
+    return {}
+
+
+def get_custom_context_processors(request):
+    context = {}
+    context.update(get_active_gifts(request))
+    context.update(check_invitations(request))
+    context.update(get_notfications(request))
+    return context

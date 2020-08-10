@@ -145,6 +145,11 @@ function update_comments(comments){
 }
 
 
+function mark_notification_as_read(event){
+    e.preventDefault();
+    alert("Marking as Read")
+}
+
 $(document).ready(function() { 
     $('select').formSelect();
     $("#suggestionForm").submit(function(event) { 

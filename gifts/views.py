@@ -393,8 +393,6 @@ class PostGiftComment(generic.View):
         return JsonResponse({"comments":list(comments)})
 
 
-
-
 # TODO captain only members section with individual gift details (who's participating, how much contributing etc.)
 # TODO Stop someone from becoming captain before they have given bank details
 # TODO notifications (ajax to mark as read) -- Comments, payment notifications (captain only), new gift

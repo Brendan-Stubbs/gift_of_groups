@@ -215,6 +215,12 @@ class GiftComment(models.Model):
     poster = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __unicode__(self):
+        return "{} commented on {}'s gift".format(self.poster.first_name, self.gift.receiver.first_name)
+
+    def __str__(self):
+        return self.__unicode__()
+
 @receiver(post_save, sender=GiftComment)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:

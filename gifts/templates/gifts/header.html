@@ -18,6 +18,26 @@
 </ul>
 <!-- End Invitation Dropdowns -->
 
+<!-- Comment dropdown -->
+
+<ul id="notificationDropdown" class="dropdown-content">
+  <li><a class="purple-text" href="">Mark all as read<span class="material-icons right mark-read-icon" onclick="mark_notification_as_read(e);">mark_email_read</span></a></li>
+  {% for notification in notifications %}
+  <li id="notificationItem{{notification.id}}">
+      <a class="small-text-dropdown" href="{% url 'view_gift' notification.comment.gift.id %}#comment-section">{{ notification.comment }}</a>
+  </li>
+  {% endfor %}
+</ul>
+
+<ul id="notificationDropdownMobile" class="dropdown-content">
+  {% for notification in notifications %}
+  <li id="notificationItem{{notification.id}}">
+    <a class="small-text-dropdown" href="{% url 'view_gift' notification.comment.gift.id %}#comment-section">{{ notification.comment }}</a>
+  </li>
+  {% endfor %}
+</ul>
+<!-- End Comment Dropdown -->
+
 <!-- Gift Dropdowns -->
 <ul id="giftDropdown" class="dropdown-content">
   {% if active_gifts %}
@@ -68,6 +88,13 @@
             <span id="invitationCounter" class="new badge">{{gift_group_invitations.count}}</span></a>
         </li>
         {% endif %}
+        {% if notifications %}
+        <li>
+          <a id="notification_drop_trigger" class="dropdown-trigger" href="#!" data-target="notificationDropdown">Notifications<i
+              class="material-icons right">arrow_drop_down</i>
+            <span id="invitationCounter" class="new badge">{{notifications.count}}</span></a>
+        </li>
+        {% endif %}
       </ul>
 
       <ul class="right hide-on-med-and-down">
@@ -88,12 +115,22 @@
   {% if not user.is_authenticated %}
   <li><a href="{% url 'register' %}">Sign up</a></li>
   <li><a href="{% url 'login' %}">Log in</a></li>
-  {% endif %} {% if gift_group_invitations.count > 0 %}
+  {% endif %} 
+  {% if gift_group_invitations.count > 0 %}
   <li>
     <a class="dropdown-trigger" data-target="inviteDropdownMobile">Invitations
       <span class="new badge">{{gift_group_invitations.count}}</span></a>
   </li>
   {% endif %}
+
+    {% if notifications %}
+    <li>
+      <a class="dropdown-trigger" href="#!" data-target="notificationDropdownMobile">Notifications<i
+          class="material-icons right">arrow_drop_down</i>
+        <span id="invitationCounter" class="new badge">{{notifications.count}}</span></a>
+    </li>
+    {% endif %}
+
   <li><a href="{% url 'view_groups' %}">Groups</a></li>
   <li><a class="dropdown-trigger" data-target="giftDropdownMobile">Gifts</a></li>
   {% if user.is_authenticated %}

@@ -53,17 +53,21 @@
     });
     $(document).ready(function () {
         $('.modal').modal();
-        $(".dropdown-trigger").dropdown({coverTrigger: false,})
+        $(".dropdown-trigger").dropdown({coverTrigger: false,});
+        $(".dropdown-trigger").dropdown({coverTrigger: false,});
+        $("#notification_drop_trigger").dropdown({constrainWidth: false, coverTrigger: false,});
         $("#gift_drop_trigger").dropdown({
             constrainWidth: false,
             coverTrigger: false,
             hover: true,
         });
-
-        $('.tooltipped').tooltip();
-
     });
-</script>
+
+    $(document).ready(function () {
+        $('.modal').modal();
+        $('.tooltipped').tooltip();
+    });
+    </script>
 
 {% block end_scripts %} {% endblock %}
 

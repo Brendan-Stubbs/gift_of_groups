@@ -25,3 +25,15 @@ form {
 .footer-margin {
     margin-bottom: 50px;
 }
+
+.small-text-dropdown{
+    font-size: 14px !important;
+}
+
+.mark-read-icon{
+    font-size: 20px;
+}
+
+.mark-read-icon:hover{
+    background: grey;
+}
