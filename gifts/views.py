@@ -412,7 +412,6 @@ class MarkNotificationsRead(generic.View):
         return JsonResponse({})
 
 # TODO captain only members section with individual gift details (who's participating, how much contributing etc.)
-# TODO Stop someone from becoming captain before they have given bank details
 # TODO functionality to invite non group members to a once off gift
 # TODO Captain must be able to change pledged values
 # TODO select profile avatar from edit profile

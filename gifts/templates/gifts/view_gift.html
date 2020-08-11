@@ -71,7 +71,7 @@
         <div class="col s12 offset-m1 m10">
           {% if gift.chosen_gift %}
           <h5 class="white-text center-align">{{gift.chosen_gift.title}}</h5>
-          <h6 class="white-text center-align">Target: R{{gift.chosen_gift.price}}</h6>
+          <h6 class="white-text center-align">Target: R{{gift.chosen_gift.price|floatformat:2}}</h6>
           <p class="white-text center-align">{{gift.chosen_gift.description}}</p>
           {% else %}
           <span class="white-text">No gift has been selected. Your Gift Captain will need to take care of this. In the meantime you can suggest and vote for your favourite gifts below.
@@ -96,7 +96,32 @@
     <!-- Captain's Detail -->
     <div class="col s12 m12 l6">
       {% if not gift.captain %}
-      <a href="{% url 'claim_captain' gift.id %}"><button class="btn">Become the Captain</button></a>
+
+      <div class="card blue lighten-1">
+        <div class="card-content white-text">
+          <div class="row valign-wrapper">
+            <div class="col s2">
+              <img src="{% static 'gifts/images/no-avatar.jpg' %}" alt="" class="circle responsive-img">
+            </div>
+            <div class="col s10">
+              <span class="white-text captain-identifier">Captain Needed!</span>
+            </div>
+          </div>
+          <h6 class="white-text">What is a gift Captain?</h6>
+          <p>
+            The gift captain is the person who will be overseeing the gift.
+            This will include collecting the money and having the final say in the decisions.
+          </p>
+          <br>
+          {% if user.profile.are_bank_details_complete %}
+          <a href="{% url 'claim_captain' gift.id %}"><button class="btn">Become the Captain</button></a>
+          {% else %}
+          <button class="btn disabled">Become the Captain</button><br>
+          <small><a href="{% url 'edit_profile' %}" class='white-text'>Complete your bank details </a>to become captain</small>
+          {% endif %}
+        </div>
+      </div>
+
       {% else %}
 
       <div class="card blue lighten-1">
@@ -120,8 +145,10 @@
           <p>Account Type: {{gift.captain.profile.get_bank_account_type_display}}</p>
         </div>
       </div>
+      
+
+      {% endif %}
     </div>
-    {% endif %}
     <!-- End Captain's Detail -->
   </div>
 

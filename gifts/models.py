@@ -28,6 +28,9 @@ class Profile(models.Model):
     def get_next_birthday(self):
         return datehelper.get_next_birthday(self)
 
+    def are_bank_details_complete(self):
+        return bool(self.bank_account_number) and bool(self.bank_name)
+
     def __unicode__(self):
         return self.user.email
 
