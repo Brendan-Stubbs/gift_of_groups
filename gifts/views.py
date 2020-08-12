@@ -259,6 +259,7 @@ class ViewGift(generic.View):
             "user_gift_relation": user_gift_relation,
             "birthday_has_passed": birthday_has_passed, # TODO Use this to hide the mark complete button
             "comment_form": comment_form,
+            "gift_relations": gift_relations,
         }
         return render(request, "gifts/view_gift.html", context)
 

@@ -162,7 +162,7 @@
         {% for idea in gift_ideas %}
         <li class="collection-item idea-item avatar blue lighten-1">
           <span class="title">{{idea.title}}</span> 
-          <span class="amber-text">R{{idea.price}}</span>
+          <span class="amber-text">R{{idea.price|floatformat:2}}</span>
           <p class="idea-description">{{idea.description}}</p>
           <div class="secondary-content">
             <i id="vote_button{{idea.id}}" {% if not idea.user_has_voted %} onclick="vote_for_gift_ajax('{{idea.id}}');"{% endif %} class="material-icons {% if not idea.user_has_voted %}white-text clickable{% else %} grey-text{% endif %}">thumb_up</i>
@@ -225,21 +225,33 @@
 
 <!-- Section for captain to manage gifts -->
 <div class="row">
-  <div class="col s12 offset-m2 m8 offset-l4 l4">
+  <div class="col s12 offset-m2 m8 offset-l3 l6">
     <p>Members</p>
     <ul class="collection">
-      {% for member in members %}
+      {% for gift_relation in gift_relations %}
       <li class="collection-item avatar">
         <img src="{% static 'gifts/images/avatar_placeholder.png' %}" alt="" class="circle">
-        <span class="title">{{member.first_name}} {{member.last_name}}</span>
-        <p>First Line</p>
-        {% if member.is_admin %}<i class="material-icons secondary-content yellow-text">verified</i>
-        {% elif user_is_admin %}
-        <a href="{% url 'group_grant_admin' group_id=group.id user_id=member.id %}">
-          <i class="material-icons secondary-content green-text">add_circle</i>
-        </a>
+        <span class="title">{{gift_relation.contributor.first_name}} {{gift_relation.contributor.last_name}}</span>
+
+        {% if gift_relation.participation_status == "approved" %}
+        <p class="green-text">Participating</p>
+        {% elif gift_relation.participation_status == "rejected" %}
+        <p class="red-text">Not Participating</p>
         {% else %}
-        <i class="material-icons secondary-content teal-text">account_circle</i>
+        <p class="amber-text text-darken-3">Undecided</p>
+        {% endif %}
+        <i class="material-icons secondary-content teal-text">edit</i>
+
+        {% if gift_relation.has_made_payment %}
+        <p>
+          R{{gift_relation.contribution|floatformat:2}}
+          {% if gift_relation.payment_has_cleared %}
+          <span class="green-text"> -Confirmed</span>
+          {% else %}
+          <span class="amber-text text-darken-3"> -Awaiting payment</span>
+          <button class="btn right">Confirm Payment</button>
+          {% endif %}
+        </p>
         {% endif %}
       </li>
       {% endfor %}
