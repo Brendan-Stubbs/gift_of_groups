@@ -1,0 +1,32 @@
+{% load static %}
+<div class="row">
+  <div class="col s12 offset-m1 m10 offset-l2 l8">
+    <ul class="collection">
+      {% for gift_relation in gift_relations %}
+      <li class="collection-item avatar">
+        <img src="{% static 'gifts/images/avatar_placeholder.png' %}" alt="" class="circle">
+        <span class="title">{{gift_relation.contributor.first_name}} {{gift_relation.contributor.last_name}}</span>
+        {% if gift_relation.participation_status == "approved" %}
+        <p class="green-text">Participating</p>
+        {% elif gift_relation.participation_status == "rejected" %}
+        <p class="red-text">Not Participating</p>
+        {% else %}
+        <p class="amber-text text-darken-3">Undecided</p>
+        {% endif %}
+        <i class="material-icons secondary-content teal-text">edit</i>
+        {% if gift_relation.has_made_payment %}
+        <p>
+          R{{gift_relation.contribution|floatformat:2}}
+          {% if gift_relation.payment_has_cleared %}
+          <span class="green-text"> -Confirmed</span>
+          {% else %}
+          <span class="amber-text text-darken-3"> -Awaiting payment</span>
+          <button class="btn right">Confirm Payment</button>
+          {% endif %}
+        </p>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>

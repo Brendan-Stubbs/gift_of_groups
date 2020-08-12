@@ -6,6 +6,8 @@ from django.http import HttpResponse, JsonResponse
 from django.utils import timezone
 from django.core import serializers
 from django.db.models import F
+from django.template.loader import render_to_string
+
 
 from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm, GiftIdeaForm, GiftIdea, GiftManagementUserForm, GiftCommentForm
 from gifts.models import GiftGroup, GiftGroupInvitation, Gift, ContributorGiftRelation, GiftCommentNotification
@@ -245,6 +247,7 @@ class ViewGift(generic.View):
         gift_relation_form = GiftManagementUserForm(instance=user_gift_relation)
         birthday_has_passed = timezone.now().date() > gift.wrap_up_date
         comment_form = GiftCommentForm()
+        captain_management_component = render_to_string("gifts/components/captain_gift_management.html",{"gift_relations":gift_relations})
 
         context = {
             "gift": gift,
@@ -259,7 +262,7 @@ class ViewGift(generic.View):
             "user_gift_relation": user_gift_relation,
             "birthday_has_passed": birthday_has_passed, # TODO Use this to hide the mark complete button
             "comment_form": comment_form,
-            "gift_relations": gift_relations,
+            "captain_management_component": captain_management_component,
         }
         return render(request, "gifts/view_gift.html", context)
 

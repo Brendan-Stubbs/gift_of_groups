@@ -13,7 +13,7 @@
   <div class="row">
     <form method="POST" action="/set_gift/{{gift.id}}">
       {% csrf_token %}
-      <div class="input-field col s12 m6 l4">
+      <div class="input-field col s12 offset-m3 m4 ">
         <select name="idea_id" id="idea_id">
           {% if not gift.chosen_gift %}
           <option value="" disabled selected>Select the Gift</option>
@@ -27,14 +27,19 @@
           {% endif %}
         </select>
         <label>Select a Gift</label>
-        <button class="btn">Set the confirmed gift</button>
+        <button class="btn">Set gift</button>
       </div>
     </form>
-    <div class="col s5">
-      <button class="btn red lighten-1" onclick="mark_gift_complete('{{gift.id}}');">Mark Gift as Complete</button>
+    <div class="col s8 offset-s2 m4">
+      <button class="btn red lighten-1" onclick="mark_gift_complete('{{gift.id}}');">Gift Complete</button>
     </div>
   </div>
+
+  {{captain_management_component}}
+
   {% endif %}
+
+
 
   <!-- User gift details -->
   <div class="row">
@@ -221,48 +226,10 @@
     </div>
     <!-- End Gift Suggestion Form -->
   </div>
-</div>
-
-<!-- Section for captain to manage gifts -->
-<div class="row">
-  <div class="col s12 offset-m2 m8 offset-l3 l6">
-    <p>Members</p>
-    <ul class="collection">
-      {% for gift_relation in gift_relations %}
-      <li class="collection-item avatar">
-        <img src="{% static 'gifts/images/avatar_placeholder.png' %}" alt="" class="circle">
-        <span class="title">{{gift_relation.contributor.first_name}} {{gift_relation.contributor.last_name}}</span>
-
-        {% if gift_relation.participation_status == "approved" %}
-        <p class="green-text">Participating</p>
-        {% elif gift_relation.participation_status == "rejected" %}
-        <p class="red-text">Not Participating</p>
-        {% else %}
-        <p class="amber-text text-darken-3">Undecided</p>
-        {% endif %}
-        <i class="material-icons secondary-content teal-text">edit</i>
-
-        {% if gift_relation.has_made_payment %}
-        <p>
-          R{{gift_relation.contribution|floatformat:2}}
-          {% if gift_relation.payment_has_cleared %}
-          <span class="green-text"> -Confirmed</span>
-          {% else %}
-          <span class="amber-text text-darken-3"> -Awaiting payment</span>
-          <button class="btn right">Confirm Payment</button>
-          {% endif %}
-        </p>
-        {% endif %}
-      </li>
-      {% endfor %}
-    </ul>
-  </div>
-</div>
-<!-- End Captain Gift Management section -->
 
 <!-- Comments section -->
 <div id="comment-section" class="row">
-  <div class="col s12 offset-m2 m8 offset-l3 l6">
+  <div class="col s12 offset-m2 m8 offset-l2 l8">
     <form id="comment_form" onsubmit="ajax_post_comment('{{gift.id}}')" class="white">
       {% csrf_token %}
       {{comment_form.content}}
@@ -299,6 +266,7 @@
 </div>
 <!-- End Comments Section -->
 
+</div>
 </div>
 
 {% block end_scripts %}
