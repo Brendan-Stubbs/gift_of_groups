@@ -13,22 +13,21 @@ class RegisterForm(UserCreationForm):
 
     username = forms.EmailField(
         widget=forms.EmailInput(
-            attrs={"class": "form-control", "placeholder": "test@test.com"}
+            attrs={"autofocus": ""}
         )
     )
     first_name = forms.CharField(
-        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Tester"})
+        widget=forms.TextInput(attrs={})
     )
 
     last_name = forms.CharField(
-        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Tester"})
+        widget=forms.TextInput(attrs={})
     )
 
     password1 = forms.CharField(
-        widget=forms.PasswordInput(attrs={"class": "form-control"})
+        widget=forms.PasswordInput(attrs={})
     )
 
     password2 = forms.CharField(
-        widget=forms.PasswordInput(attrs={"class": "form-control"})
+        widget=forms.PasswordInput(attrs={})
     )
-

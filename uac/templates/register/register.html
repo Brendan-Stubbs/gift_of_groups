@@ -6,11 +6,10 @@
 {% load crispy_forms_tags %}
 
 
-<div class="row nav-margin footer-margin">
+<!-- <div class="row nav-margin footer-margin">
     <div class="col s12 offset-m2 m8 offset-l3 l6 blue-grey lighten-5">
         <div class="col-content">
             <form method="POST">
-                {% csrf_token %}
                 {{ form|crispy }}
                 <div class="center">
                     <button type="submit" class="btn">Create Account</button>
@@ -18,8 +17,49 @@
             </form>
         </div>
     </div>
+</div> -->
+
+
+<div class="container" id="content">
+   <div class="row">
+      <div class="col offset-l3 l6 offset-m3 m6 offset-s12">
+         <form action="" method="POST">
+            {% csrf_token %}
+            <div class="card-panel z-depth-5">
+               <h5 class="center">Register</h5>
+               <p class="center">Start Gifting Now!</p>
+               <div class="input-field">
+                  <i class="material-icons prefix">email</i>
+                  {{form.username}}
+                  <label>Email</label>
+               </div>
+               <div class="input-field">
+                  <i class="material-icons prefix">account_circle</i>
+                  {{form.first_name}}
+                  <label>First Name</label>
+               </div>
+               <div class="input-field">
+                  <i class="material-icons prefix">account_circle</i>
+                  {{form.last_name}}
+                  <label>Last Name</label>
+               </div>
+               <div class="input-field">
+                  <i class="material-icons prefix">lock</i>
+                  {{form.password1}}
+                  <label>Enter password</label>
+               </div>
+               <div class="input-field">
+                  <i class="material-icons prefix">vpn_key</i>
+                  {{form.password2}}
+                  <label>Confirm password</label>
+               </div>
+               <p class="right">Already have an account? <a href="{% url 'login' %}" class="modal-trigger">login</a></p>
+               <input type="submit" name="submit" value="register" class="btn left col s12">
+               <div class="clearfix"></div>
+            </div>
+         </form>
+      </div>
+   </div>
 </div>
-
-
 
 {% endblock %}

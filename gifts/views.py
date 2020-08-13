@@ -415,6 +415,7 @@ class MarkNotificationsRead(generic.View):
             notfication.save()
         return JsonResponse({})
 
+# TODO add form errors to the new register form
 # TODO captain only members section with individual gift details (who's participating, how much contributing etc.)
 # TODO functionality to invite non group members to a once off gift
 # TODO Captain must be able to change pledged values
