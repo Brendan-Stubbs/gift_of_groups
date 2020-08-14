@@ -67,7 +67,16 @@ class GiftGroup(models.Model):
         for gift in active_gifts:
             if not ContributorGiftRelation.objects.filter(contributor=user, gift=gift).exists():
                 ContributorGiftRelation.objects.create(contributor=user, gift=gift)
-    
+
+    def create_upcoming_gifts(self):
+        '''Creates any upcoming gifts and returns the amount create as an integer'''
+        gifts_created = 0
+        birthdays_in_scope = datehelper.get_upcoming_birthdays(self)
+        for user in birthdays_in_scope:
+            if not Gift.objects.filter(gift_group=self, receiver=user, wrap_up_date=user.profile.get_next_birthday()).exists():
+                Gift.objects.create(gift_group=self, receiver=user, wrap_up_date=user.profile.get_next_birthday())
+                gifts_created += 1
+        return gifts_created
 
     def manage_user_change(sender, instance, action, pk_set, **kwargs):
         ids = list(pk_set)

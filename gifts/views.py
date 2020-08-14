@@ -415,6 +415,8 @@ class MarkNotificationsRead(generic.View):
             notfication.save()
         return JsonResponse({})
 
+# TODO check logic on wrap up date
+# TODO button to check for upcoming birthdays
 # TODO functionality to invite non group members to a once off gift
 # TODO Captain must be able to change pledged values
 # TODO select profile avatar from edit profile

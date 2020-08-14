@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 import operator
 from django.db.models import Q
 from functools import reduce
+from gifts.utils import datehelper
 
 def mark_old_gifts_as_complete():
     expiry_date = datetime.now() - timedelta(days=25)
@@ -17,32 +18,13 @@ def mark_old_gifts_as_complete():
     print("{} gifts marked as complete!".format(len(old_gifts)))
 
 
-def birthdays_within(days):
-    now = datetime.now()
-    then = now + timedelta(days)
-
-    monthdays = [(now.month, now.day)]
-    while now <= then:
-        monthdays.append((now.month, now.day))
-        now += timedelta(days=1)
-
-    monthdays = (dict(zip(("profile__birth_date__month", "profile__birth_date__day"), t))
-                 for t in monthdays)
-
-    query = reduce(operator.or_, (Q(**d) for d in monthdays))
-    return User.objects.filter(query)
-
 def create_gifts():
+    gifts_created = 0
     groups = GiftGroup.objects.all()
     gifts_created = 0
     for group in groups:
-        birthdays_in_scope = birthdays_within(group.days_to_notify)
-        for user in birthdays_in_scope:
-            if not Gift.objects.filter(gift_group=group, receiver=user, wrap_up_date=user.profile.get_next_birthday()).exists():
-                Gift.objects.create(gift_group=group, receiver=user, wrap_up_date=user.profile.get_next_birthday())
-                gifts_created += 1
-    print("{} gifts created!".format(gifts_created))
-
+        gifts_created += group.create_upcoming_gifts()
+    print("Gifts created {}".format(gifts_created))
 
 
 def run():
