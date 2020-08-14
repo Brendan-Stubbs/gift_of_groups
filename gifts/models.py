@@ -225,7 +225,7 @@ class GiftComment(models.Model):
         return self.__unicode__()
 
 @receiver(post_save, sender=GiftComment)
-def create_user_profile(sender, instance, created, **kwargs):
+def create_gift_notification(sender, instance, created, **kwargs):
     if created:
         gift_relations = ContributorGiftRelation.objects.filter(gift=instance.gift).exclude(participation_status='rejected').exclude(contributor=instance.poster)
         for relation in gift_relations:
