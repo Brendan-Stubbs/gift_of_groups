@@ -26,33 +26,48 @@
          <form action="" method="POST">
             {% csrf_token %}
             <div class="card-panel z-depth-5">
-               <h5 class="center">Register</h5>
-               <p class="center">Start Gifting Now!</p>
+               <h5 class="center">Sign Up</h5>
                <div class="input-field">
                   <i class="material-icons prefix">email</i>
+                  <label for="id_email">Email</label>
                   {{form.username}}
-                  <label>Email</label>
                </div>
                <div class="input-field">
                   <i class="material-icons prefix">account_circle</i>
+                  <label for="id_first_name">First Name</label>
                   {{form.first_name}}
-                  <label>First Name</label>
                </div>
                <div class="input-field">
                   <i class="material-icons prefix">account_circle</i>
+                  <label for="id_last_name">Last Name</label>
                   {{form.last_name}}
-                  <label>Last Name</label>
                </div>
                <div class="input-field">
                   <i class="material-icons prefix">lock</i>
+                  <label for="id_password1">Enter password</label>
                   {{form.password1}}
-                  <label>Enter password</label>
                </div>
                <div class="input-field">
                   <i class="material-icons prefix">vpn_key</i>
+                  <label for="id_password2">Confirm password</label>
                   {{form.password2}}
-                  <label>Confirm password</label>
                </div>
+
+           {% if form.errors %}
+               {% for field in form %}
+               {% for error in field.errors %}
+                <div class="red-text">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+            <div class="red-text">
+                <strong>{{ error|escape }}</strong>
+            </div>
+            {% endfor %}
+            {% endif %}
+
                <p class="right">Already have an account? <a href="{% url 'login' %}" class="modal-trigger">login</a></p>
                <input type="submit" name="submit" value="register" class="btn left col s12">
                <div class="clearfix"></div>

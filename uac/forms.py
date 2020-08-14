@@ -13,7 +13,7 @@ class RegisterForm(UserCreationForm):
 
     username = forms.EmailField(
         widget=forms.EmailInput(
-            attrs={"autofocus": ""}
+            attrs={}
         )
     )
     first_name = forms.CharField(

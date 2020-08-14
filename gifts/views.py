@@ -415,10 +415,9 @@ class MarkNotificationsRead(generic.View):
             notfication.save()
         return JsonResponse({})
 
-# TODO add form errors to the new register form
-# TODO captain only members section with individual gift details (who's participating, how much contributing etc.)
 # TODO functionality to invite non group members to a once off gift
 # TODO Captain must be able to change pledged values
 # TODO select profile avatar from edit profile
 # TODO Option to Change Group icon?
 # TODO Look at possibilities of Patreon Webhook (for accessing bonus avatars)
+# TODO change db to mysql
