@@ -6,23 +6,9 @@
 {% load crispy_forms_tags %}
 
 
-<!-- <div class="row nav-margin footer-margin">
-    <div class="col s12 offset-m2 m8 offset-l3 l6 blue-grey lighten-5">
-        <div class="col-content">
-            <form method="POST">
-                {{ form|crispy }}
-                <div class="center">
-                    <button type="submit" class="btn">Create Account</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div> -->
-
-
 <div class="container" id="content">
    <div class="row">
-      <div class="col offset-l3 l6 offset-m3 m6 offset-s12">
+      <div class="col offset-l3 l6 offset-m1 m10 s12">
          <form action="" method="POST">
             {% csrf_token %}
             <div class="card-panel z-depth-5">
@@ -68,7 +54,7 @@
             {% endfor %}
             {% endif %}
 
-               <p class="right">Already have an account? <a href="{% url 'login' %}" class="modal-trigger">login</a></p>
+               <p class="right">Already have an account? <a href="{% url 'login' %}">login</a></p>
                <input type="submit" name="submit" value="register" class="btn left col s12">
                <div class="clearfix"></div>
             </div>
