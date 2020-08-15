@@ -23,4 +23,5 @@ urlpatterns = [
     path("register/", uac_views.Register.as_view(), name="register"),
     path("", include("django.contrib.auth.urls")),
     path("", include("gifts.urls")),
+    path("oauth/", include("social_django.urls", namespace="social")),
 ]

@@ -1,4 +1,4 @@
-Django==2.2.13
+Django==2.2.15
 django-crispy-forms==1.9.1
 psycopg2-binary==2.8.5
 pytz==2020.1

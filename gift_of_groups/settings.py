@@ -47,6 +47,14 @@ INSTALLED_APPS = [
     "crispy_forms",
     "uac.apps.UacConfig",
     "gifts.apps.GiftsConfig",
+    "social_django",
+]
+
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "social_core.backends.facebook.FacebookOAuth2",
+    "social_core.backends.google.GoogleOAuth2",
+
 ]
 
 MIDDLEWARE = [
@@ -57,6 +65,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "social_django.middleware.SocialAuthExceptionMiddleware",
 ]
 
 ROOT_URLCONF = "gift_of_groups.urls"
@@ -72,9 +81,9 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                # "utils.custom_context_processors.check_invitations",
-                # "utils.custom_context_processors.get_active_gifts",
                 'utils.custom_context_processors.get_custom_context_processors',
+                "social_django.context_processors.backends",
+                "social_django.context_processors.login_redirect",
             ],
         },
     },
