@@ -25,4 +25,5 @@ urlpatterns = [
     path("ajax/mark_notifications_read/", views.MarkNotificationsRead.as_view(), name="mark_notfications_read"),
     path("ajax/get_comments/<int:gift_id>/", views.GetComments.as_view(), name="get_comments"),
     path("ajax/refresh_gifts/<int:id>/", views.RefreshGifts.as_view(), name="refresh_gifts"),
+    path("ajax/invite_to_gift/<int:id>/", views.InviteToGift.as_view(), name="invite_to_gift"),
 ]

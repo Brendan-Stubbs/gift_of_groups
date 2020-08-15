@@ -431,10 +431,29 @@ class RefreshGifts(generic.View):
             print(e)
             return JsonResponse({}, status=403)
 
+class InviteToGift(generic.View):
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return JsonResponse({}, status=403)
+        try:
+            gift = Gift.objects.get(pk=self.kwargs.get("id"))
+            if not User.objects.filter(email=self.kwargs.get("email")).exists():
+                message = "There is no account linked to this address"
+                return JsonResponse({"message":message})
+            user = User.objects.get(email=self.kwargs.get("email"))
+            if ContributorGiftRelation.objects.filter(gift=gift, user=user).exists():
+                message = "This user is already part of the group"
+                return JsonResponse({"message":message})
+            gift.group.create_gift_relation_for_group(user)
+            message = "Succesfully added {} {} to group".format(user.first_name, user.last_name)
+            return JsonResponse({"message":message})
+        except:
+            return JsonResponse({}, status=403)
 
-# TODO functionality to invite non group members to a once off gift
 # TODO Captain must be able to change pledged values
 # TODO select profile avatar from edit profile
 # TODO Option to Change Group icon?
-# TODO Look at possibilities of Patreon Webhook (for accessing bonus avatars)
+# TODO Look at possibilities of Patreon/Buy me a coffee Webhook (for accessing bonus avatars)
 # TODO change db to mysql
+# TODO Sendgrid integration
+# TODO simple page of all gifts (Straight forward table)

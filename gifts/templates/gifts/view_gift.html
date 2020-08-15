@@ -11,29 +11,46 @@
 
   {% if user == captain %}
   <div class="row">
-    <form method="POST" action="/set_gift/{{gift.id}}">
-      {% csrf_token %}
-      <div class="input-field col s12 offset-m3 m4 ">
-        <select name="idea_id" id="idea_id">
-          {% if not gift.chosen_gift %}
-          <option value="" disabled selected>Select the Gift</option>
-          {% else %}
-          <option value="{{gift.chosen_gift.id}}">{{gift.chosen_gift.title}}</option>
-          {% endif %}
-          {% if gift_ideas|length > 0 %}
-          {% for idea in gift_ideas %}
-          <option value="{{idea.id}}">{{idea.title}}</option>
-          {% endfor %}
-          {% endif %}
-        </select>
-        <label>Select a Gift</label>
-        <button class="btn">Set gift</button>
+    <div class="col s12 offset-m2 m4">
+      <form method="POST" action="/set_gift/{{gift.id}}">
+        {% csrf_token %}
+        <div class="input-field">
+          <select name="idea_id" id="idea_id">
+            {% if not gift.chosen_gift %}
+            <option value="" disabled selected>Select the Gift</option>
+            {% else %}
+            <option value="{{gift.chosen_gift.id}}">{{gift.chosen_gift.title}}</option>
+            {% endif %}
+            {% if gift_ideas|length > 0 %}
+            {% for idea in gift_ideas %}
+            <option value="{{idea.id}}">{{idea.title}}</option>
+            {% endfor %}
+            {% endif %}
+          </select>
+          <label>Select a Gift</label>
+          <button class="btn">Set gift</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="col s12 m4">
+      <form id="non-group-form" onsubmit="invite_to_gift_ajax('{{gift.id}}')">
+        {% csrf_token %}
+        <div class="input-field">
+          <input class="tooltipped" data-position="bottom" data-tooltip="Invite non group members to this gift."type="email" name="email" id="non_group_invite">
+          <label for="non_group_invite">Email</label>
+          <button class="btn right">Invite</button>
+        </form>
+        <p id="invite_message" class="white-text" style="display: none">Error</p>
       </div>
-    </form>
-    <div class="col s8 offset-s2 m4">
-      <button class="btn red lighten-1" onclick="mark_gift_complete('{{gift.id}}');">Gift Complete</button>
     </div>
   </div>
+
+  <div class="row center-align">
+    <button class="btn red lighten-1" onclick="mark_gift_complete('{{gift.id}}');">Gift Complete</button>
+  </div>
+
+  
 
   {{captain_management_component}}
 

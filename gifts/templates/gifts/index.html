@@ -40,22 +40,32 @@
 <section class="section section-icons center">
   <div class="container">
     <div class="row">
-      <h4 class="center">Some Title</h4>
+      <h4 class="center">Getting Started</h4>
       <div class="col s12 m4">
-        <a href="{% url 'register' %}">
-          <div class="card-panel">
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'edit_profile' %}">
+          <div class="card-panel small">
             <i class="fas fa-user-plus large teal-text"></i>
-            <h4>Sign up</h4>
-            <p>Create an account and complete your profile</p>
+            <h4>Profile</h4>
+            <p>Fill in your birthday, and let your group know where to pay</p>
           </div>
         </a>
+        {% else %}
+        <a href="{% url 'register' %}">
+          <div class="card-panel small">
+            <i class="fas fa-user-plus large teal-text"></i>
+            <h4>Register</h4>
+            <p>Create an account and complete your profile to get get gifting</p>
+          </div>
+        </a>
+        {% endif %}
       </div>
       <div class="col s12 m4">
         <a href="{% url 'view_groups' %}">
-          <div class="card-panel">
+          <div class="card-panel small">
             <i class="fas fa-users large teal-text"></i>
-            <h4>Join Groups</h4>
-            <p>View your groups and invite your friends</p>
+            <h4>Groups</h4>
+            <p>View your groups and invite your friends. Gifts will be set up automatically</p>
           </div>
         </a>
       </div>
@@ -63,9 +73,9 @@
         <a href="#">
           <div class="card-panel">
             <i class="fas fa-gift large teal-text"></i>
-            <h4>Give a Gift</h4>
+            <h4>Gifts</h4>
             <p>
-              See the smile on your friend's face when they receive their gift
+              Make your mate's birthday extra special, navigate and manage your gifts
             </p>
           </div>
         </a>
@@ -79,7 +89,7 @@
 <section class="section section-image-row">
   <div class="container">
     <div class="row">
-      <h4 class="center">Some Title</h4>
+      <h4 class="center">How It Works</h4>
 
       <div class="col s12 m4">
         <div class="card small">

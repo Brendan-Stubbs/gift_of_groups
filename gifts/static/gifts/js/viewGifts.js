@@ -15,6 +15,26 @@ function vote_for_gift_ajax(idea_id){
     });
 }
 
+function invite_to_gift_ajax(gift_id){
+    let data = new FormData(document.getElementById('non-group-form'));
+    data.append('gift_id', gift_id)
+    alert("Hello")
+
+    $.ajax({
+        type: 'POST',
+        url: `/ajax/invite_to_gift/${gift_id}/`,
+        dataType: 'json',
+        data:data,
+        contentType: false,
+        processData: false,
+        enctype: 'multipart/form-data',
+        success: function(resp){
+            $("#invite_message").text(resp.message).show()
+            $('#non-group-form').trigger("reset");
+        },
+    });
+}
+
 
 function update_votes(resp, idea_id){
     $(`#vote_counter${idea_id}`).text(resp.total_votes)
@@ -171,6 +191,9 @@ $(document).ready(function() {
         event.preventDefault();
     })
     $("#comment_form").submit(function(event) {
+        event.preventDefault();
+    })
+    $("#non-group-form").submit(function(event) {
         event.preventDefault();
     })
 });
