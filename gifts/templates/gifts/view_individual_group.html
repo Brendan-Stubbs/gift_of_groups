@@ -11,6 +11,25 @@
     <a href="{% url 'edit_group' group.id %}"><button class="btn orange">Edit</button></a>
     {% endif %}
     <a href="{% url 'leave_group' group.id %}"><button class="btn red">Leave group</button></a>
+    <a onclick="refresh_gifts_ajax('{{group.id}}')" class="btn green right tooltipped" data-position="bottom" data-tooltip="Check for new gifts. This will be done for you every 24 hours">
+        <i id="gift-refresh" class="material-icons left">refresh</i>
+    <!-- Spinner -->
+          <div style="display:none;" id="gift-collection-loading" class="preloader-wrapper small active">
+            <div class="spinner-layer spinner-blue-only">
+              <div class="circle-clipper left">
+                <div class="circle"></div>
+              </div><div class="gap-patch">
+                <div class="circle"></div>
+              </div><div class="circle-clipper right">
+                <div class="circle"></div>
+              </div>
+            </div>
+          </div>
+      <!-- End Spinner -->
+        Refresh Gifts
+    </a>
+<a class="waves-effect waves-light btn"><i class="material-icons left">cloud</i>button</a>
+
 
     <div class="row">
         <div class="col s12 offset-m2 m8 l7">
@@ -41,27 +60,14 @@
             {% endif %}
         </div>
 
-        <div class="col s12 offset-m2 m8 l5">
-            <p>Gifts</p>
-            {% if not active_gifts %}
-            <p>You don't have any active gifts</p>
-            {% else %}
-            <ul class="collection">
-                {% for gift in active_gifts %}
-                <a href="{% url 'view_gift' gift.id %}">
-                    <li class="collection-item avatar">
-                        <i class="material-icons circle pink lighten-3">cake</i>
-                        <span class="title">{{gift.receiver.first_name}} {{gift.receiver.last_name}} </span>
-                        <p>Birthday: {{gift.receiver.profile.birth_date}}</p>
-                        <p>Chosen gift: {% if gift.chosen_gift %}{{gift.chosen_gift.title}}{% else %}To be chosen
-                            {% endif %}</p>
-                    </li>
-                </a>
-                {% endfor %}
-            </ul>
-            {% endif %}
+        <div class="col s12 offset-m2 m8 l5" id="gifts-collection">
+            {{group_gifts_component}}
         </div>
+
     </div>
 </div>
+{% endblock %}
 
+{% block end_scripts %}
+<script src="{% static 'gifts/js/viewIndividualGroup.js'%}"></script>
 {% endblock %}

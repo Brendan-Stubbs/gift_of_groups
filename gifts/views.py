@@ -128,6 +128,7 @@ class ViewIndividualGroup(generic.View):
         user_is_admin = user in group.admins.all()
         invitation_form = GiftGroupInvitationForm()
         active_gifts = group.get_group_gifts_for_user(user)
+        group_gifts_component = render_to_string("gifts/components/group_gift_collection.html", {"active_gifts": active_gifts})
 
         context = {
             "members": members,
@@ -135,6 +136,7 @@ class ViewIndividualGroup(generic.View):
             "group": group,
             "invitation_form": invitation_form,
             "active_gifts": active_gifts,
+            "group_gifts_component": group_gifts_component,
         }
         return render(request, "gifts/view_individual_group.html", context)
 
@@ -415,8 +417,21 @@ class MarkNotificationsRead(generic.View):
             notfication.save()
         return JsonResponse({})
 
-# TODO check logic on wrap up date
-# TODO button to check for upcoming birthdays
+class RefreshGifts(generic.View):
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return JsonResponse({}, status=403)
+        try:
+            group = GiftGroup.objects.get(pk=self.kwargs.get("id"))
+            group.create_upcoming_gifts()
+            active_gifts = group.get_group_gifts_for_user(request.user)
+            group_gifts_component = render_to_string("gifts/components/group_gift_collection.html", {"active_gifts": active_gifts})
+            return JsonResponse({"group_gifts_component": group_gifts_component})
+        except Exception as e:
+            print(e)
+            return JsonResponse({}, status=403)
+
+
 # TODO functionality to invite non group members to a once off gift
 # TODO Captain must be able to change pledged values
 # TODO select profile avatar from edit profile
