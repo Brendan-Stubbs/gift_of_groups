@@ -457,8 +457,17 @@ class InviteToGift(generic.View):
         except:
             return JsonResponse({}, status=403)
 
-# TODO Captain must be able to change pledged values
 # TODO select profile avatar from edit profile
 # TODO Look at possibilities of Patreon/Buy me a coffee Webhook (for accessing bonus avatars)
-# TODO Sendgrid integration
-# TODO simple page of all gifts (Straight forward table)
+# TODO simple page of all gifts (Straight forward table) Option to see old gifts
+
+# TODO Send email when Gift is created
+# TODO Contact Modal
+# TODO Donations Modal
+# TODO Sort out layout of Gift page
+# TODO Disable Interactions on Closed Gift
+# TODO set up social auth (Google + Facebook)
+# TODO Create separate email for existing user's invites
+
+# Maybe
+# TODO Captain must be able to change pledged values

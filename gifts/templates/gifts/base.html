@@ -33,7 +33,7 @@
         <div class="modal-content">
             <h4>{{invitation.gift_group.name}}</h4>
             <p>{{invitation.inviter.first_name}} {{invitation.inviter.last_name}} has invited you to join the group
-                {{invitation.gift_group.name}}, along with {{invitation.gift_group.users.count}} other people.</p>
+                {{invitation.gift_group.name}}, along with {{invitation.gift_group.users.count}} other {% if invitation.gift_group.users.count > 1 %} people{% else %} person{% endif %}.</p>
         </div>
         <div class="modal-footer">
             <a href="{% url 'accept_invite' invitation.id %}"

@@ -4,7 +4,7 @@
 <ul id="inviteDropdown" class="dropdown-content">
   {% for invitation in gift_group_invitations %}
   <li id="invitationItem{{invitation.id}}">
-    <a class="modal-trigger" href="#inviteModal{{invitation.id}}">{{ invitation.gift_group.name }}</a>
+    <a class="modal-trigger" href="#inviteModal{{invitation.id}}"><i class="purple-text {{invitation.gift_group.icon}}"></i>{{ invitation.gift_group.name }}</a>
   </li>
   {% endfor %}
 </ul>
@@ -12,7 +12,7 @@
 <ul id="inviteDropdownMobile" class="dropdown-content">
   {% for invitation in gift_group_invitations %}
   <li id="invitationItemMobile{{invitation.id}}">
-    <a class="modal-trigger" href="#inviteModal{{invitation.id}}">{{ invitation.gift_group.name }}</a>
+    <a class="modal-trigger" href="#inviteModal{{invitation.id}}"><i class="purple-text {{invitation.gift_group.icon}}"></i>{{ invitation.gift_group.name }}</a>
   </li>
   {% endfor %}
 </ul>

@@ -26,4 +26,4 @@ class Register(generic.View):
         else:
             context = {"form": form, "page_name" :"register"}
             return render(request, "register/register.html", context)
-        return redirect("index")
+        return redirect("edit_profile")

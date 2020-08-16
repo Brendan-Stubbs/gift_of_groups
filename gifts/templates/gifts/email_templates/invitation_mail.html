@@ -1,29 +1,21 @@
+{% extends 'gifts/email_templates/email_template.html' %}
 
-<div style="margin-left:auto; margin-right:auto;width:50%">
-
-    <div style="background-color: grey; height:130px;"></div>
-
-    
-    <h3>You have been invited to join {{invitation.gift_group.name}} on <a style="color:black;" href="{% url 'index' %}">Giftly Groups</a></h3>
-    <div style="padding: 20px">
-        <p>Greetings from Giftly Groups</p>
-        <p>
-            {{invitation.inviter.first_name}} {{invitation.inviter.last_name}} has invited you to join their group {{invitation.group.name}}
-            <br>
-            In order to get started, all you need to do is <a href="{% url 'register' %}">create your account</a> and complete your profile.
-            <br>
-            You will then see your invitations on the <a href="{% url 'index'%}">homepage</a>
-        </p>
-        <h4>What is Giftly Groups?</h4>
-        <ul>
-            <li>Giftly Groups is a tool to help you manage the organization of birthday gifts.</li>
-            <li>We help you keep track of the contributions and provide an environment free from the noise of alternative methods of communication.</li>
-            <li>The easy to use interface ensures you will not spend countless hours on the admin behind your gift</li>
-        </ul>
-        <p>
-            <i>Happy Gifting</i>
-            <br>
-            Giftly Groups
-        </p>
-    </div>
+{% block content %}
+<h3>You have been invited to join {{invitation.gift_group.name}} on <a style="color:black;" href="{% url 'index' %}">Giftly Groups</a></h3>
+<div style="padding: 10px">
+    <p>Greetings from Giftly Groups</p>
+    <p>
+        {{invitation.inviter.first_name}} {{invitation.inviter.last_name}} has invited you to join their group {{invitation.group.name}}
+        <br>
+        In order to get started, all you need to do is <a href="{% url 'register' %}">create your account</a> and complete your profile.
+        <br>
+        You will then see your invitations on the <a href="{% url 'index'%}">homepage</a>
+    </p>
+    <h4>What is Giftly Groups?</h4>
+    <ul>
+        <li>Giftly Groups is a tool to help you manage the organization of birthday gifts.</li>
+        <li>We help you keep track of the contributions and provide an environment free from the noise of alternative methods of communication.</li>
+        <li>The easy to use interface ensures you will not spend countless hours on the admin behind your gift</li>
+    </ul>
 </div>
+{% endblock %}
