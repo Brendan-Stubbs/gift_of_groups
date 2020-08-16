@@ -43,7 +43,7 @@
             <a href="{% url 'view_individual_group' group.id %}" class="card-anchor">
                 <div class="card">
                     <div class="card-body">
-                        <div class="card-icon-container"><i class="fas fa-users card-icon site-purple"></i></div>
+                        <div class="card-icon-container"><i class="{{group.icon}} card-icon site-purple"></i></div>
                         <h5 class="card-title" style="white-space: nowrap;">{{group.name}}</h5>
                         <small style="position: absolute" class="card-text">{{group.members_total}}
                             member{% if group.members_total > 1 %}s{% endif %}</small>

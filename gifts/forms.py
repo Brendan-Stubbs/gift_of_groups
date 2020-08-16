@@ -7,11 +7,11 @@ from django.contrib.admin.widgets import AdminDateWidget
 class GiftGroupForm(forms.ModelForm):
     class Meta:
         model = GiftGroup
-        fields = ["name", "standard_user_can_invite"]
+        fields = ["name", "standard_user_can_invite", "days_to_notify", "icon"]
 
     name = forms.CharField(
         widget=forms.TextInput(
-            attrs={"class": "form-control", "placeholder": "The Gift Crew"}
+            attrs={}
         )
     )
 

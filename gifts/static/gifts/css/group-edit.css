@@ -1,0 +1,17 @@
+.selectable-group-icon {
+    font-size: 40px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.xl-group-icon {
+    font-size: 60px;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.selected-icon {
+    color: blue;
+}

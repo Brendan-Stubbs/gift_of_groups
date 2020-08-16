@@ -1,22 +1,91 @@
 {% extends 'gifts/base.html'%}
+{% load static %}
 
 {% block title %} Giftly Groups - Create Group {% endblock %}
-{% load crispy_forms_tags %}
+{% block head_links %}
+<link rel="stylesheet" type="text/css" href="{% static 'gifts/css/group-edit.css' %}">
+{% endblock %}
 
 {% block content %}
-<div class="containt container">
-    <h1>Edit Group</h1>
+<div class="container" id="content">
+   <div class="row">
+      <div class="col offset-l3 l6 offset-m1 m10 s12">
+         <form action="" method="POST">
+            {% csrf_token %}
+            <div class="card-panel z-depth-5">
+               <h5 class="center">Edit Group</h5>
 
-    <form method="POST" class="form-group offset-lg-4 col-lg-4 offset-md-3 col-md-6 offset-sm-2 col-sm-8">
-        {% csrf_token %}
-        {{form.name}}
-        <label>
-            {{form.standard_user_can_invite}}
-            <span>Standard User can invite</span>
-        </label>
-        <br>
-        <button type="submit" class="btn btn-success">Save Changes</button>
+               <!-- Icon Select -->
+                <div class="row center-align">
+                        <p>Current Icon</p>
+                        <i id="current-icon" class="{{group.icon}} xl-group-icon purple-text"></i>
+                </div>
+
+                <div class="row" id="icon-options">
+                    <p class="center-align">Change Icon</p>
+                    {% for icon in icons %}
+                    <div class="col s3 center-align pointer">
+                        <i class="{{icon}} {% if group.icon == icon %}selected-icon{% else %}purple-text{% endif %} selectable-group-icon hoverable selected-icon"
+                        onclick="select_icon(this, '{{icon}}');">
+                        </i>
+                    </div>
+                    {% endfor %}
+                </div>
+                <!-- End Icon Select -->
+
+               <div class="input-field">
+                  <i class="material-icons prefix">sentiment_satisfied_alt</i>
+                  <label for="id_name">Group Name</label>
+                  {{form.name}}
+              </div>
+
+              <div class="input-field tooltipped" data-position="right" data-tooltip="The notification time before someone's birthday. Recommended 14 days">
+                  <i class="material-icons prefix">date_range</i>
+                  <label for="id_days_to_notfiy">Gift Notfication Time(days)</label>
+                  {{form.days_to_notify}}
+              </div>
+
+              
+
+                <p class="center-align">
+                  <label>
+                    {{form.standard_user_can_invite}}
+                    <span>Standard User can invite</span>
+                </label>
+                </p>
+
+                <div style="display:none" class="input-field">
+                    {{form.icon}}
+                    <label>Icon</label>
+                </div>
+
+            {% if form.errors %}
+            {% for field in form %}
+            {% for error in field.errors %}
+            <div class="red-text">
+                <strong>{{ error|escape }}</strong>
+            </div>
+            {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+            <div class="red-text">
+                <strong>{{ error|escape }}</strong>
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            <input type="submit" name="submit" value="Save" class="btn left col s12">
+            <div class="clearfix"></div>
+        </div>
     </form>
+
+
 </div>
+</div>
+</div>
+
+{% block end_scripts %}
+<script src="{% static 'gifts/js/createEditGroups.js'%}"></script>
+{% endblock %}
 
 {% endblock %}

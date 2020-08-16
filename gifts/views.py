@@ -8,7 +8,7 @@ from django.core import serializers
 from django.db.models import F
 from django.template.loader import render_to_string
 
-
+from gifts.utils import group_helper
 from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm, GiftIdeaForm, GiftIdea, GiftManagementUserForm, GiftCommentForm
 from gifts.models import GiftGroup, GiftGroupInvitation, Gift, ContributorGiftRelation, GiftCommentNotification
 
@@ -61,7 +61,9 @@ class CreateGroup(generic.View):
             return redirect('/login/?next=%s' % request.path)
 
         form = GiftGroupForm()
-        context = {"form": form}
+        icons = [x[0] for x in group_helper.ICON_CHOICES]
+        selected_icon = "fas fa-users"
+        context = {"form": form, "icons":icons, "selected_icon": selected_icon}
         return render(request, "gifts/create_group.html", context)
 
     def post(self, request, *args, **kwargs):
@@ -75,7 +77,9 @@ class CreateGroup(generic.View):
             instance.users.add(request.user)
             instance.save()
             return redirect("view_individual_group", instance.id)
-        context = {"form": form}
+        icons = [x[0] for x in group_helper.ICON_CHOICES]
+        selected_icon = "fas fa-users"
+        context = {"form": form, "icons":icons, "selected_icon": selected_icon}
         return render(request, "gifts/create_group.html", context)
 
 
@@ -91,7 +95,8 @@ class EditGroup(generic.View):
             return redirect("view_individual_group", group.id)
 
         form = GiftGroupForm(instance=group)
-        context = {"form": form}
+        icons = [x[0] for x in group_helper.ICON_CHOICES]
+        context = {"form": form, "group":group, "icons":icons}
         return render(request, "gifts/edit_group.html", context)
 
     def post(self, request, *args, **kwargs):
@@ -108,7 +113,8 @@ class EditGroup(generic.View):
         if form.is_valid():
             instance = form.save()
             return redirect("view_groups")
-        context = {"form": form}
+        icons = [x[0] for x in group_helper.ICON_CHOICES]
+        context = {"form": form, "group":group, "icons":icons}
         return render(request, "gifts/edit_group.html", context)
 
 
@@ -454,6 +460,5 @@ class InviteToGift(generic.View):
 # TODO select profile avatar from edit profile
 # TODO Option to Change Group icon?
 # TODO Look at possibilities of Patreon/Buy me a coffee Webhook (for accessing bonus avatars)
-# TODO change db to mysql
 # TODO Sendgrid integration
 # TODO simple page of all gifts (Straight forward table)

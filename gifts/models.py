@@ -4,7 +4,7 @@ from django.db.models.signals import post_save, m2m_changed
 from django.db.models import Count, Sum
 from django.dispatch import receiver
 from django.utils import timezone
-from gifts.utils import datehelper
+from gifts.utils import datehelper, group_helper
 
 
 class Profile(models.Model):
@@ -50,6 +50,8 @@ class GiftGroup(models.Model):
     created_at = models.DateField(auto_now_add=True)
     standard_user_can_invite = models.BooleanField(default=False)
     days_to_notify = models.IntegerField(default=14)
+    icon = models.CharField(max_length=30, default="fas fa-users", choices=group_helper.ICON_CHOICES)
+
 
 
     def create_invitation(self, inviter, invitee_email):
