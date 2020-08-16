@@ -8,7 +8,7 @@ from django.core import serializers
 from django.db.models import F
 from django.template.loader import render_to_string
 
-from gifts.utils import group_helper
+from gifts.utils import group_helper, sendgrid_helper
 from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm, GiftIdeaForm, GiftIdea, GiftManagementUserForm, GiftCommentForm
 from gifts.models import GiftGroup, GiftGroupInvitation, Gift, ContributorGiftRelation, GiftCommentNotification
 
@@ -163,6 +163,7 @@ class ViewIndividualGroup(generic.View):
             if (not GiftGroupInvitation.objects.filter(invitee_email=instance.invitee_email, gift_group=group, status=1) 
                 and not GiftGroup.objects.filter(id=group.id, users__email=instance.invitee_email).exists()):
                 instance.save()
+                sendgrid_helper.send_invite_email(instance)
                 messages.success(request, "{} has been invited to the group".format(
                     instance.invitee_email))
             else:
@@ -458,7 +459,6 @@ class InviteToGift(generic.View):
 
 # TODO Captain must be able to change pledged values
 # TODO select profile avatar from edit profile
-# TODO Option to Change Group icon?
 # TODO Look at possibilities of Patreon/Buy me a coffee Webhook (for accessing bonus avatars)
 # TODO Sendgrid integration
 # TODO simple page of all gifts (Straight forward table)

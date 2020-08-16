@@ -4,7 +4,7 @@ from django.db.models.signals import post_save, m2m_changed
 from django.db.models import Count, Sum
 from django.dispatch import receiver
 from django.utils import timezone
-from gifts.utils import datehelper, group_helper
+from gifts.utils import datehelper, group_helper, sendgrid_helper
 
 
 class Profile(models.Model):
@@ -20,7 +20,6 @@ class Profile(models.Model):
     bank_account_type = models.CharField(max_length=20, null=True, blank=True, choices=ACCOUNT_TYPE_CHOICES)
     bank_branch_number = models.CharField(max_length=15, null=True, blank=True)
     bank_branch_name = models.CharField(max_length=50, null=True, blank=True)
-
 
     def get_groups(self):
         return GiftGroup.objects.filter(user=self)
@@ -56,8 +55,8 @@ class GiftGroup(models.Model):
 
     def create_invitation(self, inviter, invitee_email):
         if not GiftGroupInvitation.objects.filter(gift_group=self, invitee=invitee_email, status=GiftGroupInvitation.STATUS_PENDING).exists() and not invitee in self.users.all():
-            GiftGroupInvitation.objects.create(gift_group=self, invitee_email=invitee_email, inviter=inviter)
-            # TODO trigger an email here
+            invite = GiftGroupInvitation.objects.create(gift_group=self, invitee_email=invitee_email, inviter=inviter)
+            sendgrid_helper.send_invite_email(invite)
 
     def get_group_gifts_for_user(self, user):
         '''Returns all active gifts for the group, excluding the one's pertaining to user'''
