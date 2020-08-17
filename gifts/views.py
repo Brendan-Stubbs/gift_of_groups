@@ -12,7 +12,7 @@ from django.template.loader import render_to_string
 
 from gifts.utils import group_helper, sendgrid_helper
 from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm, GiftIdeaForm, GiftIdea, GiftManagementUserForm, GiftCommentForm
-from gifts.models import GiftGroup, GiftGroupInvitation, Gift, ContributorGiftRelation, GiftCommentNotification, Donation
+from gifts.models import GiftGroup, GiftGroupInvitation, Gift, ContributorGiftRelation, GiftCommentNotification, Donation, Profile
 import json
 
 
@@ -471,11 +471,12 @@ class WebhookBuyMeACoffee(generic.View):
             amount = float(js.get("total_amount"))
             origin = "buy_me_a_coffee"
             Donation.objects.create(email=email, amount=amount, origin=origin)
-            profile = Profile.objects.filter(user__email=email)
-            if profile.exists():
-                profile[0].has_made_donation = True
+            if Profile.objects.filter(user__email=email).exists():
+                profile = Profile.objects.get(user__email=email)
+                sendgrid_helper.send_test_mail(email)
+                profile.has_made_donation = True
                 profile.save()
-        except Exception as e:
+        except:
             pass
 
         return HttpResponse("")
