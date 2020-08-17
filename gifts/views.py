@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import HttpResponse, JsonResponse
 from django.utils import timezone
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 from django.db.models import F
 from django.template.loader import render_to_string
@@ -458,10 +460,11 @@ class InviteToGift(generic.View):
         except:
             return JsonResponse({}, status=403)
 
-
+@method_decorator(csrf_exempt, name="dispatch")
 class WebhookBuyMeACoffee(generic.View):
 
     def post(self, request, *args, **kwargs):
+        sendgrid_helper.send_test_mail()
         try:
             data = request.body.decode("utf-8")
             js = json.loads(data)
