@@ -12,7 +12,7 @@ from django.template.loader import render_to_string
 
 from gifts.utils import group_helper, sendgrid_helper
 from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm, GiftIdeaForm, GiftIdea, GiftManagementUserForm, GiftCommentForm
-from gifts.models import GiftGroup, GiftGroupInvitation, Gift, ContributorGiftRelation, GiftCommentNotification
+from gifts.models import GiftGroup, GiftGroupInvitation, Gift, ContributorGiftRelation, GiftCommentNotification, Donation
 import json
 
 
@@ -464,17 +464,16 @@ class InviteToGift(generic.View):
 class WebhookBuyMeACoffee(generic.View):
 
     def post(self, request, *args, **kwargs):
-        sendgrid_helper.send_test_mail()
         try:
             data = request.body.decode("utf-8")
             js = json.loads(data)
-            with open("webhook-response.txt", "w") as f:
-                json.dump(js, f)
-                f.close()
+            email = js.get("supporter_email")
+            amount = js.get("total_amount")
+            origin = "buy_me_a_coffee"
+            Donation.objects.create(email=email, amount=amount, origin=origin)
         except Exception as e:
-            with open("webhook-error.txt", "w") as f:
-                f.write(e)
-                f.close()
+            sendgrid_helper.send_text_email(e)
+
         return HttpResponse("")
 
 

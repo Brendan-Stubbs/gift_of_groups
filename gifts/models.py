@@ -247,3 +247,14 @@ class GiftCommentNotification(models.Model):
     comment = models.ForeignKey(GiftComment, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     read = models.BooleanField(default=False)
+
+
+class Donation(models.Model):
+    ORIGIN_CHOICES = (
+        ("patreon", "Patreon"),
+        ("buy_me_a_coffee", "Buy Me a Coffee"),
+    )
+    email = models.EmailField(max_length=100, null=True, blank=True)
+    origin = models.CharField(max_length=30, null=True, blank=True, choices=ORIGIN_CHOICES)
+    amount = models.FloatField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
