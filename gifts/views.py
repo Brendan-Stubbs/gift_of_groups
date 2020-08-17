@@ -471,8 +471,12 @@ class WebhookBuyMeACoffee(generic.View):
             amount = float(js.get("total_amount"))
             origin = "buy_me_a_coffee"
             Donation.objects.create(email=email, amount=amount, origin=origin)
+            profile = Profile.objects.filter(user__email=email)
+            if profile.exists():
+                profile[0].has_made_donation = True
+                profile.save()
         except Exception as e:
-            sendgrid_helper.send_test_mail(str(e))
+            pass
 
         return HttpResponse("")
 
