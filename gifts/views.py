@@ -462,8 +462,6 @@ class InviteToGift(generic.View):
 # TODO simple page of all gifts (Straight forward table) Option to see old gifts
 
 # TODO Send email when Gift is created
-# TODO Contact Modal
-# TODO Donations Modal
 # TODO Sort out layout of Gift page
 # TODO Disable Interactions on Closed Gift
 # TODO set up social auth (Google + Facebook)
