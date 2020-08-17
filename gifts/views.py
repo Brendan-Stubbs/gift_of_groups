@@ -163,7 +163,7 @@ class ViewIndividualGroup(generic.View):
             instance.gift_group = group
             instance.inviter = user
             instance.status = GiftGroupInvitation.STATUS_PENDING
-            if (not GiftGroupInvitation.objects.filter(invitee_email=instance.invitee_email, gift_group=group, status=1) 
+            if (not GiftGroupInvitation.objects.filter(invitee_email=instance.invitee_email, gift_group=group, status=1)
                 and not GiftGroup.objects.filter(id=group.id, users__email=instance.invitee_email).exists()):
                 instance.save()
                 sendgrid_helper.send_invite_email(instance)
@@ -466,13 +466,13 @@ class WebhookBuyMeACoffee(generic.View):
     def post(self, request, *args, **kwargs):
         try:
             data = request.body.decode("utf-8")
-            js = json.loads(data)
+            js = json.loads(data)["response"]
             email = js.get("supporter_email")
-            amount = js.get("total_amount")
+            amount = float(js.get("total_amount"))
             origin = "buy_me_a_coffee"
             Donation.objects.create(email=email, amount=amount, origin=origin)
         except Exception as e:
-            sendgrid_helper.send_text_email(e)
+            sendgrid_helper.send_test_mail(str(e))
 
         return HttpResponse("")
 

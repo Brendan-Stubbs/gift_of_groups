@@ -39,7 +39,7 @@ def send_test_mail(e):
         from_email='giftlygroups@gmail.com',
         to_emails="stubbsbrendan@gmail.com",
         subject = "Testing some Sendgrid",
-        html_content = "<p>e</p>"
+        html_content = "<p>{}</p>".format(e)
     )
 
     send_mail(message)
