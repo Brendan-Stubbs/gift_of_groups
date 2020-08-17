@@ -34,12 +34,12 @@ def send_invite_mail_existing_user(invitation):
     )
     send_mail(message)
 
-def send_test_mail():
+def send_test_mail(e):
     message = Mail(
         from_email='giftlygroups@gmail.com',
         to_emails="stubbsbrendan@gmail.com",
         subject = "Testing some Sendgrid",
-        html_content = "<p>I am a test</p>"
+        html_content = "<p>{}</p>".format(e)
     )
 
     send_mail(message)
