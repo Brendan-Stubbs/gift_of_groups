@@ -20,6 +20,7 @@ class Profile(models.Model):
     bank_account_type = models.CharField(max_length=20, null=True, blank=True, choices=ACCOUNT_TYPE_CHOICES)
     bank_branch_number = models.CharField(max_length=15, null=True, blank=True)
     bank_branch_name = models.CharField(max_length=50, null=True, blank=True)
+    has_made_donation = models.BooleanField(default=False)
 
     def get_groups(self):
         return GiftGroup.objects.filter(user=self)

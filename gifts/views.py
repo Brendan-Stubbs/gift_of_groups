@@ -457,6 +457,19 @@ class InviteToGift(generic.View):
         except:
             return JsonResponse({}, status=403)
 
+
+class WebhookBuyMeACoffee(generic.View):
+
+    def post(self, request, *args, **kwargs):
+        try:
+            data = request.body.decode("utf-8")
+            js = json.loads(data)
+            with open("webhook-response", "w") as f:
+                json.dump(data, f)
+        except:
+            pass
+
+
 # TODO select profile avatar from edit profile
 # TODO Look at possibilities of Patreon/Buy me a coffee Webhook (for accessing bonus avatars)
 # TODO simple page of all gifts (Straight forward table) Option to see old gifts
