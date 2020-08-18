@@ -28,4 +28,5 @@ urlpatterns = [
     path("ajax/invite_to_gift/<int:id>/", views.InviteToGift.as_view(), name="invite_to_gift"),
 
     path("webhook/donatemesomecoffee/", views.WebhookBuyMeACoffee.as_view(), name="webhook_buy_coffee"),
+    path("webhook/supportthegiftlyonpatreon/", views.WebhookPatreon.as_view(), name="webhook_patreon"),
 ]

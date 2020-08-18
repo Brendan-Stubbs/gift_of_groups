@@ -473,7 +473,6 @@ class WebhookBuyMeACoffee(generic.View):
             Donation.objects.create(email=email, amount=amount, origin=origin)
             if Profile.objects.filter(user__email=email).exists():
                 profile = Profile.objects.get(user__email=email)
-                sendgrid_helper.send_test_mail(email)
                 profile.has_made_donation = True
                 profile.save()
         except:
@@ -481,9 +480,34 @@ class WebhookBuyMeACoffee(generic.View):
 
         return HttpResponse("")
 
+@method_decorator(csrf_exempt, name="dispatch")
+class WebhookPatreon(generic.View):
+    def post(self, request, *args, **kwargs):
+        try:
+            data = request.body.decode("utf-8")
+            js = json.loads(data)
+            email = js["included"][1]["attributes"]["email"]
+            amount = js["data"]["attributes"]["campaign_lifetime_support_cents"] / 100.0
+            origin = "patreon"
+
+            if Donation.objects.filter(email=email, origin=origin).exists():
+                donation = Donation.objects.get(email=email, origin=origin)
+                donation.amount = amount
+                donation.save()
+            else:
+                Donation.objects.create(email=email, amount=amount, origin=origin)
+
+            if Profile.objects.filter(user__email=email).exists():
+                profile = Profile.objects.get(user__email=email)
+                profile.has_made_donation = True
+                profile.save()
+
+            sendgrid_helper.send_test_mail("Got through block")
+        except:
+            sendgrid_helper.send_test_mail("error with patreon")
+        return HttpResponse("")
 
 # TODO select profile avatar from edit profile
-# TODO Look at possibilities of Patreon/Buy me a coffee Webhook (for accessing bonus avatars)
 # TODO simple page of all gifts (Straight forward table) Option to see old gifts
 
 # TODO Send email when Gift is created
