@@ -1,0 +1,33 @@
+{% extends 'gifts/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col offset-s1 s10 offset-m2 m8 offset-l3 l6">
+        <ul class="collection with-header">
+        <li class="collection-header"><h4>Active Gifts</h4></li>
+        {% if not active_gifts %}
+        <li class="collection-item">You don't currently have any active gifts</li>
+        {% endif %}
+        {% for gift in active_gifts %}
+        <a href="{% url 'view_gift' gift.id %}" class="collection-item"><i class="material-icons circle" style="vertical-align: -3px;">cake</i>{{gift}}</a>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="col offset-s1 s10 offset-m2 m8 offset-l3 l6">
+        <ul class="collection with-header">
+        <li class="collection-header"><h4>Completed Gifts</h4></li>
+        {% if not complete_gifts %}
+        <li class="collection-item">You don't have any completed gifts at the moment</li>
+        {% endif %}
+        {% for gift in complete_gifts %}
+        <a href="{% url 'view_gift' gift.id %}" class="collection-item"><i class="material-icons circle" style="vertical-align: -3px;">cake</i>{{gift}}</a>
+        {% endfor %}
+      </ul>
+    </div>
+
+</div>
+
+{% endblock %}

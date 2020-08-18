@@ -173,7 +173,7 @@ class Gift(models.Model):
         return GiftComment.objects.filter(gift=self).order_by('-created_at')
 
     def __unicode__(self):
-        return "{}'s gift : {}".format(self.receiver, self.wrap_up_date.strftime("%d %b"))
+        return "{} {} : {}".format(self.receiver.first_name, self.receiver.last_name, self.wrap_up_date.strftime("%d %b"))
 
     def __str__(self):
         return self.__unicode__()

@@ -120,6 +120,21 @@ class EditGroup(generic.View):
         context = {"form": form, "group":group, "icons":icons}
         return render(request, "gifts/edit_group.html", context)
 
+class ViewAllGifts(generic.View):
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('/login/?next=%s' % request.path)
+        user = request.user
+        gift_relations = ContributorGiftRelation.objects.filter(contributor=user).exclude(gift__receiver=user)
+        active_gifts = [x.gift for x in gift_relations.filter(gift__is_complete=False)]
+        complete_gifts = [x.gift for x in gift_relations.filter(gift__is_complete=True)]
+        context = {
+            "active_gifts":active_gifts,
+            "complete_gifts": complete_gifts,
+        }
+        return render(request, "gifts/view_all_gifts.html", context)
+
+
 
 class ViewIndividualGroup(generic.View):
     def get(self, request, *args, **kwargs):
@@ -486,6 +501,7 @@ class WebhookPatreon(generic.View):
         try:
             data = request.body.decode("utf-8")
             js = json.loads(data)
+            send_json_mail("Patreon JSON Response", str(js))
             email = js["included"][1]["attributes"]["email"]
             amount = js["data"]["attributes"]["campaign_lifetime_support_cents"] / 100.0
             origin = "patreon"
@@ -501,15 +517,11 @@ class WebhookPatreon(generic.View):
                 profile = Profile.objects.get(user__email=email)
                 profile.has_made_donation = True
                 profile.save()
-
-            sendgrid_helper.send_test_mail("Got through block")
         except:
             sendgrid_helper.send_test_mail("error with patreon")
         return HttpResponse("")
 
 # TODO select profile avatar from edit profile
-# TODO simple page of all gifts (Straight forward table) Option to see old gifts
-
 # TODO Send email when Gift is created
 # TODO Sort out layout of Gift page
 # TODO Disable Interactions on Closed Gift
