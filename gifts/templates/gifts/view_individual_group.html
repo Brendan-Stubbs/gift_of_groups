@@ -35,7 +35,7 @@
             <ul class="collection">
                 {% for member in members %}
                 <li class="collection-item avatar">
-                    <img src="{% static 'gifts/images/avatar_placeholder.png' %}" alt="" class="circle">
+                    <img src="{{member.profile.get_profile_pic}}" alt="" class="circle">
                     <!-- <i class="material-icons circle">folder</i> -->
                     <span class="title">{{member.first_name}} {{member.last_name}}</span>
                     <p>First Line</p>

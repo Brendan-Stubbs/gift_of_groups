@@ -1,8 +1,12 @@
     <p>Gifts</p>
-    {% if not active_gifts %}
-    <p>You don't have any active gifts</p>
-    {% else %}
     <ul class="collection">
+        {% if not active_gifts %}
+            <li class="collection-item">
+                <p>You don't have any active gifts</p>
+                <p>Gifts will be created automatically when a group member's birthday is approaching</p>
+            </li>
+            
+        {% else %}
         {% for gift in active_gifts %}
         <a href="{% url 'view_gift' gift.id %}">
             <li class="collection-item avatar">

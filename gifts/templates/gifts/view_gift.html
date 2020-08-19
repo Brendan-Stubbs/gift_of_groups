@@ -150,7 +150,7 @@
         <div class="card-content white-text">
           <div class="row valign-wrapper">
             <div class="col s2">
-              <img src="{% static 'gifts/images/avatar_placeholder.png' %}" alt="" class="circle responsive-img">
+              <img src="{{captain.profile.get_profile_pic}}" alt="" class="circle responsive-img">
             </div>
             <div class="col s10">
               <span class="black-text captain-identifier">
@@ -273,7 +273,7 @@
     <ul class="collection" id="comment-list">
       {% for comment in gift.get_all_comments %}
       <li id="comment{{comment.id}}"class="collection-item avatar">
-        <img src="{% static 'gifts/images/avatar_placeholder.png' %}" alt="" class="circle">
+        <img src="{{comment.poster.profile.get_profile_pic}}" alt="" class="circle">
         <p>{{ comment.content }}.</p>
         <small>{{comment.poster.first_name}} {{comment.poster.last_name}} {{comment.created_at}}</small>
       </li>

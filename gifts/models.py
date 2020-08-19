@@ -6,6 +6,10 @@ from django.dispatch import receiver
 from django.utils import timezone
 from gifts.utils import datehelper, group_helper, sendgrid_helper
 
+class ProfilePic(models.Model):
+    image = models.URLField()
+    is_premium = models.BooleanField(default=False)
+
 
 class Profile(models.Model):
     ACCOUNT_TYPE_CHOICES = (
@@ -21,6 +25,12 @@ class Profile(models.Model):
     bank_branch_number = models.CharField(max_length=15, null=True, blank=True)
     bank_branch_name = models.CharField(max_length=50, null=True, blank=True)
     has_made_donation = models.BooleanField(default=False)
+    profile_pic = models.ForeignKey(ProfilePic, on_delete=models.SET_NULL, null=True)
+
+    def get_profile_pic(self):
+        if self.profile_pic:
+            return self.profile_pic.image
+        return "https://giftly-groups.s3.us-east-2.amazonaws.com/no-avatar.jpg"
 
     def get_groups(self):
         return GiftGroup.objects.filter(user=self)
@@ -140,6 +150,7 @@ class Gift(models.Model):
         contributors = self.gift_group.users.all().exclude(id=self.receiver.id)
         for contributor in contributors:
             ContributorGiftRelation.objects.create(contributor=contributor, gift=self)
+        sendgrid_helper.send_gift_creation_mail(self)
 
     def get_total_pledged_amount(self):
         pledged_total = ContributorGiftRelation.objects.filter(gift=self).aggregate(Sum('contribution'))['contribution__sum']
@@ -168,6 +179,10 @@ class Gift(models.Model):
         for idea in gift_ideas:
             idea.user_has_voted = user in idea.votes.all()
         return gift_ideas
+
+    def get_all_contributors(self):
+        gift_relations = ContributorGiftRelation.objects.filter(gift=self)
+        return [x.contributor for x in gift_relations]
 
     def get_all_comments(self):
         return GiftComment.objects.filter(gift=self).order_by('-created_at')

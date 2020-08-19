@@ -181,7 +181,12 @@ class ViewIndividualGroup(generic.View):
             if (not GiftGroupInvitation.objects.filter(invitee_email=instance.invitee_email, gift_group=group, status=1)
                 and not GiftGroup.objects.filter(id=group.id, users__email=instance.invitee_email).exists()):
                 instance.save()
-                sendgrid_helper.send_invite_email(instance)
+                # Move the below into the model
+                if User.objects.filter(email=instance.invitee_email).exists():
+                    sendgrid_helper.send_invite_mail_existing_user(instance)
+                else:
+                    sendgrid_helper.send_invite_email(instance)
+
                 messages.success(request, "{} has been invited to the group".format(
                     instance.invitee_email))
             else:
@@ -260,10 +265,10 @@ class ViewGift(generic.View):
             return redirect('/login/?next=%s' % request.path)
         user = request.user
         if not Gift.objects.filter(pk=self.kwargs["id"]).exists():
-            redirect('view_groups')
+            return redirect('view_groups')
         gift = Gift.objects.get(pk=self.kwargs["id"])
         if not ContributorGiftRelation.objects.filter(contributor=user, gift=gift).exists():
-            redirect('view_groups')
+            return redirect('view_groups')
         gift_relations = ContributorGiftRelation.objects.filter(gift=gift)
         members = [x.contributor for x in gift_relations]
         gift_ideas = gift.get_all_gift_suggestions_with_vote_info(user)
@@ -522,11 +527,10 @@ class WebhookPatreon(generic.View):
         return HttpResponse("")
 
 # TODO select profile avatar from edit profile
-# TODO Send email when Gift is created
 # TODO Sort out layout of Gift page
 # TODO Disable Interactions on Closed Gift
-# TODO set up social auth (Google + Facebook)
-# TODO Create separate email for existing user's invites
+
 
 # Maybe
 # TODO Captain must be able to change pledged values
+# TODO set up social auth (Google + Facebook)

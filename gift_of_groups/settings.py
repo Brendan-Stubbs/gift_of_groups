@@ -27,10 +27,12 @@ try:
     DEBUG = local_settings.DEBUG
     ENVIRONMENT = local_settings.ENVIRONMENT
     SECRET_KEY = local_settings.SECRET_KEY
+    DOMAIN_NAME = local_settings.DOMAIN_NAME
 except:
     DEBUG = True
     ENVIRONMENT = "local"
     SECRET_KEY = "fe1769t_=18)kl@p-hq97&id3l&r=c1zrn8zy#7!zv-2gtks0_"
+    DOMAIN_NAME = "http://127.0.0.1:8000"
 
 ALLOWED_HOSTS = ["giftly.pythonanywhere.com", "localhost", "127.0.0.1"]
 
