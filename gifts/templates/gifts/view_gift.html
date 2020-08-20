@@ -85,33 +85,9 @@
   </div>
   <!-- END User gift Details -->
 
-  <!-- Target Stuff -->
-  <div class="row">
+  <div class="row flex-container-on-large">
     <div id="target-details" class="col s12 m12 l6">
-      <!-- No gift selected -->
-      <div class="card-panel blue lighten-1">
-        {% if gift.chosen_gift %}
-        <h5 class="white-text center-align">{{gift.chosen_gift.title}}</h5>
-        <h6 class="white-text center-align">Target: R{{gift.chosen_gift.price|floatformat:2}}</h6>
-        <p class="white-text center-align">{{gift.chosen_gift.description}}</p>
-        {% else %}
-        <span class="white-text">No gift has been selected. Your Gift Captain will need to take care of this. In the meantime you can suggest and vote for your favourite gifts below.
-        </span>
-        {% endif %}
-
-        <!-- End no gift selected -->
-        <div class="col s12 m10 offset-m1">
-          <div class="progress gift-countdown">
-            <div class="determinate" style="width: {{gift.get_total_pledged_percentage}}%"></div>
-          </div>
-          <p class="center-align gift-countdown-text">R{{gift.get_total_pledged_amount|floatformat:2}} Pledged</p>
-          <div class="progress gift-countdown">
-            <div class="determinate" style="width: {{gift.get_total_contribution_percentage}}%"></div>
-          </div>
-          <p class="center-align gift-countdown-text">R{{gift.get_total_pledged_amount|floatformat:2}} Confirmed</p>
-        </div>
-        <div class="clearfix"></div>
-      </div>
+        {% include 'gifts/components/gift_progress_component.html' %}
     </div>
     <!-- End Target Stuff -->
 
@@ -119,7 +95,7 @@
     <div class="col s12 m12 l6">
       {% if not gift.captain %}
 
-      <div class="card blue lighten-1">
+      <div class="card blue lighten-1" style="height:100%;">
         <div class="card-content white-text">
           <div class="row valign-wrapper">
             <div class="col s2">
@@ -146,7 +122,7 @@
 
       {% else %}
 
-      <div class="card blue lighten-1">
+      <div class="card blue lighten-1" style="height:100%;">
         <div class="card-content white-text">
           <div class="row valign-wrapper">
             <div class="col s2">
@@ -159,12 +135,12 @@
             </div>
           </div>
           <h6 class="purple-text">Bank Details</h6>
-          <p>Name: {{gift.captain.profile.bank_account_name}}</p>
-          <p>Bank Name: {{gift.captain.profile.bank_name}}</p>
-          <p>Account Number: {{gift.captain.profile.bank_account_number}}</p>
-          <p>Branch: {{gift.captain.profile.bank_branch_name}}</p>
-          <p>Branch Code: {{gift.captain.profile.bank_branch_number}}</p>
-          <p>Account Type: {{gift.captain.profile.get_bank_account_type_display}}</p>
+          {% if gift.captain.profile.bank_account_name %}<p>Name: {{gift.captain.profile.bank_account_name}}</p>{% endif %}
+          {% if gift.captain.profile.bank_name %}<p>Bank Name: {{gift.captain.profile.bank_name}}</p>{% endif %}
+          {% if gift.captain.profile.bank_account_number %}<p>Account Number: {{gift.captain.profile.bank_account_number}}</p>{% endif %}
+          {% if gift.captain.profile.bank_branch_name %}<p>Branch: {{gift.captain.profile.bank_branch_name}}</p>{% endif %}
+          {% if gift.captain.profile.bank_branch_number %} <p>Branch Code: {{gift.captain.profile.bank_branch_number}}</p>{% endif %}
+          {% if gift.captain.profile.bank_account_type%}<p>Account Type: {{gift.captain.profile.get_bank_account_type_display}}</p>{% endif %}
         </div>
       </div>
       
@@ -175,30 +151,31 @@
   </div>
 
   <!-- Gift Suggestions -->
-  <div class="row">
+  <div class="row flex-container-on-large">
     <div class="col s12 m12 l6">
-      <h5 class="center-align">Gift Suggestions</h5>
 
       {% if gift_ideas|length > 0 %}
-      <ul id="ideas-collection" class="collection blue lighten-1 white-text">
-        {% for idea in gift_ideas %}
-        <li class="collection-item idea-item avatar blue lighten-1">
-          <span class="title">{{idea.title}}</span> 
-          <span class="amber-text">R{{idea.price|floatformat:2}}</span>
-          <p class="idea-description">{{idea.description}}</p>
-          <div class="secondary-content">
-            <i id="vote_button{{idea.id}}" {% if not idea.user_has_voted %} onclick="vote_for_gift_ajax('{{idea.id}}');"{% endif %} class="material-icons {% if not idea.user_has_voted %}white-text clickable{% else %} grey-text{% endif %}">thumb_up</i>
-            <span id="vote_counter{{idea.id}}"class="white-text">{{idea.votes.all.count}}</span>
-          </div>
-        </li>
-        {% endfor %}
-      </ul>
+      <div class="blue lighten-1 white-text card-panel" style="margin-top: 0; height:100%">
+        <h5 class="center-align">Gift Suggestions</h5>
+        <ul id="ideas-collection" class="collection">
+          {% for idea in gift_ideas %}
+          <li class="collection-item idea-item avatar blue lighten-1">
+            <span class="title">{{idea.title}}</span> 
+            <span class="amber-text">R{{idea.price|floatformat:2}}</span>
+            <p class="idea-description">{{idea.description}}</p>
+            <div class="secondary-content">
+              <i id="vote_button{{idea.id}}" {% if not idea.user_has_voted %} onclick="vote_for_gift_ajax('{{idea.id}}');"{% endif %} class="material-icons {% if not idea.user_has_voted %}white-text clickable{% else %} grey-text{% endif %}">thumb_up</i>
+              <span id="vote_counter{{idea.id}}"class="white-text">{{idea.votes.all.count}}</span>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
 
 
       {% else %}
-      <div class="row">
-        <div class="col s12">
-          <div class="card-panel purple lighten-2">
+          <div class="purple lighten-2 card-panel" style="margin-top: 0; height:100%;">
+            <h5 class="center-align white-text">Gift Suggestions</h5>
             <span class="white-text">No one has suggested a gift just yet.
               <br><br>
               Once there are suggestions available, your group will be able to vote for their favourite gift.
@@ -206,40 +183,39 @@
               Your group captain still has the final say!
             </span>
           </div>
-        </div>
-      </div>
       {% endif %}
     </div>
     <!-- End Gift Suggestions -->
 
     <!-- Gift Suggestion Form -->
     <div class="col s12 m12 l6">
-      <h5>Suggest a Gift</h5>
-      <form onsubmit="add_suggestion_ajax('{{gift.id}}', '{{user.id}}')" id="suggestionForm" method="POST" class="blue lighten-1 suggestion-form">
-        {% csrf_token %}
+      <div class="blue lighten-1 suggestion-form" style="height:100%">
+        <form onsubmit="add_suggestion_ajax('{{gift.id}}', '{{user.id}}')" id="suggestionForm" method="POST">
+          {% csrf_token %}
+          <h5 class="center white-text">Suggest a Gift</h5>
+          <ul class="messages">
+            <li id="suggestion-messages"></li>
+          </ul>
 
-        <ul class="messages">
-          <li id="suggestion-messages"></li>
-        </ul>
-
-        <div class="input-field">
-          {{ gift_idea_form.title }}
-          {{ gift_idea_form.title.label_tag }}
-        </div>
-        <div class="input-field">
-          {{ gift_idea_form.description.label_tag }}
-          {{ gift_idea_form.description }}
-        </div>
-        <div class="input-field">
-          {{ gift_idea_form.url }}
-          {{ gift_idea_form.url.label_tag }}
-        </div>
-        <div class="input-field">
-          {{ gift_idea_form.price }}
-          {{ gift_idea_form.price.label_tag }}
-        </div>
-        <button class="btn">Suggest</button>
-      </form>
+          <div class="input-field">
+            {{ gift_idea_form.title }}
+            {{ gift_idea_form.title.label_tag }}
+          </div>
+          <div class="input-field">
+            {{ gift_idea_form.description.label_tag }}
+            {{ gift_idea_form.description }}
+          </div>
+          <div class="input-field">
+            {{ gift_idea_form.url }}
+            {{ gift_idea_form.url.label_tag }}
+          </div>
+          <div class="input-field">
+            {{ gift_idea_form.price }}
+            {{ gift_idea_form.price.label_tag }}
+          </div>
+          <button class="btn">Suggest</button>
+        </form>
+      </div>
     </div>
     <!-- End Gift Suggestion Form -->
   </div>

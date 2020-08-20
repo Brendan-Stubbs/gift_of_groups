@@ -416,7 +416,11 @@ class UpdateUserGiftRelation(generic.View):
             form = GiftManagementUserForm(request.POST, instance=gift_relation)
             if form.is_valid():
                 instance = form.save()
-            return JsonResponse({})
+            context = {
+                "gift": gift_relation.gift,
+            }
+            gift_progress_component = render_to_string("gifts/components/gift_progress_component.html", context)
+            return JsonResponse({"gift_progress_component": gift_progress_component})
         except Exception as e:
             print(e)
             return JsonResponse({}, status=403)
@@ -553,12 +557,12 @@ class WebhookPatreon(generic.View):
                 profile.has_made_donation = True
                 profile.save()
         except:
-            sendgrid_helper.send_test_mail("error with patreon")
+            sendgrid_helper.send_json_mail("error with patreon", "Error")
         return HttpResponse("")
 
-# TODO select profile avatar from edit profile
 # TODO Sort out layout of Gift page
 # TODO Disable Interactions on Closed Gift
+# TODO sort out first gift suggestion submission (Section can't update)
 
 
 # Maybe

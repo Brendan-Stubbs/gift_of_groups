@@ -45,3 +45,9 @@ label {
 #target-details p{
     margin:0;
 }
+
+@media only screen and (min-width: 992px){
+    .flex-container-on-large{
+        display: flex;
+    }
+}

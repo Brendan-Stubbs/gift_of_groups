@@ -18,7 +18,6 @@ function vote_for_gift_ajax(idea_id){
 function invite_to_gift_ajax(gift_id){
     let data = new FormData(document.getElementById('non-group-form'));
     data.append('gift_id', gift_id)
-    alert("Hello")
 
     $.ajax({
         type: 'POST',
@@ -112,6 +111,7 @@ function ajax_update_user_gift_form(gift_relation_id){
         enctype: 'multipart/form-data',
         success: function(resp){
             $('#user_gift_detail_success').removeClass('hidden-message')
+            $('#target-details').empty().append(resp.gift_progress_component)
         },
         error: function(resp){
             alert("There was an error saving your changes, please refresh the page")
