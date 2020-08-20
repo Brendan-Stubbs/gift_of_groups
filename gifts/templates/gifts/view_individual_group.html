@@ -39,7 +39,16 @@
                     <!-- <i class="material-icons circle">folder</i> -->
                     <span class="title">{{member.first_name}} {{member.last_name}}</span>
                     <p>First Line</p>
-                </li>
+                    {% if member.is_admin %}<i class="material-icons secondary-content yellow-text tooltipped" data-position="right" data-tooltip="Admin">verified</i>
+                    {% elif user_is_admin %}
+                    <a href="{% url 'group_grant_admin' group_id=group.id user_id=member.id %}">
+                        <i class="material-icons secondary-content green-text tooltipped" data-position="right" data-tooltip="Make admin">add_circle</i>
+                    </a>
+                    {% else %}
+                    <i class="material-icons secondary-content teal-text">account_circle</i>
+                    {% endif %}
+
+                 </li>
                 {% endfor %}
             </ul>
             {% if group.standard_user_can_invite or user_is_admin %}

@@ -25,7 +25,7 @@ class Profile(models.Model):
     bank_branch_number = models.CharField(max_length=15, null=True, blank=True)
     bank_branch_name = models.CharField(max_length=50, null=True, blank=True)
     has_made_donation = models.BooleanField(default=False)
-    profile_pic = models.ForeignKey(ProfilePic, on_delete=models.SET_NULL, null=True)
+    profile_pic = models.ForeignKey(ProfilePic, on_delete=models.SET_NULL, null=True, blank=True)
 
     def get_profile_pic(self):
         if self.profile_pic:

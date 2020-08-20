@@ -12,7 +12,7 @@ from django.template.loader import render_to_string
 
 from gifts.utils import group_helper, sendgrid_helper
 from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm, GiftIdeaForm, GiftIdea, GiftManagementUserForm, GiftCommentForm
-from gifts.models import GiftGroup, GiftGroupInvitation, Gift, ContributorGiftRelation, GiftCommentNotification, Donation, Profile
+from gifts.models import GiftGroup, GiftGroupInvitation, Gift, ContributorGiftRelation, GiftCommentNotification, Donation, Profile, ProfilePic
 import json
 
 
@@ -23,11 +23,19 @@ class Index(generic.View):
 
 
 class EditProfile(generic.View):
+    free_pics = ProfilePic.objects.filter(is_premium=False)
+    premium_pics = ProfilePic.objects.filter(is_premium=True)
+
     def get(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect('/login/?next=%s' % request.path)
         form = ProfileForm(instance=request.user.profile)
-        context = {"form": form, "page_name": "edit_profile"}
+        context = {
+            "form": form, 
+            "page_name": "edit_profile",
+            "free_pics": self.free_pics,
+            "premium_pics": self.premium_pics
+        }
         return render(request, "gifts/edit_profile.html", context)
 
     def post(self, request, *arg, **kwargs):
@@ -40,7 +48,12 @@ class EditProfile(generic.View):
         else:
             messages.warning(
                 request, "There was an error saving your changes, please try again!")
-        context = {"form": form, "page_name": "edit_profile"}
+        context = {
+            "form": form,
+            "page_name": "edit_profile",
+            "free_pics": self.free_pics,
+            "premium_pics": self.premium_pics
+            }
         return render(request, "gifts/edit_profile.html", context)
 
 
@@ -479,6 +492,23 @@ class InviteToGift(generic.View):
             return JsonResponse({"message":message})
         except:
             return JsonResponse({}, status=403)
+
+class UpdateProfilePic(generic.View):
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            user = request.user
+            try:
+                profile_pic = ProfilePic.objects.get(pk=self.kwargs["id"])
+                if profile_pic.is_premium and not user.has_made_donation:
+                    pass
+                else:
+                    user.profile.profile_pic = profile_pic
+                    user.profile.save()
+                    return JsonResponse({"new_image":profile_pic.image})
+            except:
+                pass
+        return JsonResponse({}, status=403)
+
 
 @method_decorator(csrf_exempt, name="dispatch")
 class WebhookBuyMeACoffee(generic.View):
