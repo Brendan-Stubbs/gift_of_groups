@@ -360,13 +360,16 @@ class SuggestIdea(generic.View):
                 instance.suggested_by = user
                 instance.save()
 
+                gift_ideas = gift.get_all_gift_suggestions_with_vote_info(user)
+                gift_suggestion_component=render_to_string("gifts/components/gift_suggestions_component.html", {"gift_ideas":gift_ideas})
+
                 response = JsonResponse({
                     "title": instance.title,
                     "description": instance.description,
                     "id": instance.pk,
                     "price": instance.price,
-                    "message": "Suggestion submitted succesfully"
-
+                    "gift_suggestion_component": gift_suggestion_component,
+                    "message": "Suggestion submitted succesfully",
                 })
                 return response
 
@@ -452,6 +455,7 @@ class GetComments(generic.View):
             return JsonResponse(status=403)
         gift = Gift.objects.get(pk=self.kwargs.get("gift_id"))
         comments = gift.get_all_comments().values("id", "content", "created_at", first_name=F("poster__first_name"), last_name=F("poster__last_name")).order_by('created_at')
+        print(comments)
         return JsonResponse({"comments":list(comments)})
 
 class MarkNotificationsRead(generic.View):
@@ -563,6 +567,7 @@ class WebhookPatreon(generic.View):
 # TODO Sort out layout of Gift page
 # TODO Disable Interactions on Closed Gift
 # TODO sort out first gift suggestion submission (Section can't update)
+# TODO sort out profile pic on new comment (Probably with a component)
 
 
 # Maybe

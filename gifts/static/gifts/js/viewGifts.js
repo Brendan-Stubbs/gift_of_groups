@@ -54,7 +54,7 @@ function add_suggestion_ajax(gift_id, user_id){
         processData: false,
         enctype: 'multipart/form-data',
         success: function(resp){
-            add_new_suggestion_to_list(resp);
+            $('#giftSuggestions').empty().append(resp.gift_suggestion_component)
             $('#suggestion-messages').attr('class', 'green-text').text(resp.message)
             $('input', '#suggestionForm').val('');
             $('textarea', '#suggestionForm').val('');
@@ -64,21 +64,6 @@ function add_suggestion_ajax(gift_id, user_id){
             $('#suggestion-messages').attr('class', 'red-text').text("There was an error please ensure you are logged in");
         }
     })
-}
-
-function add_new_suggestion_to_list(resp){
-    $('#ideas-collection').append(`
-        <li class="collection-item idea-item avatar blue lighten-1">
-            <span class="title">${resp.title}</span>
-            <span class="amber-text">R${resp.price}</span>
-            <p class="idea-description">${resp.description}</p>
-            <div class="secondary-content">
-              <i id="vote_button${resp.id}" onclick="vote_for_gift_ajax('${resp.id}');" class="material-icons white-text clickable">thumb_up</i>
-              <span id="vote_counter${resp.id}"class="white-text">0</span>
-            </div>
-        </li>
-        `
-    )
 }
 
 function clearForm(form_id){
