@@ -46,7 +46,12 @@
       <div class="row">
           {% for pic in free_pics %}
           <div class="col s4 m3 l2">
-              <img onclick="change_profile_pic(self,'{{pic.id}}')" id="profilePic{{pic.id}}" src="{{pic.image}}" class="responsive-img circle" style="cursor: pointer;">
+              <img onclick="change_profile_pic(self,'{{pic.id}}')" id="profilePic{{pic.id}}" src="{{pic.image}}" class="responsive-img circle hoverable" style="cursor: pointer;">
+          </div>
+          {% endfor %}
+          {% for pic in premium_pics %}
+          <div class="col s4 m3 l2">
+              <img onclick="change_profile_pic(self,'{{pic.id}}')" id="profilePic{{pic.id}}" src="{{pic.image}}" class="responsive-img circle hoverable" style="cursor: pointer;">
           </div>
           {% endfor %}
       </div>

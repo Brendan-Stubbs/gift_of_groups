@@ -38,3 +38,9 @@ form {
 .pointer{
     cursor: pointer;
 }
+
+@media only screen and (min-width: 992px){
+    .flex-container-on-large{
+        display: flex;
+    }
+}

@@ -44,7 +44,7 @@
       <div class="col s12 m4">
         {% if request.user.is_authenticated %}
         <a href="{% url 'edit_profile' %}">
-          <div class="card-panel small">
+          <div class="card-panel small hoverable">
             <i class="fas fa-user-plus large teal-text"></i>
             <h4>Profile</h4>
             <p>Fill in your birthday, and let your group know where to pay</p>
@@ -52,7 +52,7 @@
         </a>
         {% else %}
         <a href="{% url 'register' %}">
-          <div class="card-panel small">
+          <div class="card-panel small hoverable">
             <i class="fas fa-user-plus large teal-text"></i>
             <h4>Register</h4>
             <p>Create an account and complete your profile to get get gifting</p>
@@ -62,7 +62,7 @@
       </div>
       <div class="col s12 m4">
         <a href="{% url 'view_groups' %}">
-          <div class="card-panel small">
+          <div class="card-panel small hoverable">
             <i class="fas fa-users large teal-text"></i>
             <h4>Groups</h4>
             <p>View your groups and invite your friends. Gifts will be set up automatically</p>
@@ -71,7 +71,7 @@
       </div>
       <div class="col s12 m4">
         <a href="{% url 'view_all_gifts' %}">
-          <div class="card-panel">
+          <div class="card-panel small hoverable">
             <i class="fas fa-gift large teal-text"></i>
             <h4>Gifts</h4>
             <p>

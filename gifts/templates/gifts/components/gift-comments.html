@@ -1,0 +1,17 @@
+{% if  gift.get_all_comments|length > 0 %}
+<ul class="collection" id="comment-list">
+  {% for comment in gift.get_all_comments %}
+  <li id="comment{{comment.id}}"class="collection-item avatar">
+    <img src="{{comment.poster.profile.get_profile_pic}}" alt="" class="circle">
+    <p>{{ comment.content }}.</p>
+    <small>{{comment.poster.first_name}} {{comment.poster.last_name}} {{comment.created_at}}</small>
+  </li>
+  {% endfor %}
+</ul>
+
+{% else %}
+<ul class="collection" id="comment-list">
+  <li class="collection-item center">
+    <p>The discussion had not yet been started. Be the first to leave a comment</p>
+  </li>
+{% endif %}

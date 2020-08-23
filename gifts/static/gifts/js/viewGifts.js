@@ -117,7 +117,7 @@ function ajax_post_comment(gift_id) {
         processData: false,
         enctype: 'multipart/form-data',
         success: function(resp){
-            update_comments(resp.comments)
+            $("#comment_list").empty().append(resp.comments_component)
             $('#id_content').val('');
         },
         error: function(resp){
@@ -139,31 +139,8 @@ function refresh_comments(gift_id) {
             $("#comments-refresh").show()
         }, 1000),
         success: function(resp){
-            update_comments(resp.comments)
+            $("#comment_list").empty().append(resp.comments_component)
         },
-    })
-}
-
-function update_comments(comments){
-    let existing_comments = []
-    $('#comment-list li').each(function(){
-        existing_comments.push(this.id);
-    })
-
-    comments.forEach(function(comment){
-        if (!existing_comments.includes(`comment${comment.id}`)){
-            let options = { year: 'numeric', month: 'short', day: 'numeric', hour: "2-digit", minute:"2-digit" };
-            comment.formatted_date = new Date(comment.created_at).toLocaleDateString("en-us", options)
-            $("#comment-list").prepend(
-                `
-                <li id="comment${comment.id}"class="collection-item avatar">
-                    <img src="/static/gifts/images/avatar_placeholder.png" alt="" class="circle">
-                    <p>${comment.content}.</p>
-                    <small>${comment.first_name} ${comment.last_name} ${comment.formatted_date}</small>
-                </li>
-                `
-            )
-        }
     })
 }
 

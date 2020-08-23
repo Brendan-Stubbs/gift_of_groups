@@ -216,15 +216,9 @@
         </div>
       </a>
     </form>
-    <ul class="collection" id="comment-list">
-      {% for comment in gift.get_all_comments %}
-      <li id="comment{{comment.id}}"class="collection-item avatar">
-        <img src="{{comment.poster.profile.get_profile_pic}}" alt="" class="circle">
-        <p>{{ comment.content }}.</p>
-        <small>{{comment.poster.first_name}} {{comment.poster.last_name}} {{comment.created_at}}</small>
-      </li>
-      {% endfor %}
-    </ul>
+    <div id="comment_list">
+    {% include 'gifts/components/gift-comments.html' %}
+    </div>
   </div>
 </div>
 <!-- End Comments Section -->
