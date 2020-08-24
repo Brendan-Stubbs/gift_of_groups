@@ -57,7 +57,7 @@
   {% endif %}
 
 
-
+  {% if not gift.is_complete %}
   <!-- User gift details -->
   <div class="row">
     <p id="user_gift_detail_success" class="hidden-message green-text">Updated Succesfully</p>
@@ -84,6 +84,7 @@
     </form>
   </div>
   <!-- END User gift Details -->
+  {% endif %}
 
   <div class="row flex-container-on-large">
     <div id="target-details" class="col s12 m12 l6">
@@ -229,7 +230,4 @@
 {% block end_scripts %}
 <script src="{% static 'gifts/js/viewGifts.js'%}"></script>
 {% endblock %}
-<script>
-  // $('body').css("background", "white")
-</script>
 {% endblock %}

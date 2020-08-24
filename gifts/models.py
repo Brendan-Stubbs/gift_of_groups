@@ -187,6 +187,12 @@ class Gift(models.Model):
     def get_all_comments(self):
         return GiftComment.objects.filter(gift=self).order_by('-created_at')
 
+    def get_contributor_count(self):
+        return len(ContributorGiftRelation.objects.filter(gift=self, participation_status="approved"))
+
+    def get_confirmed_payment_count(self):
+        return len(ContributorGiftRelation.objects.filter(gift=self, has_made_payment=True))
+
     def __unicode__(self):
         return "{} {} : {}".format(self.receiver.first_name, self.receiver.last_name, self.wrap_up_date.strftime("%d %b"))
 

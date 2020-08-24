@@ -560,14 +560,9 @@ class WebhookPatreon(generic.View):
                 profile = Profile.objects.get(user__email=email)
                 profile.has_made_donation = True
                 profile.save()
-        except:
-            sendgrid_helper.send_json_mail("error with patreon", "Error")
+        except Exception as e:
+            sendgrid_helper.send_json_mail("error with patreon", str(e))
         return HttpResponse("")
-
-# TODO Sort out layout of Gift page
-# TODO Disable Interactions on Closed Gift
-# TODO sort out first gift suggestion submission (Section can't update)
-# TODO sort out profile pic on new comment (Probably with a component)
 
 
 # Maybe

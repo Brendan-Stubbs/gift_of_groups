@@ -21,4 +21,9 @@
     <p class="center-align gift-countdown-text">R{{gift.get_total_pledged_amount|floatformat:2}} Confirmed</p>
   </div>
   <div class="clearfix"></div>
+  <div class="white-text center-align">
+    <br>
+    <p>People contributing: {{gift.get_contributor_count}}/{{gift.get_all_contributors|length}}</p>
+    <p>Confirmed Payments: {{gift.get_confirmed_payment_count}}</p>
+  </div>
 </div>
