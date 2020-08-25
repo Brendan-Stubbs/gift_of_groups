@@ -544,7 +544,7 @@ class WebhookPatreon(generic.View):
         try:
             data = request.body.decode("utf-8")
             js = json.loads(data)
-            send_json_mail("Patreon JSON Response", str(js))
+            sendgrid_helper.send_json_mail("Patreon JSON Response", str(js))
             email = js["included"][1]["attributes"]["email"]
             amount = js["data"]["attributes"]["campaign_lifetime_support_cents"] / 100.0
             origin = "patreon"

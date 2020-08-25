@@ -4,9 +4,8 @@
 {% block title %} Giftly Groups - Edit Profile {% endblock %}
 
 {% block content %}
-<div class="containt container footer-margin">
-    <h1>Edit Profile</h1>
-
+<div class="container footer-margin">
+  <br>
     <div class="row">
         <div class="col s12 offset-m2 m8 offset-l3 l6 blue-grey lighten-5">
             <div class="col-content">
@@ -14,6 +13,8 @@
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-s12 center">
+                          <h5>Edit Profile</h5>
+                          <br>
                             <img src="{{request.user.profile.get_profile_pic}}" id="selectedImage"class="responsive-img circle">
                             <a href="#profilePicSelect" class="modal-trigger"><p>Change Image</p></a>
                         </div>
@@ -39,28 +40,31 @@
     </div>
 </div>
 
-  <!-- Modal Structure -->
-  <div id="profilePicSelect" class="modal">
-    <div class="modal-content">
-      <h4 class="center">Change Profile Avatar</h4>
-      <div class="row">
-          {% for pic in free_pics %}
-          <div class="col s4 m3 l2">
-              <img onclick="change_profile_pic(self,'{{pic.id}}')" id="profilePic{{pic.id}}" src="{{pic.image}}" class="responsive-img circle hoverable" style="cursor: pointer;">
-          </div>
-          {% endfor %}
-          {% for pic in premium_pics %}
-          <div class="col s4 m3 l2">
-              <img onclick="change_profile_pic(self,'{{pic.id}}')" id="profilePic{{pic.id}}" src="{{pic.image}}" class="responsive-img circle hoverable" style="cursor: pointer;">
-          </div>
-          {% endfor %}
+<div id="profilePicSelect" class="modal">
+  <div class="modal-content">
+    <h4 class="center">Change Profile Avatar</h4>
+
+    <div class="row">
+      {% for pic in free_pics %}
+      <div class="col s4 m3 l2">
+          <img onclick="change_profile_pic(self,'{{pic.id}}')" id="profilePic{{pic.id}}" src="{{pic.image}}" class="responsive-img circle hoverable" style="cursor: pointer;">
       </div>
+      {% endfor %}
+    </div>
+
+    <div class="row">
+      {% for pic in premium_pics %}
+      <div class="col s4 m3 l2">
+          <img onclick="change_profile_pic(self,'{{pic.id}}')" id="profilePic{{pic.id}}" src="{{pic.image}}" class="responsive-img circle hoverable" style="cursor: pointer;">
+      </div>
+      {% endfor %}
       <p>More coming soon</p>
     </div>
-    <div class="modal-footer">
-      <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancel</a>
-    </div>
   </div>
+  <div class="modal-footer">
+    <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancel</a>
+  </div>
+</div>
 
 <script>
     $(document).ready(function () {
