@@ -34,7 +34,7 @@ except:
     SECRET_KEY = "fe1769t_=18)kl@p-hq97&id3l&r=c1zrn8zy#7!zv-2gtks0_"
     DOMAIN_NAME = "http://127.0.0.1:8000"
 
-ALLOWED_HOSTS = ["giftly.pythonanywhere.com", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["www.giftlygroups.com", "localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -104,7 +104,7 @@ DATABASES = {
     }
 }
 
-if ENVIRONMENT == "staging":
+if ENVIRONMENT == "live":
         DATABASES = local_settings.DATABASES
 
 
@@ -139,7 +139,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = "/static/"
-if ENVIRONMENT == "staging":
+if ENVIRONMENT == "live":
     STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 STATICFILES_DIRS = [
