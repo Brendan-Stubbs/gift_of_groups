@@ -11,8 +11,8 @@ from django.db.models import F
 from django.template.loader import render_to_string
 
 from gifts.utils import group_helper, sendgrid_helper
-from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm, GiftIdeaForm, GiftIdea, GiftManagementUserForm, GiftCommentForm
-from gifts.models import GiftGroup, GiftGroupInvitation, Gift, ContributorGiftRelation, GiftCommentNotification, Donation, Profile, ProfilePic
+from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm, GiftIdeaForm, GiftIdea, GiftManagementUserForm, GiftCommentForm, GroupCommentForm
+from gifts.models import GiftGroup, GiftGroupInvitation, Gift, ContributorGiftRelation, GiftCommentNotification, Donation, Profile, ProfilePic, GroupCommentNotification
 import json
 
 
@@ -166,7 +166,8 @@ class ViewIndividualGroup(generic.View):
         invitation_form = GiftGroupInvitationForm()
         active_gifts = group.get_group_gifts_for_user(user)
         group_gifts_component = render_to_string("gifts/components/group_gift_collection.html", {"active_gifts": active_gifts})
-
+        comment_form = GroupCommentForm()
+        
         context = {
             "members": members,
             "user_is_admin": user_is_admin,
@@ -174,6 +175,7 @@ class ViewIndividualGroup(generic.View):
             "invitation_form": invitation_form,
             "active_gifts": active_gifts,
             "group_gifts_component": group_gifts_component,
+            "comment_form": comment_form,
         }
         return render(request, "gifts/view_individual_group.html", context)
 
@@ -449,7 +451,6 @@ class PostGiftComment(generic.View):
         # comments = gift.get_all_comments().values("id", "content", "created_at", first_name=F("poster__first_name"), last_name=F("poster__last_name")).order_by('created_at')
         return JsonResponse({"comments_component":comments_component})
 
-
 class GetComments(generic.View):
     def get(self, request, *args, **kwargs):
         if not request.user.is_authenticated or not ContributorGiftRelation.objects.filter(gift__id=self.kwargs.get("gift_id"), contributor=request.user).exists():
@@ -458,12 +459,43 @@ class GetComments(generic.View):
         comments_component = render_to_string("gifts/components/gift-comments.html", {"gift":gift})
         return JsonResponse({"comments_component":comments_component})
 
+
+class PostGroupComment(generic.View):
+    def post(self, request, *args, **kwargs):
+        try:
+            group = GiftGroup.objects.get(pk=request.POST.get('group_id'))
+            if not request.user.is_authenticated or not request.user in group.users.all():
+                return JsonResponse({}, status=403)
+        except Exception as e:
+            print(e)
+            return JsonResponse({}, status=403)
+
+        comment_form = GroupCommentForm(request.POST)
+        instance = comment_form.save(commit=False)
+        instance.poster = request.user
+        instance.group = group
+        instance.save()
+
+        comments_component = render_to_string("gifts/components/group-comments.html", {"group":group})
+        return JsonResponse({"comments_component":comments_component})
+
+
+class GetGroupComments(generic.View):
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated or not request.user in GiftGroup.objects.get(id=self.kwargs.get("group_id")).users.all():
+            return JsonResponse(status=403)
+        group = GiftGroup.objects.get(pk=self.kwargs.get("group_id"))
+        comments_component = render_to_string("gifts/components/group-comments.html", {"group":group})
+        return JsonResponse({"comments_component":comments_component})
+
+
 class MarkNotificationsRead(generic.View):
     def get(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return JsonResponse({}, status=403)
-        notfications = GiftCommentNotification.objects.filter(user=request.user, read=False)
-        for notfication in notfications:
+        notifications = list(GiftCommentNotification.objects.filter(user=request.user, read=False))
+        notifications += list(GroupCommentNotification.objects.filter(user=request.user, read=False))
+        for notfication in notifications:
             notfication.read = True
             notfication.save()
         return JsonResponse({})
@@ -564,6 +596,8 @@ class WebhookPatreon(generic.View):
             sendgrid_helper.send_json_mail("error with patreon", str(e))
         return HttpResponse("")
 
+
+# TODO Include group comments in mark all as read
 
 # Maybe
 # TODO Captain must be able to change pledged values

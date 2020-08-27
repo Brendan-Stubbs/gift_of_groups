@@ -1,6 +1,6 @@
-{% if  gift.get_all_comments|length > 0 %}
+{% if  group.get_all_comments|length > 0 %}
 <ul class="collection" id="comment-list">
-  {% for comment in gift.get_all_comments %}
+  {% for comment in group.get_all_comments %}
   <li id="comment{{comment.id}}"class="collection-item avatar">
     <img src="{{comment.poster.profile.get_profile_pic}}" alt="" class="circle">
     <p>{{ comment.content }}.</p>

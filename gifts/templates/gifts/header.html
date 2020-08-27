@@ -24,9 +24,15 @@
   <li><a class="purple-text" onclick="mark_notifications_as_read();">Mark all as read<span class="material-icons right dropdown-icon" onclick="mark_notification_as_read(e);">mark_email_read</span></a></li>
   {% for notification in notifications %}
   <li id="notificationItem{{notification.id}}">
+    {% if notification.get_url_type == "gift" %}
       <a class="small-text-dropdown" href="{% url 'view_gift' notification.comment.gift.id %}#comment-section">{{ notification.comment }}
         <span class="material-icons right dropdown-icon">markunread</span>
       </a>
+    {% elif notification.get_url_type == "group" %}
+      <a class="small-text-dropdown" href="{% url 'view_individual_group' notification.comment.group.id %}#comment-section">{{ notification.comment }}
+        <span class="material-icons right dropdown-icon">markunread</span>
+      </a>
+    {% endif %}
   </li>
   {% endfor %}
 </ul>
@@ -35,7 +41,11 @@
   <li><a class="purple-text" onclick="mark_notifications_as_read();">Mark all as read<span class="material-icons right dropdown-icon" onclick="mark_notification_as_read(e);">mark_email_read</span></a></li>
   {% for notification in notifications %}
   <li id="notificationItem{{notification.id}}">
-      <a class="small-text-dropdown" href="{% url 'view_gift' notification.comment.gift.id %}#comment-section">{{ notification.comment }}</a>
+      {% if notification.get_url_type == "gift" %}
+        <a class="small-text-dropdown" href="{% url 'view_gift' notification.comment.gift.id %}#comment-section">{{ notification.comment }}</a>
+      {% elif notification.get_url_type == "group" %}
+        <a class="small-text-dropdown" href="{% url 'view_individual_group' notification.comment.group.id %}#comment-section">{{ notification.comment }}</a>
+      {% endif %}
   </li>
   {% endfor %}
 </ul>
@@ -95,7 +105,7 @@
         <li id="notifications-nav">
           <a id="notification_drop_trigger" class="dropdown-trigger" href="#!" data-target="notificationDropdown">Notifications<i
               class="material-icons right">arrow_drop_down</i>
-            <span id="invitationCounter" class="new badge">{{notifications.count}}</span></a>
+            <span id="invitationCounter" class="new badge">{{notifications|length}}</span></a>
         </li>
         {% endif %}
       </ul>
@@ -130,7 +140,7 @@
     <li id="notfications-nav-mobile">
       <a class="dropdown-trigger" href="#!" data-target="notificationDropdownMobile">Notifications<i
           class="material-icons right">arrow_drop_down</i>
-        <span id="invitationCounter" class="new badge">{{notifications.count}}</span></a>
+        <span id="invitationCounter" class="new badge">{{notifications|length}}</span></a>
     </li>
     {% endif %}
 

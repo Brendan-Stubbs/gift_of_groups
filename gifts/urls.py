@@ -23,8 +23,12 @@ urlpatterns = [
     path("ajax/add_gift_suggestion/", views.SuggestIdea.as_view(), name="suggest_gift_idea"),
     path("ajax/update_user_gift_relation/", views.UpdateUserGiftRelation.as_view(), name="update_user_gift_relation"),
     path("ajax/post_gift_comment/<int:gift_id>/", views.PostGiftComment.as_view(), name="post_gift_comment"),
+    path("ajax/post_group_comment/<int:group_id>/", views.PostGroupComment.as_view(), name="post_group_comment"),
+
     path("ajax/mark_notifications_read/", views.MarkNotificationsRead.as_view(), name="mark_notfications_read"),
     path("ajax/get_comments/<int:gift_id>/", views.GetComments.as_view(), name="get_comments"),
+    path("ajax/get_group_comments/<int:group_id>/", views.GetGroupComments.as_view(), name="get_group_comments"),
+
     path("ajax/refresh_gifts/<int:id>/", views.RefreshGifts.as_view(), name="refresh_gifts"),
     path("ajax/invite_to_gift/<int:id>/", views.InviteToGift.as_view(), name="invite_to_gift"),
     path("ajax/update_profile_pic/<int:id>", views.UpdateProfilePic.as_view(), name="update_profile_pic"),

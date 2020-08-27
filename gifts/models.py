@@ -62,7 +62,8 @@ class GiftGroup(models.Model):
     days_to_notify = models.IntegerField(default=14)
     icon = models.CharField(max_length=30, default="fas fa-users", choices=group_helper.ICON_CHOICES)
 
-
+    def get_all_comments(self):
+        return GroupComment.objects.filter(group=self).order_by('-created_at')
 
     def create_invitation(self, inviter, invitee_email):
         if not GiftGroupInvitation.objects.filter(gift_group=self, invitee=invitee_email, status=GiftGroupInvitation.STATUS_PENDING).exists() and not invitee in self.users.all():
@@ -264,10 +265,41 @@ def create_gift_notification(sender, instance, created, **kwargs):
             GiftCommentNotification.objects.create(user=relation.contributor, comment=instance)
 
 
+class GroupComment(models.Model):
+    group = models.ForeignKey(GiftGroup, on_delete=models.CASCADE)
+    content = models.TextField()
+    poster = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return "{} commented in {}".format(self.poster.first_name, self.group.name)
+
+    def __str__(self):
+        return self.__unicode__()
+
+@receiver(post_save, sender=GroupComment)
+def create_group_notification(sender, instance, created, **kwargs):
+    if created:
+        group_members = instance.group.users.all().exclude(id=instance.poster.id)
+        for member in group_members:
+            GroupCommentNotification.objects.create(user=member, comment=instance)
+
+
 class GiftCommentNotification(models.Model):
     comment = models.ForeignKey(GiftComment, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     read = models.BooleanField(default=False)
+
+    def get_url_type(self):
+        return "gift"
+
+class GroupCommentNotification(models.Model):
+    comment = models.ForeignKey(GroupComment, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    read = models.BooleanField(default=False)
+
+    def get_url_type(self):
+        return "group"
 
 
 class Donation(models.Model):
