@@ -215,12 +215,12 @@ class GrantAdminAccess(generic.View):
             return redirect('/login/?next=%s' % request.path)
         if (
             not GiftGroup.objects.filter(id=self.kwargs["group_id"]).exists()
-            or not User.objects.filter(id=self.kwargs["profile_id"]).exists()
+            or not User.objects.filter(id=self.kwargs["user_id"]).exists()
         ):
             return redirect("groups")
         user = request.user
         group = GiftGroup.objects.get(id=self.kwargs["group_id"])
-        selected_user = User.objects.get(id=self.kwargs["profile_id"])
+        selected_user = User.objects.get(id=self.kwargs["user_id"])
         if user in group.admins.all():
             group.admins.add(selected_user)
             group.save()

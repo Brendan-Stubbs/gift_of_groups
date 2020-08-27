@@ -39,8 +39,33 @@ form {
     cursor: pointer;
 }
 
+.flex-fix-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start !important;
+    flex-wrap: wrap !important;
+}
+
+.flex-fix-column {
+    padding: 4px;
+    flex-basis: 50%;
+}
+
+
+/*Medium*/
+@media only screen and (min-width: 600px) {
+    .flex-fix-column {
+        flex-basis: 20%;
+    }
+}
+
+/*Large*/
 @media only screen and (min-width: 992px){
     .flex-container-on-large{
         display: flex;
+    }
+
+    .flex-fix-column {
+        flex-basis: 16.4%;
     }
 }

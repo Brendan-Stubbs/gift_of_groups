@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from uac import views as uac_views
+from django.views.generic.base import TemplateView
 
 
 urlpatterns = [
@@ -24,4 +25,7 @@ urlpatterns = [
     path("", include("django.contrib.auth.urls")),
     path("", include("gifts.urls")),
     path("oauth/", include("social_django.urls", namespace="social")),
+    path("robots.txt", TemplateView.as_view(template_name="gifts/robots.txt", content_type="text/plain"),),
+    path("sitemap.xml", TemplateView.as_view(template_name="gifts/sitemaps.xml", content_type="text/xml"),),
+
 ]

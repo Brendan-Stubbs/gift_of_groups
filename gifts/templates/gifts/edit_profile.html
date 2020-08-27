@@ -43,9 +43,9 @@
 <div id="profilePicSelect" class="modal">
   <div class="modal-content">
     <h4 class="center">Change Profile Avatar</h4>
-    <div class="row">
+    <div class="row flex-fix-row">
       {% for pic in free_pics %}
-      <div class="col s4 m3 l2">
+      <div class="flex-fix-column">
         <img onclick="change_profile_pic(self,'{{pic.id}}')" id="profilePic{{pic.id}}" src="{{pic.image}}" class="responsive-img circle hoverable" style="cursor: pointer;">
       </div>
       {% endfor %}
