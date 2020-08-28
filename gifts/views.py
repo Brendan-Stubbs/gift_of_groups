@@ -597,7 +597,6 @@ class WebhookPatreon(generic.View):
         return HttpResponse("")
 
 
-# TODO Add CronJobs on Production
 # TODO Setup Favicon
 
 # Maybe
