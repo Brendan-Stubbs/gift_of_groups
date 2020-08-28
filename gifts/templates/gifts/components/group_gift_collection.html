@@ -1,5 +1,24 @@
-    <p>Gifts</p>
-    <ul class="collection">
+    <ul class="collection white">
+        <div class="center-align">
+          <li class="collection-header center-align"><h4>Active Gifts</h4></li>
+          <a onclick="refresh_gifts_ajax('{{group.id}}')" class="btn green tooltipped" data-position="bottom" data-tooltip="Check for new gifts. This will be done for you every 24 hours">
+              <i id="gift-refresh" class="material-icons left">refresh</i>
+          <!-- Spinner -->
+                <div style="display:none;" id="gift-collection-loading" class="preloader-wrapper small active">
+                  <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                      <div class="circle"></div>
+                    </div><div class="gap-patch">
+                      <div class="circle"></div>
+                    </div><div class="circle-clipper right">
+                      <div class="circle"></div>
+                    </div>
+                  </div>
+                </div>
+            <!-- End Spinner -->
+              Refresh Gifts
+          </a>
+      </div>
         {% if not active_gifts %}
             <li class="collection-item">
                 <p>You don't have any active gifts</p>

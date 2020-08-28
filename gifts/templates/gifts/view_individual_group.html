@@ -5,34 +5,24 @@
 
 <div class="content container">
 
-    <h1>{{group.name}}</h1>
+    <h1 class="center-align"><i class="{{group.icon}} site-purple"></i> {{group.name}}</h1>
 
-    {% if user_is_admin %}
-    <a href="{% url 'edit_group' group.id %}"><button class="btn orange">Edit</button></a>
-    {% endif %}
-    <a href="{% url 'leave_group' group.id %}"><button class="btn red">Leave group</button></a>
-    <a onclick="refresh_gifts_ajax('{{group.id}}')" class="btn green right tooltipped" data-position="bottom" data-tooltip="Check for new gifts. This will be done for you every 24 hours">
-        <i id="gift-refresh" class="material-icons left">refresh</i>
-    <!-- Spinner -->
-          <div style="display:none;" id="gift-collection-loading" class="preloader-wrapper small active">
-            <div class="spinner-layer spinner-blue-only">
-              <div class="circle-clipper left">
-                <div class="circle"></div>
-              </div><div class="gap-patch">
-                <div class="circle"></div>
-              </div><div class="circle-clipper right">
-                <div class="circle"></div>
-              </div>
-            </div>
-          </div>
-      <!-- End Spinner -->
-        Refresh Gifts
-    </a>
+    <div class="center-align">
+      {% if user_is_admin %}
+      <a href="{% url 'edit_group' group.id %}"><button class="btn orange">Edit Group</button></a>
+      {% endif %}
+      <a href="{% url 'leave_group' group.id %}"><button class="btn red">Leave group</button></a>
+  </div>
 
     <div class="row">
-        <div class="col s12 offset-m2 m8 l7">
-            <p>Members</p>
-            <ul class="collection">
+        <div class="col s12 offset-m2 m8" id="gifts-collection">
+            {{group_gifts_component}}
+        </div>
+
+    <div class="row">
+        <div class="col s12 offset-m2 m8">
+            <ul class="collection white">
+              <li class="collection-header center-align"><h4>Group Members</h4></li>
                 {% for member in members %}
                 <li class="collection-item avatar">
                     <img src="{{member.profile.get_profile_pic}}" alt="" class="circle">
@@ -65,11 +55,7 @@
             </form>
             {% endif %}
         </div>
-
-        <div class="col s12 offset-m2 m8 l5" id="gifts-collection">
-            {{group_gifts_component}}
-        </div>
-
+      </div>
     </div>
 
 <!-- Comments section -->

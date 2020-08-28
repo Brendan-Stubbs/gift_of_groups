@@ -597,7 +597,8 @@ class WebhookPatreon(generic.View):
         return HttpResponse("")
 
 
-# TODO Include group comments in mark all as read
+# TODO Add CronJobs on Production
+# TODO Setup Favicon
 
 # Maybe
 # TODO Captain must be able to change pledged values

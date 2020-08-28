@@ -6,8 +6,10 @@
 
 {% block content %}
 <div class="content container">
-  <h1>{{gift.receiver.first_name}}</h1>
-  <h4>{{gift.receiver.profile.birth_date}}</h4>
+  <div class="center-align">
+    <h1>{{gift.receiver.first_name}}</h1>
+    <h4><i class="material-icons circle pink-text">cake</i> {{gift.receiver.profile.birth_date|date:"d F"}}</h4>
+  </div>
 
   {% if user == captain %}
   <div class="row">
