@@ -27,7 +27,6 @@
                 <li class="collection-item avatar">
                     <img src="{{member.profile.get_profile_pic}}" alt="" class="circle">
                     <span class="title">{{member.first_name}} {{member.last_name}}</span>
-                    <p>First Line</p>
                     {% if member.is_admin %}<i class="material-icons secondary-content yellow-text tooltipped" data-position="right" data-tooltip="Admin">verified</i>
                     {% elif user_is_admin %}
                     <a href="{% url 'group_grant_admin' group_id=group.id user_id=member.id %}">
