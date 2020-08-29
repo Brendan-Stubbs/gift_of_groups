@@ -596,6 +596,7 @@ class WebhookPatreon(generic.View):
             sendgrid_helper.send_json_mail("error with patreon", str(e))
         return HttpResponse("")
 
+# TODO Create a Once Off Gift
 
 # Maybe
 # TODO Captain must be able to change pledged values

@@ -13,5 +13,6 @@ function set_dummy_bank_details(){
     $('#id_bank_account_name').val("Contact me for details");
     $('#id_bank_name').val("Contact me for details");
     $('#id_bank_account_number').val("0000");
+    M.updateTextFields();
 
 };
