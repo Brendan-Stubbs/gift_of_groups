@@ -37,12 +37,12 @@ class ProfileForm(forms.ModelForm):
         fields = ["birth_date", "bank_account_name", "bank_name", "bank_account_number",
                   "bank_branch_name", "bank_branch_number", "bank_account_type"]
         labels = {
-            "bank_account_name": "Account Name",
-            "bank_name": "Bank Name",
-            "bank_account_number": "Account Number",
-            "bank_branch_name": "Branch Name",
-            "bank_branch_number": "Branch Number",
-            "bank_account_type": "Bank Account Type",
+            "bank_account_name": "Account Name(Optional)",
+            "bank_name": "Bank Name(Optional)",
+            "bank_account_number": "Account Number(Optional)",
+            "bank_branch_name": "Branch Name(Optional)",
+            "bank_branch_number": "Branch Number(Optional)",
+            "bank_account_type": "Bank Account Type(Optional)",
         }
 
     birth_date = forms.DateField(

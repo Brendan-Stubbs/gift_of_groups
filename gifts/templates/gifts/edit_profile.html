@@ -27,12 +27,38 @@
                         {% endfor %}
                     </ul>
                     {% endif %}
-                    {% for field in form %}
                     <div class="input-field">
-                        {{field}}
-                        {{field.label_tag}}
+                      {{form.birth_date}}
+                      {{form.birth_date.label_tag}}
                     </div>
-                    {% endfor %}
+                    <div class="center-align">
+                      <p><strong>Bank Account Details:</strong><br> <span class="small-text">These are optional, and will only be shown to those you are expecting money from</span></p>
+                    <a class="btn center-align" onclick="set_dummy_bank_details();">I'd prefer not to give my bank details</a></div>
+                    <br>
+                    <div class="input-field">
+                      {{form.bank_account_name}}
+                      {{form.bank_account_name.label_tag}}
+                    </div>
+                    <div class="input-field">
+                      {{form.bank_name}}
+                      {{form.bank_name.label_tag}}
+                    </div>
+                    <div class="input-field">
+                      {{form.bank_account_number}}
+                      {{form.bank_account_number.label_tag}}
+                    </div>
+                    <div class="input-field">
+                      {{form.bank_branch_name}}
+                      {{form.bank_branch_name.label_tag}}
+                    </div>
+                    <div class="input-field">
+                      {{form.bank_branch_number}}
+                      {{form.bank_branch_number.label_tag}}
+                    </div>
+                    <div class="input-field">
+                      {{form.bank_account_type}}
+                      {{form.bank_account_type.label_tag}}
+                    </div>
                     <button type="submit" class="btn btn-success">Save Changes</button>
                 </form>
             </div>

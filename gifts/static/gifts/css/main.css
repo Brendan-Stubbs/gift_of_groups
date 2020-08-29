@@ -51,6 +51,10 @@ form {
     flex-basis: 50%;
 }
 
+span.small-text{
+    font-size: 13px;
+}
+
 
 /*Medium*/
 @media only screen and (min-width: 600px) {

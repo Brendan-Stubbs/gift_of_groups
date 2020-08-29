@@ -597,8 +597,6 @@ class WebhookPatreon(generic.View):
         return HttpResponse("")
 
 
-# TODO Setup Favicon
-
 # Maybe
 # TODO Captain must be able to change pledged values
 # TODO set up social auth (Google + Facebook)
