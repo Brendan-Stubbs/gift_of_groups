@@ -15,13 +15,31 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from uac import views as uac_views
 from django.views.generic.base import TemplateView
+from django.contrib.auth import views as auth_views
+
+from uac import views as uac_views
 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("register/", uac_views.Register.as_view(), name="register"),
+
+    path("reset_password/",
+        auth_views.PasswordResetView.as_view(template_name="password_management/password_reset.html"),
+        name="reset_password"),
+
+    path("password_reset/done/",
+        auth_views.PasswordResetDoneView.as_view(template_name="password_management/password_reset_sent.html"), 
+        name="password_reset_done"),
+
+    path("reset/<uidb64>/<token>/",
+        auth_views.PasswordResetConfirmView.as_view(template_name="password_management/password_reset_form.html"), name="password_reset_confirm"),
+
+    path('reset/done/',
+        auth_views.PasswordResetCompleteView.as_view(template_name="password_management/password_reset_complete.html"), 
+        name="password_reset_complete"),
+
     path("", include("django.contrib.auth.urls")),
     path("", include("gifts.urls")),
     path("oauth/", include("social_django.urls", namespace="social")),

@@ -159,3 +159,14 @@ MESSAGE_TAGS = {
     30: 'red-text',
     25: 'green-text'
 }
+
+try:
+    EMAIL_HOST_USER = 'apikey'
+    EMAIL_HOST_PASSWORD = local_settings.SENDGRID_API_KEY
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = 'smtp.sendgrid.net'
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    DEFAULT_FROM_EMAIL = local_settings.DEFAULT_FROM_EMAIL
+except:
+    "Add email settings in local_settings.py"
