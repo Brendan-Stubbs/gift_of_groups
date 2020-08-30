@@ -4,7 +4,9 @@ from django.db.models.signals import post_save, m2m_changed
 from django.db.models import Count, Sum
 from django.dispatch import receiver
 from django.utils import timezone
+from django.utils.crypto import get_random_string
 from gifts.utils import datehelper, group_helper, sendgrid_helper
+
 
 class ProfilePic(models.Model):
     image = models.URLField()
@@ -47,6 +49,7 @@ class Profile(models.Model):
     def __str__(self):
         return self.__unicode__()
 
+
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
@@ -75,7 +78,7 @@ class GiftGroup(models.Model):
         group_gifts = ContributorGiftRelation.objects.filter(gift__gift_group=self, gift__is_complete=False, contributor=user).exclude(gift__receiver=user)
         return [x.gift for x in group_gifts]
 
-    def create_gift_relation_for_group(self,user):
+    def create_gift_relation_for_group(self, user):
         active_gifts = Gift.objects.filter(gift_group=self, is_complete=False).exclude(receiver=user)
         for gift in active_gifts:
             if not ContributorGiftRelation.objects.filter(contributor=user, gift=gift).exists():
@@ -100,6 +103,13 @@ class GiftGroup(models.Model):
         # elif action == 'post_remove':
         #     instance.remove_gift_relation_for_group(user)
 
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            super(GiftGroup, self).save(*args, **kwargs)
+            GroupInvitationLink.objects.create(group=self)
+        else:
+            super(GiftGroup, self).save(*args, **kwargs)
+        
 
     def __unicode__(self):
         return self.name
@@ -107,7 +117,25 @@ class GiftGroup(models.Model):
     def __str__(self):
         return self.__unicode__()
 
-m2m_changed.connect(GiftGroup.manage_user_change, sender=GiftGroup.users.through)
+
+m2m_changed.connect(GiftGroup.manage_user_change,
+                    sender=GiftGroup.users.through)
+
+
+class GroupInvitationLink(models.Model):
+    group = models.OneToOneField(GiftGroup, on_delete=models.CASCADE)
+    code = models.CharField(max_length=32, unique=True)
+
+    def create_unique_code(self):
+        random_code = get_random_string(32)
+        while GroupInvitationLink.objects.filter(code=random_code).exists():
+            random_code = get_random_string(32)
+        return random_code
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.code = self.create_unique_code()
+        super(GroupInvitationLink, self).save(*args, **kwargs)
 
 
 class GiftGroupInvitation(models.Model):
@@ -200,6 +228,7 @@ class Gift(models.Model):
     def __str__(self):
         return self.__unicode__()
 
+
 @receiver(post_save, sender=Gift)
 def populate_gift_relations(sender, instance, created, **kwargs):
     if created:
@@ -221,6 +250,7 @@ class GiftIdea(models.Model):
     def __str__(self):
         return self.__unicode__()
 
+
 class ContributorGiftRelation(models.Model):
     PARICIPATION_CHOICES = (
         ("approved", "Yes, I will be contributing!"),
@@ -229,7 +259,7 @@ class ContributorGiftRelation(models.Model):
 
     contributor = models.ForeignKey(User, on_delete=models.CASCADE)
     gift = models.ForeignKey(Gift, on_delete=models.CASCADE)
-    contribution = models.FloatField(default = 0)
+    contribution = models.FloatField(default=0)
     has_made_payment = models.BooleanField(default=False)
     payment_has_cleared = models.BooleanField(default=False)
     participation_status = models.CharField(max_length=15, null=True, blank=True, choices=PARICIPATION_CHOICES, default=None)
@@ -257,6 +287,7 @@ class GiftComment(models.Model):
     def __str__(self):
         return self.__unicode__()
 
+
 @receiver(post_save, sender=GiftComment)
 def create_gift_notification(sender, instance, created, **kwargs):
     if created:
@@ -277,6 +308,7 @@ class GroupComment(models.Model):
     def __str__(self):
         return self.__unicode__()
 
+
 @receiver(post_save, sender=GroupComment)
 def create_group_notification(sender, instance, created, **kwargs):
     if created:
@@ -292,6 +324,7 @@ class GiftCommentNotification(models.Model):
 
     def get_url_type(self):
         return "gift"
+
 
 class GroupCommentNotification(models.Model):
     comment = models.ForeignKey(GroupComment, on_delete=models.CASCADE)
