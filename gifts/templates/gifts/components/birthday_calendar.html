@@ -1,0 +1,47 @@
+{% extends 'gifts/base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<style>
+  .birthday {
+    background-color: rgba(3, 248, 252, 0.4);
+    border: 3px solid rgba(3, 248, 252, 0.4);
+    border-radius: 50%;
+  }
+
+  .calendar td {
+    text-align: center;
+  }
+</style>
+
+<div class="row">
+  <div class="col l6 card-panel">
+    <table class="calendar">
+      <tr>
+        <td>S</td>
+        <td>M</td>
+        <td>T</td>
+        <td>W</td>
+        <td>T</td>
+        <td>F</td>
+        <td>S</td>
+      </tr>
+      <tr>
+        <td>01</td>
+        <td>02</td>
+        <td> <span class="birthday">03</span></td>
+        <td>04</td>
+        <td>05</td>
+        <td>06</td>
+        <td>07</td>
+      </tr>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block end_scripts %}
+<script src="{% static 'gifts/js/calendar.js' %}"></script>
+{% endblock %}

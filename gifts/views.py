@@ -639,7 +639,14 @@ class WebhookPatreon(generic.View):
             sendgrid_helper.send_json_mail("error with patreon", str(e))
         return HttpResponse("")
 
+class TestCalendar(generic.View):
+    def get(self,request, *args, **kwargs):
+        return render(request, "gifts/components/birthday_calendar.html", {})
+
+
 # TODO Create a Once Off Gift
+# TODO Birthday Calendar
+# TODO Group invite link
 
 # Maybe
 # TODO Captain must be able to change pledged values
