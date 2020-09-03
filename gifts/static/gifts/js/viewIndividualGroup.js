@@ -1,8 +1,7 @@
 function refresh_gifts_ajax(group_id){
-
     $.ajax({
         type: 'GET',
-        url: `/ajax/refresh_gifts/${group_id}`,
+        url: `/ajax/refresh_gifts/${group_id}/`,
         beforeSend: function(){
             $("#gift-refresh").hide()
             $("#gift-collection-loading").show()

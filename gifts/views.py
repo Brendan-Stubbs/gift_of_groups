@@ -171,7 +171,7 @@ class ViewIndividualGroup(generic.View):
         invitation_form = GiftGroupInvitationForm()
         active_gifts = group.get_group_gifts_for_user(user)
         group_gifts_component = render_to_string(
-            "gifts/components/group_gift_collection.html", {"active_gifts": active_gifts})
+            "gifts/components/group_gift_collection.html", {"active_gifts": active_gifts, "group":group})
         comment_form = GroupCommentForm()
 
         context = {
@@ -318,7 +318,7 @@ class ViewGift(generic.View):
         birthday_has_passed = timezone.now().date() > gift.wrap_up_date
         comment_form = GiftCommentForm()
         captain_management_component = render_to_string(
-            "gifts/components/captain_gift_management.html", {"gift_relations": gift_relations})
+            "gifts/components/captain_gift_management.html", {"gift_relations": gift_relations, "group":group})
 
         context = {
             "gift": gift,
@@ -547,7 +547,7 @@ class RefreshGifts(generic.View):
             group.create_upcoming_gifts()
             active_gifts = group.get_group_gifts_for_user(request.user)
             group_gifts_component = render_to_string(
-                "gifts/components/group_gift_collection.html", {"active_gifts": active_gifts})
+                "gifts/components/group_gift_collection.html", {"active_gifts": active_gifts, "group":group})
             return JsonResponse({"group_gifts_component": group_gifts_component})
         except Exception as e:
             print(e)
