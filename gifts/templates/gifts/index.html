@@ -1,11 +1,15 @@
 {% extends 'gifts/base.html'%} {% block title %} Giftly Groups {% endblock %}
-{%load static %} {% block head_links %} {% endblock %} {% block content %}
+{%load static %}
+{% block head_links %}
+<meta name="description" content="A tool to help you organise gifts and remember birthday presents for your friends.">
+{% endblock %} 
+{% block content %}
 
 <!-- Section: Slider -->
 <div class="slider">
   <ul class="slides">
     <li>
-      <img src="{% static 'gifts/images/header-image.jpg' %}" />
+      <img src="{% static 'gifts/images/header-image.jpg' %}" alt="header-image" />
       <div class="caption center-align">
         <h3 class="black-text">Go the extra mile</h3>
         <h6 class="light black-text text-lighten-1 hide-on-small-only">
@@ -94,7 +98,7 @@
       <div class="col s12 m4">
         <div class="card small">
           <div class="card-image">
-            <img src="{% static 'gifts/images/gift-purple.jpg'%}" alt="" />
+            <img src="{% static 'gifts/images/gift-purple.jpg'%}" alt="setup" />
             <span class="card-title black-text">Setup</span>
           </div>
           <div class="card-content">
@@ -106,7 +110,7 @@
       <div class="col s12 m4">
         <div class="card small">
           <div class="card-image">
-            <img src="{% static 'gifts/images/gift-holding.jpg'%}" alt="" />
+            <img src="{% static 'gifts/images/gift-holding.jpg'%}" alt="gifting" />
             <span class="card-title white-text">Gifting</span>
           </div>
           <div class="card-content">
@@ -118,7 +122,7 @@
       <div class="col s12 m4">
         <div class="card small">
           <div class="card-image">
-            <img src="{% static 'gifts/images/gift-green.jpg'%}" alt="" />
+            <img src="{% static 'gifts/images/gift-green.jpg'%}" alt="donate" />
             <span class="card-title white-text">Donate</span>
           </div>
           <div class="card-content">
