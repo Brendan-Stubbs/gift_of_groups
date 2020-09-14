@@ -11,6 +11,10 @@
     border-radius: 50%;
   }
 
+  .inline-icon{
+    vertical-align: bottom;
+  }
+
   .calendar td {
     text-align: center;
   }
@@ -19,6 +23,11 @@
 <div class="row">
   <div class="col l6 card-panel">
     <table class="calendar">
+      <div class="center-align">
+        <button id="left-button"><i class="material-icons inline-icon">keyboard_arrow_left</i></button>
+        <span id="monthName"></span>
+        <button id="right-button"><i class="material-icons inline-icon">keyboard_arrow_right</i></button>
+      </div>
       <tr>
         <td>S</td>
         <td>M</td>
