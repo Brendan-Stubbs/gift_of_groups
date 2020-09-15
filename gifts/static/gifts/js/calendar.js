@@ -1,7 +1,7 @@
 let current_displayed_month = new Date().getMonth()
 let months_from_now = 0;
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-var dayPerMonth = ["31", ""+FebNumberOfDays+"","31","30","31","30","31","31","30","31","30","31"];
+let dayPerMonth = ["31", get_feb_number_of_days(),"31","30","31","30","31","31","30","31","30","31"];
 
 function increment_month() {
     if (months_from_now < 11) {
@@ -18,6 +18,18 @@ function decrement_month() {
         check_buttons();
     }
 }
+
+function get_feb_number_of_days(){
+    today = new Date()
+    year = today.getFullYear()
+    if (today.getMonth() >= 1){
+        year += 1;
+    }
+    if((year%100!=0) && (year%4==0) || (year%400==0)){
+        return '29'
+     }
+     return '28'
+ }
 
 function disable_button(id) {
     $(`#${id}`).prop('disabled', true)
@@ -38,9 +50,20 @@ function check_buttons() {
     }
 }
 
+function populate_calendar_with_month(month) {
+    let year_to_display = new Date().getFullYear()
+    if (month > 11){year_to_display ++;}
+    month = month % 11
+    let total_days = new Date(year_to_display, month + 1, 0).getDate()
+    let starting_weekday = new Date(year_to_display, month, 1).getDay()
+    let calendarContent = ""
+}
+
 $(document).ready(function () {
     $('#monthName').text(monthNames[current_displayed_month])
     $("#right-button").click(increment_month)
     $("#left-button").click(decrement_month)
     check_buttons()
+
+    populate_calendar_with_month(new Date().getMonth())
 });
