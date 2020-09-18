@@ -1,0 +1,39 @@
+{% load static %}
+
+<table class="calendar" id="calendar">
+  <div class="center-align">
+    <button id="left-button"><i class="material-icons inline-icon">keyboard_arrow_left</i></button>
+    <span style="width:30%; display:inline-block;" id="monthName"></span>
+    <button id="right-button"><i class="material-icons inline-icon">keyboard_arrow_right</i></button>
+  </div>
+  <tbody id="calendarBody">
+    
+  </tbody>
+</table>
+
+{% for date, people in birthdays_dict.items %}
+<div id="bdayModal{{date|date:'Y-n-j'}}" class="modal">
+  <div class="modal-content center-align">
+    <h4>{{date|date:'d M Y'}}</h4>
+    {% for person in people %}
+    <div>
+      <i class="material-icons birthday-icon">cake</i><p class="birthday-name">{{person}}</p>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="modal-footer">
+    <a href="#!" class="modal-close waves-effect waves-light btn">close</a>
+  </div>
+</div>
+{% endfor %}
+
+
+{% block end_scripts %}
+<script>
+  let birthdays = []
+  "{% for day in birthdays %}"
+    birthdays.push("{{day}}");
+  "{% endfor %}"
+</script>
+<script src="{% static 'gifts/js/calendar.js' %}"></script>
+{% endblock %}

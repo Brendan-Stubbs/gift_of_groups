@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from gift_of_groups import local_settings
 
 urlpatterns = [
     path("", views.Index.as_view(), name="index"),
@@ -37,3 +38,8 @@ urlpatterns = [
     path("webhook/donatemesomecoffee/", views.WebhookBuyMeACoffee.as_view(), name="webhook_buy_coffee"),
     path("webhook/supportthegiftlyonpatreon/", views.WebhookPatreon.as_view(), name="webhook_patreon"),
 ]
+
+if local_settings.ENVIRONMENT == "local":
+    urlpatterns.append(
+        path("test/", views.TestCalendar.as_view())
+        )

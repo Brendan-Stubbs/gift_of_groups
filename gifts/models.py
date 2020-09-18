@@ -38,7 +38,8 @@ class Profile(models.Model):
         return GiftGroup.objects.filter(user=self)
 
     def get_next_birthday(self):
-        return datehelper.get_next_birthday(self)
+        if self.birth_date:
+            return datehelper.get_next_birthday(self)
 
     def are_bank_details_complete(self):
         return bool(self.bank_account_number) and bool(self.bank_name)
@@ -102,6 +103,20 @@ class GiftGroup(models.Model):
                 instance.create_gift_relation_for_group(user)
         # elif action == 'post_remove':
         #     instance.remove_gift_relation_for_group(user)
+
+    def get_all_members_next_birthday(self):
+        members = self.users.all()
+        birthdays = {}
+        for member in members:
+            next_birthday = member.profile.get_next_birthday()
+            if next_birthday:
+                member_name = "{} {}".format(member.first_name, member.last_name)
+                if next_birthday in birthdays:
+                    birthdays[next_birthday].append(member_name)
+                else:
+                    birthdays[next_birthday] = [member_name]
+        return birthdays
+
 
     def save(self, *args, **kwargs):
         if not self.pk:
