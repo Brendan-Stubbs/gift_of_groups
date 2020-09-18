@@ -10,7 +10,7 @@ from django.core import serializers
 from django.db.models import F
 from django.template.loader import render_to_string
 
-from gifts.utils import group_helper, sendgrid_helper
+from gifts.utils import group_helper, sendgrid_helper, datehelper
 from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm, GiftIdeaForm, GiftIdea, GiftManagementUserForm, GiftCommentForm, GroupCommentForm
 from gifts.models import GiftGroup, GiftGroupInvitation, Gift, ContributorGiftRelation, GiftCommentNotification, Donation, Profile, ProfilePic, GroupCommentNotification, GroupInvitationLink
 import json
@@ -173,6 +173,8 @@ class ViewIndividualGroup(generic.View):
         group_gifts_component = render_to_string(
             "gifts/components/group_gift_collection.html", {"active_gifts": active_gifts, "group":group})
         comment_form = GroupCommentForm()
+        birthdays_dict = group.get_all_members_next_birthday()
+        birthdays = [datehelper.stringify_datetime_year_month_day(key) for key in birthdays_dict]
 
         context = {
             "members": members,
@@ -182,6 +184,8 @@ class ViewIndividualGroup(generic.View):
             "active_gifts": active_gifts,
             "group_gifts_component": group_gifts_component,
             "comment_form": comment_form,
+            "birthdays_dict": birthdays_dict,
+            "birthdays": birthdays,
         }
         return render(request, "gifts/view_individual_group.html", context)
 
@@ -318,7 +322,7 @@ class ViewGift(generic.View):
         birthday_has_passed = timezone.now().date() > gift.wrap_up_date
         comment_form = GiftCommentForm()
         captain_management_component = render_to_string(
-            "gifts/components/captain_gift_management.html", {"gift_relations": gift_relations, "group":group})
+            "gifts/components/captain_gift_management.html", {"gift_relations": gift_relations})
 
         context = {
             "gift": gift,
@@ -641,12 +645,18 @@ class WebhookPatreon(generic.View):
 
 class TestCalendar(generic.View):
     def get(self,request, *args, **kwargs):
-        return render(request, "gifts/components/birthday_calendar.html", {})
+        group = GiftGroup.objects.all()[5]
+        birthdays_dict = group.get_all_members_next_birthday()
+        birthdays = [datehelper.stringify_datetime_year_month_day(key) for key in birthdays_dict]
+        return render(request, "gifts/components/birthday_calendar.html", {"birthdays":(birthdays), "birthdays_dict": birthdays_dict})
 
 
 # TODO Create a Once Off Gift
+# TODO Create invite links to Once off Gifts
 # TODO Birthday Calendar
+    # Master Calendar of all groups
 # TODO Group invite link
+    # -- Just need to add this link to the front end
 
 # Maybe
 # TODO Captain must be able to change pledged values

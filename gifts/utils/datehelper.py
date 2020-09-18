@@ -35,3 +35,6 @@ def get_upcoming_birthdays(group):
     query = reduce(operator.or_, (Q(**d) for d in monthdays))
     group_users = group.users.all()
     return group_users.filter(query)
+
+def stringify_datetime_year_month_day(date):
+    return "{}-{}-{}".format(date.year, date.month, date.day)

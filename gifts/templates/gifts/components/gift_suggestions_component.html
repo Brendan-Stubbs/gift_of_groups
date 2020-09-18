@@ -3,8 +3,11 @@
     <h5 class="center-align">Gift Suggestions</h5>
     <ul id="ideas-collection" class="collection">
       {% for idea in gift_ideas %}
+      
       <li class="collection-item idea-item avatar blue lighten-1">
-        <span class="title">{{idea.title}}</span> 
+        <a href="{{idea.url}}" target="blank">
+          <span class="title white-text">{{idea.title}}</span>
+        </a>
         <span class="amber-text">R{{idea.price|floatformat:2}}</span>
         <p class="idea-description">{{idea.description}}</p>
         <div class="secondary-content">

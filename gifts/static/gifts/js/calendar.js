@@ -71,11 +71,17 @@ function populate_calendar_with_month(month) {
             current_weekday = 0;
         };
 
+        
         if (current_weekday===0 && current_day < total_days+1 && current_day !== 1){
             calendarContent += "<tr>";
         };
 
-        calendarContent += `<td>${current_day}</td>`;
+        let date_string = `${year_to_display}-${month+1}-${current_day}`
+        if (birthdays.includes(date_string)){
+            calendarContent += `<td class="birthday calendar-day"><a href="#bdayModal${date_string}" class="modal-trigger anchor-black">${current_day}</a></td>`;
+        }else {
+            calendarContent += `<td class="calendar-day">${current_day}</td>`;
+        }
 
         current_day++;
         current_weekday++;
