@@ -54,12 +54,14 @@ function check_buttons() {
 
 function populate_calendar_with_month(month) {
     let year_to_display = new Date().getFullYear()
-    if (month > 11){year_to_display ++;}
-    month = month % 11
+    if (month > 11){
+        year_to_display ++;
+        month = month % 12
+    }
     let total_days = new Date(year_to_display, month + 1, 0).getDate()
     let current_weekday = new Date(year_to_display, month, 1).getDay()
     let current_day = 1
-    let calendarContent = "<tr><td>S</td><td>M</td><td>T</td><td>W</td><td>T</td><td>F</td><td>S</td></tr>"
+    let calendarContent = "<tr>"
     let day_countdown = current_weekday;
 
     while(day_countdown-- > 0){

@@ -38,8 +38,3 @@ urlpatterns = [
     path("webhook/donatemesomecoffee/", views.WebhookBuyMeACoffee.as_view(), name="webhook_buy_coffee"),
     path("webhook/supportthegiftlyonpatreon/", views.WebhookPatreon.as_view(), name="webhook_patreon"),
 ]
-
-if local_settings.ENVIRONMENT == "local":
-    urlpatterns.append(
-        path("test/", views.TestCalendar.as_view())
-        )

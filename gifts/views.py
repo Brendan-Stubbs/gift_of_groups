@@ -643,7 +643,7 @@ class WebhookPatreon(generic.View):
             sendgrid_helper.send_json_mail("error with patreon", str(e))
         return HttpResponse("")
 
-class TestCalendar(generic.View):
+class MasterCalendar(generic.View):
     def get(self,request, *args, **kwargs):
         group = GiftGroup.objects.all()[5]
         birthdays_dict = group.get_all_members_next_birthday()
@@ -653,8 +653,7 @@ class TestCalendar(generic.View):
 
 # TODO Create a Once Off Gift
 # TODO Create invite links to Once off Gifts
-# TODO Birthday Calendar
-    # Master Calendar of all groups
+# TODO Master Calendar of all groups
 # TODO Group invite link
     # -- Just need to add this link to the front end
 
