@@ -85,6 +85,11 @@ class GiftGroup(models.Model):
             if not ContributorGiftRelation.objects.filter(contributor=user, gift=gift).exists():
                 ContributorGiftRelation.objects.create(contributor=user, gift=gift)
 
+    def get_invite_link(self):
+        if not GroupInvitationLink.objects.filter(group=self).exists():
+            GroupInvitationLink.objects.create(group=self)
+        return GroupInvitationLink.objects.get(group=self)
+
     def create_upcoming_gifts(self):
         '''Creates any upcoming gifts and returns the amount create as an integer'''
         gifts_created = 0

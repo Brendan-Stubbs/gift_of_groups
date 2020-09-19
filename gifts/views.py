@@ -173,6 +173,7 @@ class ViewIndividualGroup(generic.View):
         group_gifts_component = render_to_string(
             "gifts/components/group_gift_collection.html", {"active_gifts": active_gifts, "group":group})
         comment_form = GroupCommentForm()
+        invite_link = group.get_invite_link()
         birthdays_dict = group.get_all_members_next_birthday()
         birthdays = [datehelper.stringify_datetime_year_month_day(key) for key in birthdays_dict]
 
@@ -186,6 +187,7 @@ class ViewIndividualGroup(generic.View):
             "comment_form": comment_form,
             "birthdays_dict": birthdays_dict,
             "birthdays": birthdays,
+            "invite_link": invite_link,
         }
         return render(request, "gifts/view_individual_group.html", context)
 

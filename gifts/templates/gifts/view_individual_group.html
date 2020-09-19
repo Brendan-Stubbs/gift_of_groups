@@ -1,5 +1,6 @@
 {% extends 'gifts/base.html' %}
 {% load static %}
+{% load gift_template_tags %}
 
 {% block head_links %}
 <link rel="stylesheet" type="text/css" href="{% static 'gifts/css/calendar.css' %}">
@@ -50,18 +51,25 @@
                 {% endfor %}
             </ul>
             {% if group.standard_user_can_invite or user_is_admin %}
-            <form method="POST">
-                {% csrf_token %}
-                {{invitation_form.invitee_email}}
-                <button class="btn green">Invite</button>
-                {% if messages %}
-                <ul class="messages">
-                    {% for message in messages %}
-                    <li class="{{ message.tags }}">{{ message }}</li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
+            <div class="card-panel">
+            <h4 class="center-align">Invite your friends</h4>
+            <form>
+              <input id="inviteLink" type="text" value="{% abs_url 'invitation_link' invite_link.code %}" class="form-control" readonly>
+              <button id="inviteLinkBtn" type="button" class="btn green">Copy to clipboard</button>
             </form>
+              <form method="POST">
+                  {% csrf_token %}
+                  {{invitation_form.invitee_email}}
+                  <button class="btn green">Invite via email</button>
+                  {% if messages %}
+                  <ul class="messages">
+                      {% for message in messages %}
+                      <li class="{{ message.tags }}">{{ message }}</li>
+                      {% endfor %}
+                  </ul>
+                  {% endif %}
+              </form>
+            </div>
             {% endif %}
         </div>
       </div>

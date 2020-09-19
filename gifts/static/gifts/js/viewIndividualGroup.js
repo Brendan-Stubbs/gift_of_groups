@@ -56,6 +56,13 @@ function refresh_comments(group_id) {
     })
 }
 
-$("#comment_form").submit(function(event) {
+$(document).ready(function(){
+    $("#comment_form").submit(function(event) {
         event.preventDefault();
-})
+    })
+
+    $('#inviteLinkBtn').click(function() {
+        document.querySelector("#inviteLink").select();
+        document.execCommand("copy");
+    });
+});
