@@ -646,7 +646,8 @@ class WebhookPatreon(generic.View):
 
 class MasterCalendar(generic.View):
     def get(self,request, *args, **kwargs):
-        group = GiftGroup.objects.all()[5]
+        if not request.user.is_authenticated:
+            return redirect('/login/?next=%s' % request.path)
         birthdays_dict = request.user.profile.get_all_friends_birthdays()
         birthdays = [datehelper.stringify_datetime_year_month_day(key) for key in birthdays_dict]
         return render(request, "gifts/master_calendar.html", {"birthdays":(birthdays), "birthdays_dict": birthdays_dict})
