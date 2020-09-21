@@ -13,6 +13,7 @@ urlpatterns = [
     path("group_grant_admin/<int:group_id>/<int:user_id>/", views.GrantAdminAccess.as_view(), name="group_grant_admin"),
     path("accept_invite/<int:id>/", views.AcceptGiftGroupInvitation.as_view(), name="accept_invite"),
     path("group_invitation_link/<str:code>", views.AcceptGroupInvitationLink.as_view(), name="invitation_link"),
+    path("calendar", views.MasterCalendar.as_view(), name="master_calendar"),
     path("leave_group/<int:id>/", views.LeaveGiftGroup.as_view(), name="leave_group"),
     path("gift/<int:id>", views.ViewGift.as_view(), name="view_gift"),
     path("claim_captain/<int:id>", views.ClaimGiftCaptaincy.as_view(), name="claim_captain"),

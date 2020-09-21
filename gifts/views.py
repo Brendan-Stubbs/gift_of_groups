@@ -275,7 +275,6 @@ class RejectGiftGroupInvitation(generic.View):
 
 class AcceptGroupInvitationLink(generic.View):
     def get(self, request, *args, **kwargs):
-        print("get request")
         if not request.user.is_authenticated:
             return redirect('/login/?next=%s' % request.path)
         user = request.user
@@ -648,16 +647,13 @@ class WebhookPatreon(generic.View):
 class MasterCalendar(generic.View):
     def get(self,request, *args, **kwargs):
         group = GiftGroup.objects.all()[5]
-        birthdays_dict = group.get_all_members_next_birthday()
+        birthdays_dict = request.user.profile.get_all_friends_birthdays()
         birthdays = [datehelper.stringify_datetime_year_month_day(key) for key in birthdays_dict]
-        return render(request, "gifts/components/birthday_calendar.html", {"birthdays":(birthdays), "birthdays_dict": birthdays_dict})
+        return render(request, "gifts/master_calendar.html", {"birthdays":(birthdays), "birthdays_dict": birthdays_dict})
 
 
 # TODO Create a Once Off Gift
 # TODO Create invite links to Once off Gifts
-# TODO Master Calendar of all groups
-# TODO Group invite link
-    # -- Just need to add this link to the front end
 
 # Maybe
 # TODO Captain must be able to change pledged values

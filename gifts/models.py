@@ -44,6 +44,23 @@ class Profile(models.Model):
     def are_bank_details_complete(self):
         return bool(self.bank_account_number) and bool(self.bank_name)
 
+    def get_all_friends_birthdays(self):
+        groups = GiftGroup.objects.filter(users=self.user)
+        friends = []
+        for group in groups:
+            friends += [x for x in group.users.all() if x not in friends]
+
+        birthdays = {}
+        for friend in friends:
+            next_birthday = friend.profile.get_next_birthday()
+            if next_birthday:
+                friend_name = "{} {}".format(friend.first_name, friend.last_name)
+                if next_birthday in birthdays:
+                    birthdays[next_birthday].append(friend_name)
+                else:
+                    birthdays[next_birthday] = [friend_name]
+        return birthdays
+
     def __unicode__(self):
         return self.user.email
 

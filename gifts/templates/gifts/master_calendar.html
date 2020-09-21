@@ -1,0 +1,22 @@
+{% extends 'gifts/base.html' %}
+{% load static %}
+{% load gift_template_tags %}
+
+{% block head_links %}
+<link rel="stylesheet" type="text/css" href="{% static 'gifts/css/calendar.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="center-align">
+        <h4>Calendar</h4>
+        <p>This calendar contains the birthdays of your friends across all group.</p>
+    </div>
+  <div class="row">
+    <div class="col s12 offset-m2 offset-m2 m8 card-panel">
+  {% include 'gifts/components/birthday_calendar.html' %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

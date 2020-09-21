@@ -1,7 +1,6 @@
 let current_displayed_month = new Date().getMonth()
 let months_from_now = 0;
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-let dayPerMonth = ["31", get_feb_number_of_days(),"31","30","31","30","31","31","30","31","30","31"];
 
 function increment_month() {
     if (months_from_now < 11) {
@@ -21,17 +20,6 @@ function decrement_month() {
     }
 }
 
-function get_feb_number_of_days(){
-    today = new Date()
-    year = today.getFullYear()
-    if (today.getMonth() >= 1){
-        year += 1;
-    }
-    if((year%100!=0) && (year%4==0) || (year%400==0)){
-        return '29'
-     }
-     return '28'
- }
 
 function disable_button(id) {
     $(`#${id}`).prop('disabled', true)
