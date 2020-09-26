@@ -11,7 +11,7 @@
         <li class="collection-item">You don't currently have any active gifts</li>
         {% endif %}
         {% for gift in active_gifts %}
-        <a href="{% url 'view_gift' gift.id %}" class="collection-item"><i class="material-icons circle" style="vertical-align: -3px;">cake</i>{{gift}}</a>
+        <a href="{% url 'view_gift' gift.id %}" class="collection-item"><i class="material-icons circle" style="vertical-align: -3px;">{% if gift.gift_type == 'birthday' %}cake{% else %}card_giftcard{% endif %}</i>{{gift}}</a>
         {% endfor %}
       </ul>
     </div>
@@ -23,7 +23,7 @@
         <li class="collection-item">You don't have any completed gifts at the moment</li>
         {% endif %}
         {% for gift in complete_gifts %}
-        <a href="{% url 'view_gift' gift.id %}" class="collection-item"><i class="material-icons circle" style="vertical-align: -3px;">cake</i>{{gift}}</a>
+        <a href="{% url 'view_gift' gift.id %}" class="collection-item"><i class="material-icons circle" style="vertical-align: -3px;">{% if gift.gift_type == 'birthday' %}cake{% else %}card_giftcard{% endif %}</i>{{gift}}</a>
         {% endfor %}
       </ul>
     </div>

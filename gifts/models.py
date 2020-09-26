@@ -205,18 +205,29 @@ class GiftGroupInvitation(models.Model):
 
 
 class Gift(models.Model):
+
+    GIFT_TYPE_CHOICES = (
+        ("birthday", "Birthday"),
+        ("wedding", "Wedding"),
+        ("other", "other"),
+    )
+
     gift_group = models.ForeignKey(GiftGroup, null=True, on_delete=models.CASCADE)
     captain = models.ForeignKey(User, null=True, blank=True, related_name="group_captain", on_delete=models.SET_NULL)
     receiver = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    title = models.CharField(max_length=100, null=True, blank=True, default=None)
+    description = models.TextField(null=True, blank=True, default=None)
     wrap_up_date = models.DateField(null=True, blank=True)
     is_complete = models.BooleanField(default=False)
     chosen_gift = models.ForeignKey('GiftIdea', null=True, blank=True, on_delete=models.SET_NULL, related_name="chosen_gift")
+    gift_type = models.CharField(max_length=20, default="other")
 
     def create_contributor_relationship_for_group(self):
-        contributors = self.gift_group.users.all().exclude(id=self.receiver.id)
-        for contributor in contributors:
-            ContributorGiftRelation.objects.create(contributor=contributor, gift=self)
-        sendgrid_helper.send_gift_creation_mail(self)
+        if self.gift_group:
+            contributors = self.gift_group.users.all().exclude(id=self.receiver.id)
+            for contributor in contributors:
+                ContributorGiftRelation.objects.create(contributor=contributor, gift=self)
+            sendgrid_helper.send_gift_creation_mail(self)
 
     def get_total_pledged_amount(self):
         pledged_total = ContributorGiftRelation.objects.filter(gift=self).aggregate(Sum('contribution'))['contribution__sum']
@@ -237,7 +248,11 @@ class Gift(models.Model):
         return 0
 
     def save(self, *args, **kwargs):
-        self.wrap_up_date = self.receiver.profile.get_next_birthday()
+        if self.receiver:
+            self.wrap_up_date = self.receiver.profile.get_next_birthday()
+            self.gift_type = "birthday"
+        else:
+            self.gift_type = "other"
         super(Gift, self).save(*args, **kwargs)
 
     def get_all_gift_suggestions_with_vote_info(self, user):
@@ -260,7 +275,10 @@ class Gift(models.Model):
         return len(ContributorGiftRelation.objects.filter(gift=self, has_made_payment=True))
 
     def __unicode__(self):
-        return "{} {} : {}".format(self.receiver.first_name, self.receiver.last_name, self.wrap_up_date.strftime("%d %b"))
+        try:
+            return "{} {} : {}".format(self.receiver.first_name, self.receiver.last_name, self.wrap_up_date.strftime("%d %b"))
+        except:
+            return "{} : {}".format(self.title, self.wrap_up_date.strftime("%d %b"))
 
     def __str__(self):
         return self.__unicode__()

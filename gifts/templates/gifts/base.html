@@ -48,7 +48,9 @@
     {% endfor %}
     <!-- End Invitation Modals -->
 
+    {% include 'gifts/components/once_off_gift_modal.html' %}
     {% include 'gifts/components/donation_modal.html' %}
+    
 
 </body>
 
@@ -56,6 +58,10 @@
     $(document).ready(function () {
         $('.sidenav').sidenav();
         $('select').formSelect();
+        $('#id_wrap_up_date').datepicker({
+            format: "yyyy-mm-dd",
+            yearRange: [new Date().getFullYear(),new Date().getFullYear() + 1],
+        });
     });
     $(document).ready(function () {
         $('.modal').modal();
