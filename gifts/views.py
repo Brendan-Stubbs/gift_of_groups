@@ -11,7 +11,7 @@ from django.db.models import F
 from django.template.loader import render_to_string
 
 from gifts.utils import group_helper, sendgrid_helper, datehelper
-from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm, GiftIdeaForm, GiftIdea, GiftManagementUserForm, GiftCommentForm, GroupCommentForm
+from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm, GiftIdeaForm, GiftIdea, GiftManagementUserForm, GiftCommentForm, GroupCommentForm, OnceOffGiftForm
 from gifts.models import GiftGroup, GiftGroupInvitation, Gift, ContributorGiftRelation, GiftCommentNotification, Donation, Profile, ProfilePic, GroupCommentNotification, GroupInvitationLink
 import json
 
@@ -342,6 +342,22 @@ class ViewGift(generic.View):
         }
         return render(request, "gifts/view_gift.html", context)
 
+class CreateOnceOffGift(generic.View):
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('/login/?next=%s' % request.path)
+        form = OnceOffGiftForm(request.POST)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.captain = request.user
+            instance.save()
+            ContributorGiftRelation.objects.create(contributor=request.user, gift=instance)
+            return redirect("view_gift", instance.id)
+
+        return redirect("index") # TODO Display Error instead?
+        
+        
+
 
 class ClaimGiftCaptaincy(generic.View):
     def get(self, request, *args, **kwargs):
@@ -357,6 +373,7 @@ class ClaimGiftCaptaincy(generic.View):
 
 
 class VoteForGift(generic.View):
+    '''AJAX View allowing users to vote for a gift.'''
     def get(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             response = JsonResponse({"error": "You are not logged in"})
@@ -565,18 +582,23 @@ class InviteToGift(generic.View):
             return JsonResponse({}, status=403)
         try:
             gift = Gift.objects.get(pk=self.kwargs.get("id"))
-            if not User.objects.filter(email=self.kwargs.get("email")).exists():
+            email = request.POST.get("email")
+            if not User.objects.filter(email=email).exists():
                 message = "There is no account linked to this address"
                 return JsonResponse({"message": message})
-            user = User.objects.get(email=self.kwargs.get("email"))
-            if ContributorGiftRelation.objects.filter(gift=gift, user=user).exists():
+            user = User.objects.get(email=email)
+            if ContributorGiftRelation.objects.filter(gift=gift, contributor=user).exists():
                 message = "This user is already part of the group"
                 return JsonResponse({"message": message})
-            gift.group.create_gift_relation_for_group(user)
+            if gift.gift_group:
+                gift.group.create_gift_relation_for_group(user)
+            else:
+                ContributorGiftRelation.objects.create(contributor=user, gift=gift)
             message = "Succesfully added {} {} to group".format(
                 user.first_name, user.last_name)
             return JsonResponse({"message": message})
-        except:
+        except Exception as e:
+            print(e)
             return JsonResponse({}, status=403)
 
 
@@ -653,9 +675,14 @@ class MasterCalendar(generic.View):
         return render(request, "gifts/master_calendar.html", {"birthdays":(birthdays), "birthdays_dict": birthdays_dict})
 
 
-# TODO Create a Once Off Gift
 # TODO Create invite links to Once off Gifts
 
 # Maybe
 # TODO Captain must be able to change pledged values
 # TODO set up social auth (Google + Facebook)
+
+'''
+for gift in gifts:
+    gift.gift_type="birthday"
+    gift.save()
+'''

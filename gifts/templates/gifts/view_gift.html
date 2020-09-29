@@ -7,8 +7,15 @@
 {% block content %}
 <div class="content container">
   <div class="center-align">
-    <h1>{{gift.receiver.first_name}}</h1>
-    <h4><i class="material-icons circle pink-text">cake</i> {{gift.receiver.profile.birth_date|date:"d F"}}</h4>
+    {% if gift.receiver %}
+      <h1>{{gift.receiver.first_name}}</h1>
+      <h4><i class="material-icons circle pink-text">cake</i> {{gift.wrap_up_date|date:"d F"}}</h4>
+    {% else %}
+      <h1>{{gift.title}}</h1>
+      <h4><i class="material-icons circle pink-text">card_giftcard</i> {{gift.wrap_up_date|date:"d F"}}</h4>
+      <p>{{gift.description}}</p>
+    {% endif %}
+
   </div>
 
   {% if user == captain %}

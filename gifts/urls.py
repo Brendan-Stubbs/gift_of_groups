@@ -17,6 +17,7 @@ urlpatterns = [
     path("leave_group/<int:id>/", views.LeaveGiftGroup.as_view(), name="leave_group"),
     path("gift/<int:id>", views.ViewGift.as_view(), name="view_gift"),
     path("claim_captain/<int:id>", views.ClaimGiftCaptaincy.as_view(), name="claim_captain"),
+    path("create_onceoff_gift", views.CreateOnceOffGift.as_view(), name="create_once_off_gift"),
 
     path("set_gift/<int:gift_id>", views.SetGift.as_view(), name="set_gift"),
     path("mark_gift_complete/<int:id>/", views.MarkGiftComplete.as_view(), name="mark_gift_complete"),

@@ -103,7 +103,7 @@
             <span class="card-title black-text">Calendar</span>
           </div>
           <div class="card-content">
-            Keep track of your friend's upcoming birthdays with your personal <a href="{% url 'master_calendar' %}">calendar</a>.
+            Keep track of your friend's upcoming birthdays with your own personal <a href="{% url 'master_calendar' %}">calendar</a>.
           </div>
         </div>
       </div>
@@ -128,7 +128,7 @@
             <span class="card-title white-text">Gifting</span>
           </div>
           <div class="card-content">
-            Giftly Groups will identify when there are birthdays coming up and setup the gift for you.
+            We will identify your friends upcoming birthdays, however you can still create a custom gift {% if request.user.is_authenticated %}<a class="modal-trigger" href="#OnceOffGiftModal"> {% else %} <a href="{% url 'login'%}">{% endif %}here</a>
           </div>
         </div>
       </div>
@@ -160,5 +160,3 @@
 </script>
 
 {% endblock %}
-
-<!-- https://unsplash.com/photos/mTkXSSScrzw -->

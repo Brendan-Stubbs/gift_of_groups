@@ -1,4 +1,5 @@
 from gifts.models import GiftGroupInvitation, Gift, ContributorGiftRelation, GiftCommentNotification, GroupCommentNotification
+from gifts.forms import OnceOffGiftForm
 
 
 def check_invitations(request):
@@ -24,10 +25,14 @@ def get_notfications(request):
         return {"notifications": notifications}
     return {}
 
+def get_once_off_gift_form():
+    return {"once_off_gift_form": OnceOffGiftForm()}
+
 
 def get_custom_context_processors(request):
     context = {}
     context.update(get_active_gifts(request))
     context.update(check_invitations(request))
     context.update(get_notfications(request))
+    context.update(get_once_off_gift_form())
     return context

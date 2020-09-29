@@ -83,3 +83,15 @@ class GroupCommentForm(forms.ModelForm):
     class Meta:
         model = GroupComment
         fields = ["content"]
+
+
+class OnceOffGiftForm(forms.ModelForm):
+    class Meta:
+        model = Gift
+        fields = ["title", "wrap_up_date", "description"]
+
+    wrap_up_date = forms.DateField(
+        widget=forms.DateInput(attrs={"class": "datepicker"}))
+
+    description = forms.CharField(
+        widget=forms.Textarea(attrs={"class": "datepicker materialize-textarea"}))

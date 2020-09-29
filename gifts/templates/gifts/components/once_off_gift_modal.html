@@ -1,0 +1,46 @@
+
+<div id="OnceOffGiftModal" class="modal">
+    <div class="modal-content center-align">
+      <h4 style="text-align: center;">Once Off Gift</h4>
+      <h6>Create a gift for any occasion</h6>
+      <p>Remember that Giftly Groups will identify any birthdays coming up in any groups you are part of and create the gift for you.</p>
+    </div>
+
+    <div class="row">
+  <div class="col offset-l3 l6 offset-m2 m8 s12">
+    <form action="{% url 'create_once_off_gift' %}" method="POST">
+    {% csrf_token %}
+      <div>
+        <h5>Enter Gift Details</h5>
+
+        <div class="input-field">
+          <i class="material-icons prefix">portrait</i>
+          <label for="id_title">Title</label>
+          {{once_off_gift_form.title}}
+        </div>
+
+        <div class="input-field">
+          <i class="material-icons prefix">description</i>
+          <label for="id_description">Description (Optional)</label>
+          {{once_off_gift_form.description}}
+        </div>
+
+        <div class="input-field">
+          <i class="material-icons prefix">calendar_today</i>
+          <label for="id_wrap_up_date">Wrap up Date</label>
+          {{once_off_gift_form.wrap_up_date}}
+        </div>
+        
+      </div>
+      <div class="center-align">
+        <input type="Submit" name="Create Gift" value="Create Gift" class="btn center">
+      </div>
+      <div class="clearfix"></div>
+    </form>
+  
+    </div>
+  </div>
+
+    <div class="modal-footer">
+    </div>
+</div>
