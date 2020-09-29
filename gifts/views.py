@@ -582,18 +582,23 @@ class InviteToGift(generic.View):
             return JsonResponse({}, status=403)
         try:
             gift = Gift.objects.get(pk=self.kwargs.get("id"))
-            if not User.objects.filter(email=self.kwargs.get("email")).exists():
+            email = request.POST.get("email")
+            if not User.objects.filter(email=email).exists():
                 message = "There is no account linked to this address"
                 return JsonResponse({"message": message})
-            user = User.objects.get(email=self.kwargs.get("email"))
-            if ContributorGiftRelation.objects.filter(gift=gift, user=user).exists():
+            user = User.objects.get(email=email)
+            if ContributorGiftRelation.objects.filter(gift=gift, contributor=user).exists():
                 message = "This user is already part of the group"
                 return JsonResponse({"message": message})
-            gift.group.create_gift_relation_for_group(user)
+            if gift.gift_group:
+                gift.group.create_gift_relation_for_group(user)
+            else:
+                ContributorGiftRelation.objects.create(contributor=user, gift=gift)
             message = "Succesfully added {} {} to group".format(
                 user.first_name, user.last_name)
             return JsonResponse({"message": message})
-        except:
+        except Exception as e:
+            print(e)
             return JsonResponse({}, status=403)
 
 
