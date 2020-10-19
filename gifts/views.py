@@ -12,7 +12,7 @@ from django.template.loader import render_to_string
 
 from gifts.utils import group_helper, sendgrid_helper, datehelper
 from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm, GiftIdeaForm, GiftIdea, GiftManagementUserForm, GiftCommentForm, GroupCommentForm, OnceOffGiftForm
-from gifts.models import GiftGroup, GiftGroupInvitation, Gift, ContributorGiftRelation, GiftCommentNotification, Donation, Profile, ProfilePic, GroupCommentNotification, GroupInvitationLink
+from gifts.models import GiftGroup, GiftGroupInvitation, Gift, ContributorGiftRelation, GiftCommentNotification, Donation, Profile, ProfilePic, GroupCommentNotification, GroupInvitationLink, GiftInvitationLink
 import json
 
 
@@ -287,6 +287,25 @@ class AcceptGroupInvitationLink(generic.View):
         except Exception as e:
             return redirect('index')
 
+class AcceptGiftInvitationLink(generic.View):
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('/login/?next=%s' % request.path)
+        user = request.user
+
+        try:
+            invite_link = GiftInvitationLink.objects.get(code=self.kwargs['code'])
+            gift = invite_link.gift
+            # Check if gift relation exists
+            if not ContributorGiftRelation.objects.filter(gift=gift, contributor=user).exists():
+                if gift.receiver and gift.receiver == user:
+                    return redirect('index')
+                ContributorGiftRelation.objects.create(gift=gift, contributor=user)
+            
+            return redirect('view_gift', gift.id)
+        except Exception as e:
+            return redirect('index')
+
 
 class LeaveGiftGroup(generic.View):
     def get(self, request, *args, **kwargs):
@@ -305,12 +324,15 @@ class ViewGift(generic.View):
     def get(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect('/login/?next=%s' % request.path)
+
         user = request.user
         if not Gift.objects.filter(pk=self.kwargs["id"]).exists():
             return redirect('view_groups')
+
         gift = Gift.objects.get(pk=self.kwargs["id"])
         if not ContributorGiftRelation.objects.filter(contributor=user, gift=gift).exists():
             return redirect('view_groups')
+
         gift_relations = ContributorGiftRelation.objects.filter(gift=gift)
         members = [x.contributor for x in gift_relations]
         gift_ideas = gift.get_all_gift_suggestions_with_vote_info(user)
@@ -321,6 +343,7 @@ class ViewGift(generic.View):
         gift_relation_form = GiftManagementUserForm(
             instance=user_gift_relation)
         birthday_has_passed = timezone.now().date() > gift.wrap_up_date
+        gift_invitation_link = gift.get_invite_link()
         comment_form = GiftCommentForm()
         captain_management_component = render_to_string(
             "gifts/components/captain_gift_management.html", {"gift_relations": gift_relations})
@@ -337,6 +360,7 @@ class ViewGift(generic.View):
             "user": user,
             "user_gift_relation": user_gift_relation, # TODO Use this to hide the mark complete button
             "birthday_has_passed": birthday_has_passed,
+            "gift_invitation_link": gift_invitation_link,
             "comment_form": comment_form,
             "captain_management_component": captain_management_component,
         }
@@ -675,14 +699,6 @@ class MasterCalendar(generic.View):
         return render(request, "gifts/master_calendar.html", {"birthdays":(birthdays), "birthdays_dict": birthdays_dict})
 
 
-# TODO Create invite links to Once off Gifts
-
 # Maybe
 # TODO Captain must be able to change pledged values
 # TODO set up social auth (Google + Facebook)
-
-'''
-for gift in gifts:
-    gift.gift_type="birthday"
-    gift.save()
-'''

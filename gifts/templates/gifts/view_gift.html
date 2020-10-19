@@ -1,5 +1,6 @@
 {% extends 'gifts/base.html' %}
 {% load static %}
+{% load gift_template_tags %}
 {% block head_links %}
 <link rel="stylesheet" type="text/css" href="{% static 'gifts/css/view_gift.css' %}">
 {% endblock %}
@@ -8,12 +9,12 @@
 <div class="content container">
   <div class="center-align">
     {% if gift.receiver %}
-      <h1>{{gift.receiver.first_name}}</h1>
-      <h4><i class="material-icons circle pink-text">cake</i> {{gift.wrap_up_date|date:"d F"}}</h4>
+    <h1>{{gift.receiver.first_name}}</h1>
+    <h4><i class="material-icons circle pink-text">cake</i> {{gift.wrap_up_date|date:"d F"}}</h4>
     {% else %}
-      <h1>{{gift.title}}</h1>
-      <h4><i class="material-icons circle pink-text">card_giftcard</i> {{gift.wrap_up_date|date:"d F"}}</h4>
-      <p>{{gift.description}}</p>
+    <h1>{{gift.title}}</h1>
+    <h4><i class="material-icons circle pink-text">card_giftcard</i> {{gift.wrap_up_date|date:"d F"}}</h4>
+    <p>{{gift.description}}</p>
     {% endif %}
 
   </div>
@@ -46,162 +47,172 @@
       <form id="non-group-form" onsubmit="invite_to_gift_ajax('{{gift.id}}')">
         {% csrf_token %}
         <div class="input-field">
-          <input class="tooltipped" data-position="bottom" data-tooltip="Invite non group members to this gift."type="email" name="email" id="non_group_invite">
+          <input class="tooltipped" data-position="bottom" data-tooltip="Invite non group members to this gift."
+            type="email" name="email" id="non_group_invite">
           <label for="non_group_invite">Email</label>
           <button class="btn right">Invite</button>
-        </form>
-        <p id="invite_message" class="white-text" style="display: none">Error</p>
-      </div>
+          <button id="inviteLinkBtn" class="btn left" type="button">Invite with Link</button>
+      </form>
+      <p id="invite_message" class="white-text" style="display: none">Error</p>
     </div>
   </div>
+</div>
 
-  <div class="row center-align">
-    <button class="btn red lighten-1" onclick="mark_gift_complete('{{gift.id}}');">Gift Complete</button>
+<div class="row center-align">
+  <button class="btn red lighten-1" onclick="mark_gift_complete('{{gift.id}}');">Gift Complete</button>
+</div>
+
+
+
+{{captain_management_component}}
+
+{% endif %}
+
+
+{% if not gift.is_complete %}
+<!-- User gift details -->
+<div class="card-panel blue lighten-1">
+  <div class="row">
+
+    <p id="user_gift_detail_success" class="hidden-message green-text" style="margin:0;">Updated Succesfully</p>
+    <form id="user_gift_detail_form" onchange="ajax_update_user_gift_form('{{user_gift_relation.id}}');">
+      {% csrf_token %}
+      <div class="col s12 m6 l4">
+        {{gift_relation_form.participation_status.label_tag}}
+        {{gift_relation_form.participation_status}}
+      </div>
+      <div class="col s12 m6 l4">
+        <label>How much are you contributing?</label>
+        {{gift_relation_form.contribution}}
+      </div>
+      <div class="col s12 m6 offset-m3 l4 center-align">
+        {% if user_gift_relation.payment_has_cleared %}
+        <button class="btn disabled">Payment Confirmed</button>
+        {% elif user_gift_relation.has_made_payment %}
+        <button class="btn disabled tooltipped" data-position="bottom"
+          data-tooltip="Your Captain will update this status when your payment has cleared">Payment Pending</button>
+        {% else %}
+        <button onclick="mark_as_paid()" class="btn green tooltipped" data-position="bottom"
+          data-tooltip="Let your captain know that you have made payment">Notify of Payment</button>
+        {% endif %}
+        <div style="">{{gift_relation_form.has_made_payment}}</div>
+      </div>
+    </form>
   </div>
+</div>
+<!-- END User gift Details -->
+{% endif %}
 
-  
+<div class="row flex-container-on-large">
+  <div id="target-details" class="col s12 m12 l6">
+    {% include 'gifts/components/gift_progress_component.html' %}
+  </div>
+  <!-- End Target Stuff -->
 
-  {{captain_management_component}}
+  <!-- Captain's Detail -->
+  <div class="col s12 m12 l6">
+    {% if not gift.captain %}
 
-  {% endif %}
+    <div class="card-panel blue lighten-1" style="height: 100%;">
+      <div class="card-content white-text">
+        <div class="row valign-wrapper">
+          <div class="col s2">
+            <img src="{% static 'gifts/images/no-avatar.jpg' %}" alt="" class="circle responsive-img">
+          </div>
+          <div class="col s10">
+            <span class="white-text captain-identifier">Captain Needed!</span>
+          </div>
+        </div>
+        <h6 class="white-text">What is a gift Captain?</h6>
+        <p>
+          The gift captain is the person who will be overseeing the gift.
+          This will include collecting the money and having the final say in the decisions.
+        </p>
+        <br>
+        {% if user.profile.are_bank_details_complete %}
+        <a href="{% url 'claim_captain' gift.id %}"><button class="btn">Become the Captain</button></a>
+        {% else %}
+        <button class="btn disabled">Become the Captain</button><br>
+        <small><a href="{% url 'edit_profile' %}" class='white-text'>Complete your bank details </a>to become
+          captain</small>
+        {% endif %}
+      </div>
+    </div>
+
+    {% else %}
+
+    <div class="card-panel blue lighten-1" style="height: 100%;">
+      <div class="card-content white-text">
+        <div class="row valign-wrapper">
+          <div class="col s2">
+            <img src="{{captain.profile.get_profile_pic}}" alt="" class="circle responsive-img">
+          </div>
+          <div class="col s10">
+            <span class="black-text captain-identifier">
+              <span class="purple-text">Your Captain:</span> {{gift.captain.first_name}}
+            </span>
+          </div>
+        </div>
+        <h6 class="purple-text">Bank Details</h6>
+        {% if gift.captain.profile.bank_account_name %}<p>Name: {{gift.captain.profile.bank_account_name}}</p>
+        {% endif %}
+        {% if gift.captain.profile.bank_name %}<p>Bank Name: {{gift.captain.profile.bank_name}}</p>{% endif %}
+        {% if gift.captain.profile.bank_account_number %}<p>Account Number: {{gift.captain.profile.bank_account_number}}
+        </p>{% endif %}
+        {% if gift.captain.profile.bank_branch_name %}<p>Branch: {{gift.captain.profile.bank_branch_name}}</p>
+        {% endif %}
+        {% if gift.captain.profile.bank_branch_number %} <p>Branch Code: {{gift.captain.profile.bank_branch_number}}</p>
+        {% endif %}
+        {% if gift.captain.profile.bank_account_type%}<p>Account Type:
+          {{gift.captain.profile.get_bank_account_type_display}}</p>{% endif %}
+      </div>
+    </div>
 
 
-  {% if not gift.is_complete %}
-  <!-- User gift details -->
-  <div class="card-panel blue lighten-1">
-    <div class="row">
-    
-      <p id="user_gift_detail_success" class="hidden-message green-text" style="margin:0;">Updated Succesfully</p>
-      <form id="user_gift_detail_form" onchange="ajax_update_user_gift_form('{{user_gift_relation.id}}');">
+    {% endif %}
+  </div>
+  <!-- End Captain's Detail -->
+</div>
+
+<!-- Gift Suggestions -->
+<div class="row flex-container-on-large">
+  <div id="giftSuggestions" class="col s12 m12 l6">
+    {% include 'gifts/components/gift_suggestions_component.html' %}
+  </div>
+  <!-- End Gift Suggestions -->
+
+  <!-- Gift Suggestion Form -->
+  <div class="col s12 m12 l6">
+    <div class="blue lighten-1 suggestion-form" style="height:100%">
+      <form onsubmit="add_suggestion_ajax('{{gift.id}}', '{{user.id}}')" id="suggestionForm" method="POST">
         {% csrf_token %}
-        <div class="col s12 m6 l4">
-          {{gift_relation_form.participation_status.label_tag}}
-          {{gift_relation_form.participation_status}}
+        <h5 class="center white-text">Suggest a Gift</h5>
+        <ul class="messages">
+          <li id="suggestion-messages"></li>
+        </ul>
+
+        <div class="input-field">
+          {{ gift_idea_form.title }}
+          {{ gift_idea_form.title.label_tag }}
         </div>
-        <div class="col s12 m6 l4">
-          <label>How much are you contributing?</label>
-          {{gift_relation_form.contribution}}
+        <div class="input-field">
+          {{ gift_idea_form.description.label_tag }}
+          {{ gift_idea_form.description }}
         </div>
-        <div class="col s12 m6 offset-m3 l4 center-align">
-          {% if user_gift_relation.payment_has_cleared %}
-          <button class="btn disabled">Payment Confirmed</button>
-          {% elif user_gift_relation.has_made_payment %}
-          <button class="btn disabled tooltipped" data-position="bottom" data-tooltip="Your Captain will update this status when your payment has cleared">Payment Pending</button>
-          {% else %}
-          <button onclick="mark_as_paid()"class="btn green tooltipped" data-position="bottom" data-tooltip="Let your captain know that you have made payment">Notify of Payment</button>
-          {% endif %}
-          <div style="">{{gift_relation_form.has_made_payment}}</div>
+        <div class="input-field">
+          {{ gift_idea_form.url }}
+          {{ gift_idea_form.url.label_tag }}
         </div>
+        <div class="input-field">
+          {{ gift_idea_form.price }}
+          {{ gift_idea_form.price.label_tag }}
+        </div>
+        <button class="btn">Suggest</button>
       </form>
     </div>
   </div>
-  <!-- END User gift Details -->
-  {% endif %}
-
-  <div class="row flex-container-on-large">
-    <div id="target-details" class="col s12 m12 l6">
-        {% include 'gifts/components/gift_progress_component.html' %}
-    </div>
-    <!-- End Target Stuff -->
-
-    <!-- Captain's Detail -->
-    <div class="col s12 m12 l6">
-      {% if not gift.captain %}
-
-      <div class="card-panel blue lighten-1" style="height: 100%;">
-        <div class="card-content white-text">
-          <div class="row valign-wrapper">
-            <div class="col s2">
-              <img src="{% static 'gifts/images/no-avatar.jpg' %}" alt="" class="circle responsive-img">
-            </div>
-            <div class="col s10">
-              <span class="white-text captain-identifier">Captain Needed!</span>
-            </div>
-          </div>
-          <h6 class="white-text">What is a gift Captain?</h6>
-          <p>
-            The gift captain is the person who will be overseeing the gift.
-            This will include collecting the money and having the final say in the decisions.
-          </p>
-          <br>
-          {% if user.profile.are_bank_details_complete %}
-          <a href="{% url 'claim_captain' gift.id %}"><button class="btn">Become the Captain</button></a>
-          {% else %}
-          <button class="btn disabled">Become the Captain</button><br>
-          <small><a href="{% url 'edit_profile' %}" class='white-text'>Complete your bank details </a>to become captain</small>
-          {% endif %}
-        </div>
-      </div>
-
-      {% else %}
-
-      <div class="card-panel blue lighten-1" style="height: 100%;">
-        <div class="card-content white-text">
-          <div class="row valign-wrapper">
-            <div class="col s2">
-              <img src="{{captain.profile.get_profile_pic}}" alt="" class="circle responsive-img">
-            </div>
-            <div class="col s10">
-              <span class="black-text captain-identifier">
-                <span class="purple-text">Your Captain:</span> {{gift.captain.first_name}}
-              </span>
-            </div>
-          </div>
-          <h6 class="purple-text">Bank Details</h6>
-          {% if gift.captain.profile.bank_account_name %}<p>Name: {{gift.captain.profile.bank_account_name}}</p>{% endif %}
-          {% if gift.captain.profile.bank_name %}<p>Bank Name: {{gift.captain.profile.bank_name}}</p>{% endif %}
-          {% if gift.captain.profile.bank_account_number %}<p>Account Number: {{gift.captain.profile.bank_account_number}}</p>{% endif %}
-          {% if gift.captain.profile.bank_branch_name %}<p>Branch: {{gift.captain.profile.bank_branch_name}}</p>{% endif %}
-          {% if gift.captain.profile.bank_branch_number %} <p>Branch Code: {{gift.captain.profile.bank_branch_number}}</p>{% endif %}
-          {% if gift.captain.profile.bank_account_type%}<p>Account Type: {{gift.captain.profile.get_bank_account_type_display}}</p>{% endif %}
-        </div>
-      </div>
-      
-
-      {% endif %}
-    </div>
-    <!-- End Captain's Detail -->
-  </div>
-
-  <!-- Gift Suggestions -->
-  <div class="row flex-container-on-large">
-    <div id="giftSuggestions" class="col s12 m12 l6">
-      {% include 'gifts/components/gift_suggestions_component.html' %}
-    </div>
-    <!-- End Gift Suggestions -->
-
-    <!-- Gift Suggestion Form -->
-    <div class="col s12 m12 l6">
-      <div class="blue lighten-1 suggestion-form" style="height:100%">
-        <form onsubmit="add_suggestion_ajax('{{gift.id}}', '{{user.id}}')" id="suggestionForm" method="POST">
-          {% csrf_token %}
-          <h5 class="center white-text">Suggest a Gift</h5>
-          <ul class="messages">
-            <li id="suggestion-messages"></li>
-          </ul>
-
-          <div class="input-field">
-            {{ gift_idea_form.title }}
-            {{ gift_idea_form.title.label_tag }}
-          </div>
-          <div class="input-field">
-            {{ gift_idea_form.description.label_tag }}
-            {{ gift_idea_form.description }}
-          </div>
-          <div class="input-field">
-            {{ gift_idea_form.url }}
-            {{ gift_idea_form.url.label_tag }}
-          </div>
-          <div class="input-field">
-            {{ gift_idea_form.price }}
-            {{ gift_idea_form.price.label_tag }}
-          </div>
-          <button class="btn">Suggest</button>
-        </form>
-      </div>
-    </div>
-    <!-- End Gift Suggestion Form -->
-  </div>
+  <!-- End Gift Suggestion Form -->
+</div>
 
 <!-- Comments section -->
 <div id="comment-section" class="row">
@@ -212,15 +223,18 @@
       <button class="btn">Comment</button>
       <a class="btn" onclick="refresh_comments('{{gift.id}}')">
         <div class="valign-wrapper">
-          <i id="comments-refresh" class="material-icons tooltipped" data-position="bottom" data-tooltip="Refresh comments">refresh</i>
+          <i id="comments-refresh" class="material-icons tooltipped" data-position="bottom"
+            data-tooltip="Refresh comments">refresh</i>
           <!-- Spinner -->
           <div style="display:none;" id="comments-loading" class="preloader-wrapper small active">
             <div class="spinner-layer spinner-blue-only">
               <div class="circle-clipper left">
                 <div class="circle"></div>
-              </div><div class="gap-patch">
+              </div>
+              <div class="gap-patch">
                 <div class="circle"></div>
-              </div><div class="circle-clipper right">
+              </div>
+              <div class="circle-clipper right">
                 <div class="circle"></div>
               </div>
             </div>
@@ -230,7 +244,7 @@
       </a>
     </form>
     <div id="comment_list">
-    {% include 'gifts/components/gift-comments.html' %}
+      {% include 'gifts/components/gift-comments.html' %}
     </div>
   </div>
 </div>
@@ -238,6 +252,8 @@
 
 </div>
 </div>
+<input id="inviteLink" type="text" value="{% abs_url 'gift_invitation_link' gift_invitation_link.code %}"
+  class="form-control" style="display: none;" readonly>
 
 {% block end_scripts %}
 <script src="{% static 'gifts/js/viewGifts.js'%}"></script>

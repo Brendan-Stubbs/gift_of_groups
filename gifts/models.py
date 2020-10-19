@@ -159,22 +159,6 @@ m2m_changed.connect(GiftGroup.manage_user_change,
                     sender=GiftGroup.users.through)
 
 
-class GroupInvitationLink(models.Model):
-    group = models.OneToOneField(GiftGroup, on_delete=models.CASCADE)
-    code = models.CharField(max_length=32, unique=True)
-
-    def create_unique_code(self):
-        random_code = get_random_string(32)
-        while GroupInvitationLink.objects.filter(code=random_code).exists():
-            random_code = get_random_string(32)
-        return random_code
-
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            self.code = self.create_unique_code()
-        super(GroupInvitationLink, self).save(*args, **kwargs)
-
-
 class GiftGroupInvitation(models.Model):
     STATUS_PENDING = 1
     STATUS_ACCEPTED = 2
@@ -274,6 +258,16 @@ class Gift(models.Model):
     def get_confirmed_payment_count(self):
         return len(ContributorGiftRelation.objects.filter(gift=self, has_made_payment=True))
 
+    def get_invite_link(self):
+        if not GiftInvitationLink.objects.filter(gift=self).exists():
+            GiftInvitationLink.objects.create(gift=self)
+        return GiftInvitationLink.objects.get(gift=self)
+
+    def get_gift_title(self):
+        if self.receiver:
+            return self.receiver.get_full_name()
+        return self.title
+
     def __unicode__(self):
         try:
             return "{} {} : {}".format(self.receiver.first_name, self.receiver.last_name, self.wrap_up_date.strftime("%d %b"))
@@ -288,6 +282,30 @@ class Gift(models.Model):
 def populate_gift_relations(sender, instance, created, **kwargs):
     if created:
         instance.create_contributor_relationship_for_group()
+
+class InvitationLink(models.Model):
+    class Meta:
+        abstract = True
+    code = models.CharField(max_length=32, unique=True)
+
+    def create_unique_code(self):
+        random_code = get_random_string(32)
+        while type(self).objects.filter(code=random_code).exists():
+            random_code = get_random_string(32)
+        return random_code
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.code = self.create_unique_code()
+        super(InvitationLink, self).save(*args, **kwargs)
+
+
+class GroupInvitationLink(InvitationLink):
+    group = models.OneToOneField(GiftGroup, on_delete=models.CASCADE)
+
+
+class GiftInvitationLink(InvitationLink):
+    gift = models.OneToOneField(Gift, on_delete=models.CASCADE)
 
 
 class GiftIdea(models.Model):
@@ -337,7 +355,9 @@ class GiftComment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
-        return "{} commented on {}'s gift".format(self.poster.first_name, self.gift.receiver.first_name)
+        if self.gift.receiver:
+            return "{} commented on {}'s gift".format(self.poster.first_name, self.gift.receiver.first_name)
+        return "{} commented on {}'s gift".format(self.poster.first_name, self.gift.title)
 
     def __str__(self):
         return self.__unicode__()
