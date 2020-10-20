@@ -73,7 +73,7 @@
     {% if active_gifts %}
     {% for gift in active_gifts %}
     <li id="giftDropdownItem{{gift.id}}">
-      <a href="{% url 'view_gift' gift.id %}">{{ gift.receiver.first_name }} {{gift.receiver.last_name}}</a>
+      <a href="{% url 'view_gift' gift.id %}">{{ gift.get_gift_title }}</a>
     </li>
     {% endfor %}
     {% elif not request.user.is_authenticated %}
