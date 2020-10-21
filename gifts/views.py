@@ -486,6 +486,25 @@ class MarkGiftComplete(generic.View):
         return redirect("view_groups")
 
 
+class CaptainConfirmPayment(generic.View):
+    def get(self, request, *args, **kwargs):
+        gift_relation = ContributorGiftRelation.objects.get(pk=self.kwargs.get("relation_id"))
+        if not request.user.is_authenticated and not request.user == gift_relation.gift.captain:
+            return JsonResponse({}, status=403)
+
+        gift_relation.payment_has_cleared = True
+        gift_relation.save()
+        gift_relations = ContributorGiftRelation.objects.filter(gift=gift_relation.gift)
+        captain_management_component = render_to_string("gifts/components/captain_gift_management.html", {"gift_relations": gift_relations})
+        gift_progress_component = render_to_string("gifts/components/gift_progress_component.html", {'gift':gift_relation.gift})
+        
+        context = {
+            "captain_management_component": captain_management_component,
+            "gift_progress_component": gift_progress_component,
+        }
+        return JsonResponse(context)
+
+
 class UpdateUserGiftRelation(generic.View):
     def post(self, request, *args, **kwargs):
         if not request.user.is_authenticated:

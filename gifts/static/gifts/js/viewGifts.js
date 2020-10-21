@@ -156,6 +156,17 @@ function refresh_comments(gift_id) {
     })
 }
 
+function ajax_confirm_payment(relation_id) {
+    $.ajax({
+        type: 'GET',
+        url: `/ajax/captain_confirm_payment/${relation_id}/`,
+        success: function (resp) {
+            $("#captain_management_component").empty().append(resp.captain_management_component)
+            $('#target-details').empty().append(resp.gift_progress_component)
+        },
+    })
+}
+
 $(document).ready(function () {
     let invite_link = $('#inviteLink')
 
