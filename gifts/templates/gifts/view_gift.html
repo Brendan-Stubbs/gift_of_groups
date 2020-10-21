@@ -78,10 +78,12 @@
     <form id="user_gift_detail_form" onchange="ajax_update_user_gift_form('{{user_gift_relation.id}}');">
       {% csrf_token %}
       <div class="col s12 m6 l4">
+        <i id="participation_spinner" style="display:none" class="fas fa-circle-notch fa-spin"></i>
         {{gift_relation_form.participation_status.label_tag}}
         {{gift_relation_form.participation_status}}
       </div>
       <div class="col s12 m6 l4">
+        <i id="contribution_spinner" style="display:none" class="fas fa-circle-notch fa-spin"></i>
         <label>How much are you contributing?</label>
         {{gift_relation_form.contribution}}
       </div>
@@ -89,13 +91,13 @@
         {% if user_gift_relation.payment_has_cleared %}
         <button class="btn disabled">Payment Confirmed</button>
         {% elif user_gift_relation.has_made_payment %}
-        <button class="btn disabled tooltipped" data-position="bottom"
+        <button" class="btn disabled tooltipped" data-position="bottom"
           data-tooltip="Your Captain will update this status when your payment has cleared">Payment Pending</button>
-        {% else %}
-        <button onclick="mark_as_paid()" class="btn green tooltipped" data-position="bottom"
-          data-tooltip="Let your captain know that you have made payment">Notify of Payment</button>
-        {% endif %}
-        <div style="">{{gift_relation_form.has_made_payment}}</div>
+          {% else %}
+          <button onclick="mark_as_paid()" class="btn green tooltipped" data-position="bottom" id="notify-button"
+            data-tooltip=" Let your captain know that you have made payment">Notify of Payment</button>
+          {% endif %}
+          <div style="">{{gift_relation_form.has_made_payment}}</div>
       </div>
     </form>
   </div>

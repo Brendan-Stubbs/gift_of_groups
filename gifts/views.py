@@ -491,17 +491,20 @@ class UpdateUserGiftRelation(generic.View):
         if not request.user.is_authenticated:
             return JsonResponse({}, status=403)
         try:
+            has_made_payment = False
             gift_relation = ContributorGiftRelation.objects.get(
                 pk=request.POST.get('gift_relation_id'))
             form = GiftManagementUserForm(request.POST, instance=gift_relation)
             if form.is_valid():
                 instance = form.save()
+            has_made_payment = gift_relation.has_made_payment
             context = {
                 "gift": gift_relation.gift,
             }
             gift_progress_component = render_to_string(
                 "gifts/components/gift_progress_component.html", context)
-            return JsonResponse({"gift_progress_component": gift_progress_component})
+            json_context = {"gift_progress_component": gift_progress_component, "has_made_payment": has_made_payment}
+            return JsonResponse(json_context)
         except Exception as e:
             print(e)
             return JsonResponse({}, status=403)

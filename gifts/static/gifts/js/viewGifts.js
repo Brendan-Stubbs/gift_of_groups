@@ -96,12 +96,22 @@ function ajax_update_user_gift_form(gift_relation_id) {
         contentType: false,
         processData: false,
         enctype: 'multipart/form-data',
+        beforeSend: function () {
+            $('#participation_spinner').removeClass('fas fa-check').addClass('fas fa-circle-notch fa-spin').css('display', 'inline-block');
+            $('#contribution_spinner').removeClass('fas fa-check').addClass('fas fa-circle-notch fa-spin').css('display', 'inline-block');
+
+        },
         success: function (resp) {
             $('#user_gift_detail_success').removeClass('hidden-message')
             $('#target-details').empty().append(resp.gift_progress_component)
+            $('#participation_spinner').removeClass('fas fa-circle-notch fa-spin').addClass('fas fa-check').css('display', 'inline-block');
+            $('#contribution_spinner').removeClass('fas fa-circle-notch fa-spin').addClass('fas fa-check').css('display', 'inline-block');
+            if (resp.has_made_payment) {
+                $('#notify-button').attr('disabled', true);
+            }
         },
         error: function (resp) {
-            alert("There was an error saving your changes, please refresh the page")
+            alert("There was an error saving your changes, please refresh the page and try again")
         }
     })
 }
