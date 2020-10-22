@@ -1,5 +1,6 @@
 from gifts.models import GiftGroupInvitation, Gift, ContributorGiftRelation, GiftCommentNotification, GroupCommentNotification
 from gifts.forms import OnceOffGiftForm
+from gift_of_groups.settings import ENVIRONMENT
 
 
 def check_invitations(request):
@@ -28,6 +29,8 @@ def get_notfications(request):
 def get_once_off_gift_form():
     return {"once_off_gift_form": OnceOffGiftForm()}
 
+def get_environment(request):
+    return {"environment":ENVIRONMENT}
 
 def get_custom_context_processors(request):
     context = {}
@@ -35,4 +38,6 @@ def get_custom_context_processors(request):
     context.update(check_invitations(request))
     context.update(get_notfications(request))
     context.update(get_once_off_gift_form())
+    context.update(get_environment(request))
     return context
+
