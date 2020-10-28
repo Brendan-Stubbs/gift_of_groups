@@ -93,19 +93,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "gift_of_groups.wsgi.application"
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "gift_db",
-        "USER": "gift_user",
-        "PASSWORD": "iamthetestdb",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
+try:
+    DATABASES = local_settings.DATABASES
+except:
+    DATABASES = {
+        'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-}
-
-if ENVIRONMENT == "live":
-        DATABASES = local_settings.DATABASES
 
 
 # Password validation
