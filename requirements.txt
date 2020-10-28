@@ -1,7 +1,7 @@
 certifi==2020.6.20
 cffi==1.14.1
 chardet==3.0.4
-cryptography==3.0
+cryptography==3.2
 defusedxml==0.7.0rc1
 Django==2.2.15
 django-crispy-forms==1.9.1
@@ -19,3 +19,4 @@ social-auth-app-django==4.0.0
 social-auth-core==3.3.3
 sqlparse==0.3.1
 urllib3==1.25.10
+
