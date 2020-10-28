@@ -2,11 +2,11 @@ body {
     display: flex;
     min-height: 100vh;
     flex-direction: column;
-  }
+}
 
 main {
     flex: 1 0 auto;
-  }
+}
 
 nav {
     margin-bottom: 30px;
@@ -36,16 +36,19 @@ form {
     margin-bottom: 50px;
 }
 
-.small-text-dropdown{
-    font-size: 14px !important;
+.small-text-dropdown {
+    font-size: 13px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.dropdown-icon{
+.dropdown-icon {
     font-size: 20px;
     margin-left: 6px;
 }
 
-.pointer{
+.pointer {
     cursor: pointer;
 }
 
@@ -61,7 +64,7 @@ form {
     flex-basis: 50%;
 }
 
-span.small-text{
+span.small-text {
     font-size: 13px;
 }
 
@@ -71,11 +74,15 @@ span.small-text{
     .flex-fix-column {
         flex-basis: 20%;
     }
+
+    .small-text-dropdown {
+        font-size: 14px !important;
+    }
 }
 
 /*Large*/
-@media only screen and (min-width: 992px){
-    .flex-container-on-large{
+@media only screen and (min-width: 992px) {
+    .flex-container-on-large {
         display: flex;
     }
 
