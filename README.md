@@ -1,18 +1,6 @@
 # gift_of_groups
 A web application to manage group birthday gifts
 
-### Set up local_settings.py in the same directory as settings.py
-```
-DEBUG = True
-ENVIRONMENT = "local"
-SECRET_KEY = <See below>
-```
-Set the value of secret key as the result of
-```
-from django.core.management.utils import get_random_secret_key
-get_random_secret_key()
-```
-
 ### Set up virtual environment
 Make sure you have Python 3 installed
 
@@ -36,6 +24,18 @@ Activate your virtual environment and install dependencies
 ```
 source ~/Venvs/gift-of-groups/bin/activate
 pip install -r requirements.txt
+```
+
+### Set up local_settings.py in the same directory as settings.py
+```
+DEBUG = True
+ENVIRONMENT = "local"
+SECRET_KEY = <See below>
+```
+Set the value of secret key as the result of
+```
+from django.core.management.utils import get_random_secret_key
+get_random_secret_key()
 ```
 
 **If you would like to use psql. Else you can ignore and it will default to sqlite**
