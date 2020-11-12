@@ -94,6 +94,7 @@
         <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
         <ul class="left hide-on-med-and-down">
           <li {% if page_name == 'groups'%} class="active" {% endif %}><a href="{% url 'view_groups' %}">Groups</a></li>
+          <li {% if page_name == 'about'%} class="active" {% endif %}><a href="{% url 'about' %}">About</a></li>
           <li {% if page_name == 'gifts'%} class="active" {% endif %}><a id="gift_drop_trigger" class="dropdown-trigger" data-target="giftDropdown">Gifts</a></li>
           {% if gift_group_invitations.count > 0 %} 
           <li>
@@ -126,6 +127,7 @@
   </div>
 
   <ul class="sidenav" id="mobile-nav">
+    <li {% if page_name == 'about'%} class="active" {% endif %}><a href="{% url 'about' %}">About</a></li>
     {% if not user.is_authenticated %}
     <li><a href="{% url 'register' %}">Sign up</a></li>
     <li><a href="{% url 'login' %}">Log in</a></li>

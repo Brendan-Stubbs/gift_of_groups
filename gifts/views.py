@@ -21,6 +21,10 @@ class Index(generic.View):
         context = {}
         return render(request, "gifts/index.html", context)
 
+class About(generic.View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "gifts/about.html", {})
+
 
 class EditProfile(generic.View):
     free_pics = ProfilePic.objects.filter(is_premium=False)

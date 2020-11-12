@@ -4,6 +4,7 @@ from gift_of_groups import local_settings
 
 urlpatterns = [
     path("", views.Index.as_view(), name="index"),
+    path("about", views.About.as_view(), name="about"),
     path("edit_profile", views.EditProfile.as_view(), name="edit_profile"),
     path("new_group/", views.CreateGroup.as_view(), name="new_group"),
     path("groups", views.ViewGroups.as_view(), name="view_groups"),

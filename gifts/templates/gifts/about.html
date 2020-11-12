@@ -1,0 +1,104 @@
+{% extends 'gifts/base.html'%} {% block title %} Giftly Groups: About {% endblock %}
+{%load static %}
+{% block head_links %}
+<meta name="description" content="A tool to help you organise gifts and remember birthday presents for your friends.">
+<style>
+    .about-list li {
+        list-style-type: disc !important;
+        margin-left: 25px;
+    }
+
+    a {
+        color: #366290;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col offset-l1 l10">
+            <h3 class="center-align">About</h3>
+            <h5>What is Giftly Groups?</h5>
+            <p>Giftly Groups is a tool for managing group gifts. Whether it be a birthday present, wedding gift,
+                housewarming
+                gift, or you just feel like being nice.</p>
+            <h5>How it Works</h5>
+            <p>If you have a group of friends who regularly get to together and organise gifts for each other's
+                birthdays,
+                you
+                have the option of <a href="{% url 'new_group' %}">creating a group</a> where we will monitor birthdays
+                and
+                set up a gift when a member of the group's birthday is approaching.</p>
+            <p>If you would like to organise a once off gift or have not yet got your group going, you are able to <a
+                    class="modal-trigger" href="#OnceOffGiftModal">create a once off gift</a> where you can get up and
+                running
+                quickly, with the ability to invite whoever you want</p>
+
+            <h5>How Do The Gifts Work</h5>
+            <ul class="about-list">
+                <li>The captain of a gift is the person taking ownership of the gift and will ultimately be the one
+                    meaking
+                    the
+                    final decisions and collecting the money.</li>
+                <li>When you create a once off gift you will be autoomatically set as the gift captain, where you will
+                    receive a
+                    link which you can use to invite contributors to the gift.</li>
+                <li>When a birthday gift is automatically created for your group, someone in the group will need to
+                    elect themselves as captain.</li>
+                <li>As gift captain you have the option of providing your bank details to the members in the gift, or
+                    considering you are all friends it is quite likely that everyone has your bank details already. In
+                    this case you can advise the members of the gift to contact you for details.</li>
+                <li>Once a gift is created you can navigate to the gift <a href="{% url 'view_all_gifts' %}">here</a>
+                </li>
+                <li>Everyone that is part of the gift will have the opportunity to make suggestions on what to get, as
+                    well as vote for their favourite suggestion.</li>
+                <li>The outcome of the vote does not dictate the final gift, it is to give the gift captain an idea of
+                    what to go for, The captain still makes the final decision.</li>
+                <li>See below for an explanation of participation in gifts.</li>
+            </ul>
+
+            <h5>Participation in Gifts</h5>
+            <ul class=about-list>
+                <li>On the gift's page you will see the option to record your participation status. This can be updated
+                    before any payment or amounts have been decided on and is to let the captain know how many
+                    contributors to expect.</li>
+                <li>Here you can also enter in the amount you plan on contributing, once again this can be done before
+                    you make payment, and is used to keep a record of how much each person plans to contribute.</li>
+                <li>Once you have made payment to the Captain, you can let them know by clicking on the <strong>Notify
+                        of Payment</strong> button</li>
+                <li>This will let the captain know that you have made payment and they will have the opportunity to
+                    confirm that they have received the payment.</li>
+            </ul>
+
+            <h5>Frequently Asked Questions</h5>
+            <p>
+                <strong>Can everyone in the group see my contribution and whether I am contributing?</strong>
+                <br>
+                No they cannot, this is only visible to the captain and is just meant for the captain to get an overview
+                of what is happening, as well as to help in confirming they have received your payment.
+            </p>
+            <p>
+                <strong>What is the difference between pledged amount and confirmed amount?</strong>
+                <br>
+                The Pledged amount which you will see on the gift page is the sum of the total contributions that have
+                not yet been confirmed.
+                <br>
+                The Confirmed amount is the sum of the total payments confirmed by the captain.
+            </p>
+            <p>
+                <strong>Do I need to create a new group everytime there is a new gift?</strong>
+                No you do not. You should only be part of one group per group of friends, and if you would like to gift
+                someone who is not yet in the group you can <a class="modal-trigger" href="#OnceOffGiftModal">Create a
+                    Once Off Gift.</a>
+            </p>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
