@@ -34,11 +34,10 @@
                 have the option of <a href="{% url 'new_group' %}">creating a group</a> where we will monitor birthdays
                 and
                 set up a gift when a member of the group's birthday is approaching.</p>
-            <p>If you would like to organise a once off gift or have not yet got your group going, you are able to <a
-                    class="modal-trigger" href="#OnceOffGiftModal">create a once off gift</a> where you can get up and
-                running
-                quickly, with the ability to invite whoever you want</p>
-
+            <p>If you would like to organise a once off gift or have not yet got your group going, you are able to
+                {% if request.user.is_authenticated %}<a class="modal-trigger" href="#OnceOffGiftModal"> {% else %} <a
+                        href="{% url 'login'%}">{% endif %}create a once off gift</a> where you can get up and
+                    running quickly, with the ability to invite whoever you want</p>
             <h5>How Do The Gifts Work</h5>
             <ul class="about-list">
                 <li>The captain of a gift is the person taking ownership of the gift and will ultimately be the one
@@ -93,8 +92,10 @@
             <p>
                 <strong>Do I need to create a new group everytime there is a new gift?</strong>
                 No you do not. You should only be part of one group per group of friends, and if you would like to gift
-                someone who is not yet in the group you can <a class="modal-trigger" href="#OnceOffGiftModal">Create a
-                    Once Off Gift.</a>
+                someone who is not yet in the group you can {% if request.user.is_authenticated %}<a
+                    class="modal-trigger" href="#OnceOffGiftModal"> {% else %} <a
+                        href="{% url 'login'%}">{% endif %}Create a
+                        Once Off Gift.</a>
             </p>
 
         </div>
