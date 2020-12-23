@@ -256,7 +256,7 @@ class Gift(models.Model):
         return len(ContributorGiftRelation.objects.filter(gift=self, participation_status="approved"))
 
     def get_confirmed_payment_count(self):
-        return len(ContributorGiftRelation.objects.filter(gift=self, has_made_payment=True))
+        return len(ContributorGiftRelation.objects.filter(gift=self, payment_has_cleared=True))
 
     def get_invite_link(self):
         if not GiftInvitationLink.objects.filter(gift=self).exists():
