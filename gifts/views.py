@@ -367,6 +367,7 @@ class ViewGift(generic.View):
             "gift_invitation_link": gift_invitation_link,
             "comment_form": comment_form,
             "captain_management_component": captain_management_component,
+            "gift_relations": gift_relations,
         }
         return render(request, "gifts/view_gift.html", context)
 

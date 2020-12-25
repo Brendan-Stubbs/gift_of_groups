@@ -1,0 +1,16 @@
+{% load static %}
+<div class="row">
+    <div class="col s12 offset-m1 m10 offset-l2 l8">
+        <ul class="collection white">
+            <h5 class="center-align">All Participants</h5>
+            {% for gift_relation in gift_relations %}
+            <li class="collection-item avatar">
+                <img src="{% static 'gifts/images/avatar_placeholder.png' %}" alt="" class="circle">
+                <span class="title">{{gift_relation.contributor.first_name}}
+                    {{gift_relation.contributor.last_name}}</span>
+                </p>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
