@@ -254,7 +254,7 @@ class Gift(models.Model):
         return [x.contributor for x in gift_relations]
 
     def get_all_contributors(self):
-        gift_relations = ContributorGiftRelation.objects.filter(gift=self, payment_has_cleared=True)
+        gift_relations = ContributorGiftRelation.objects.filter(gift=self, has_made_payment=True)
         return [x.contributor for x in gift_relations]
 
     def get_all_comments(self):
