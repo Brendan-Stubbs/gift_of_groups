@@ -5,9 +5,9 @@
             <p class="center-align">Happy Birthday, from all of these awesome people</p>
             {% for contributor in contributors %}
             <li class="collection-item avatar">
-                <img src="{% static 'gifts/images/avatar_placeholder.png' %}" alt="" class="circle">
-                <span class="title">{{gift_relation.contributor.first_name}}
-                    {{gift_relation.contributor.last_name}}</span>
+                <img src="{{contributor.profile.get_profile_pic}}"" alt="" class="circle">
+                <span class="title">{{contributor.first_name}}
+                    {{contributor.last_name}}</span>
                 </p>
             </li>
             {% endfor %}

@@ -4,7 +4,7 @@
     <ul class="collection">
       {% for gift_relation in gift_relations %}
       <li class="collection-item avatar">
-        <img src="{% static 'gifts/images/avatar_placeholder.png' %}" alt="" class="circle">
+        <img src="{{gift_relation.contributor.profile.get_profile_pic}}" alt="" class="circle">
         <span class="title">{{gift_relation.contributor.first_name}} {{gift_relation.contributor.last_name}}</span>
         {% if gift_relation.participation_status == "approved" %}
         <p class="green-text">Participating</p>

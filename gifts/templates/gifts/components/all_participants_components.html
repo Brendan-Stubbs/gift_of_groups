@@ -5,7 +5,7 @@
             <h5 class="center-align">All Participants</h5>
             {% for gift_relation in gift_relations %}
             <li class="collection-item avatar">
-                <img src="{% static 'gifts/images/avatar_placeholder.png' %}" alt="" class="circle">
+                <img src="{{gift_relation.contributor.profile.get_profile_pic}}" alt="" class="circle">
                 <span class="title">{{gift_relation.contributor.first_name}}
                     {{gift_relation.contributor.last_name}}</span>
                 </p>
