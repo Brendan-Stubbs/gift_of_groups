@@ -1,0 +1,68 @@
+{% extends 'gifts/base.html' %}
+{% load static %}
+{% load gift_template_tags %}
+{% block head_links %}
+<link rel="stylesheet" type="text/css" href="{% static 'gifts/css/view_gift.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="content container">
+  <div class="center-align">
+    {% if gift.receiver %}
+    <h1>{{gift.receiver.first_name}}</h1>
+    <h4><i class="material-icons circle pink-text">cake</i> {{gift.wrap_up_date|date:"d F"}}</h4>
+    {% else %}
+    <h1>{{gift.title}}</h1>
+    <p>{{gift.description}}</p>
+    {% endif %}
+
+  </div>
+
+  
+<div>
+  {% include 'gifts/components/all_contributors_component.html' %}
+</div>
+
+<!-- Comments section -->
+<div id="comment-section" class="row">
+  <div class="col s12 offset-m2 m8 offset-l2 l8">
+    <form id="comment_form" onsubmit="ajax_post_comment('{{gift.id}}')" class="white">
+      {% csrf_token %}
+      {{comment_form.content}}
+      <button class="btn">Comment</button>
+      <a class="btn" onclick="refresh_comments('{{gift.id}}')">
+        <div class="valign-wrapper">
+          <i id="comments-refresh" class="material-icons tooltipped" data-position="bottom"
+            data-tooltip="Refresh comments">refresh</i>
+          <!-- Spinner -->
+          <div style="display:none;" id="comments-loading" class="preloader-wrapper small active">
+            <div class="spinner-layer spinner-blue-only">
+              <div class="circle-clipper left">
+                <div class="circle"></div>
+              </div>
+              <div class="gap-patch">
+                <div class="circle"></div>
+              </div>
+              <div class="circle-clipper right">
+                <div class="circle"></div>
+              </div>
+            </div>
+          </div>
+          <!-- End Spinner -->
+        </div>
+      </a>
+    </form>
+    <div id="comment_list">
+      {% include 'gifts/components/gift-comments.html' %}
+    </div>
+  </div>
+</div>
+<!-- End Comments Section -->
+
+</div>
+</div>
+
+{% block end_scripts %}
+<script src="{% static 'gifts/js/viewGifts.js'%}"></script>
+{% endblock %}
+{% endblock %}

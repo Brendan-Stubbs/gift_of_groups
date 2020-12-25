@@ -726,6 +726,35 @@ class MasterCalendar(generic.View):
         return render(request, "gifts/master_calendar.html", {"birthdays":(birthdays), "birthdays_dict": birthdays_dict})
 
 
+class ViewBirthdayCard(generic.View):
+    def get(self,request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('/login/?next=%s' % request.path)
+        code = self.kwargs.get("code")
+        query_set = Gift.objects.filter(code=code)
+        if not query_set.exists:
+            return redirect("index")
+        else:
+            gift = query_set.last()
+
+        comment_form = GroupCommentForm()
+
+
+        contributors = gift.get_all_contributors()
+        context = {
+            "contributors": contributors,
+            "gift": gift,
+            "comment_form": comment_form,
+        }
+
+        return render(request, "gifts/birthday_card.html", context)
+
+
+# TODO Give captain the ability to send an invite to the bday boy/girl which sets them as the gift reciever??
+# TODO update bday card so that only gift members and bday boy/girl can see it
+# TODO refactor unique code generators out of the model for invitations
+# TODO separate the javascript for birthday cards
+
 # Maybe
 # TODO Captain must be able to change pledged values
 # TODO set up social auth (Google + Facebook)

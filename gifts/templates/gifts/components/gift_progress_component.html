@@ -1,29 +1,47 @@
-<div class="card-panel blue lighten-1" style="height: 100%;">
+<div class="card-panel blue lighten-1" style="height: 100%">
   {% if gift.chosen_gift %}
   <h5 class="white-text center-align">{{gift.chosen_gift.title}}</h5>
-  <h6 class="white-text center-align">Target: R{{gift.chosen_gift.price|floatformat:2}}</h6>
+  <h6 class="white-text center-align">
+    Target: R{{gift.chosen_gift.price|floatformat:2}}
+  </h6>
   <p class="white-text center-align">{{gift.chosen_gift.description}}</p>
   {% else %}
   <h5 class="white-text center">Gift Progress</h5>
-  <span class="white-text">No gift has been selected. Your Gift Captain will need to take care of this. In the meantime you can suggest and vote for your favourite gifts below.
+  <span class="white-text"
+    >No gift has been selected. Your Gift Captain will need to take care of
+    this. In the meantime you can suggest and vote for your favourite gifts
+    below.
   </span>
   {% endif %}
 
   <!-- End no gift selected -->
   <div class="col s12 m10 offset-m1">
     <div class="progress gift-countdown">
-      <div class="determinate" style="width: {{gift.get_total_pledged_percentage}}%"></div>
+      <div
+        class="determinate"
+        style="width: {{gift.get_total_pledged_percentage}}%"
+      ></div>
     </div>
-    <p class="center-align gift-countdown-text">R{{gift.get_total_pledged_amount|floatformat:2}} Pledged</p>
+    <p class="center-align gift-countdown-text">
+      R{{gift.get_total_pledged_amount|floatformat:2}} Pledged
+    </p>
     <div class="progress gift-countdown">
-      <div class="determinate" style="width: {{gift.get_total_contribution_percentage}}%"></div>
+      <div
+        class="determinate"
+        style="width: {{gift.get_total_contribution_percentage}}%"
+      ></div>
     </div>
-    <p class="center-align gift-countdown-text">R{{gift.get_total_contribution_amount|floatformat:2}} Confirmed</p>
+    <p class="center-align gift-countdown-text">
+      R{{gift.get_total_contribution_amount|floatformat:2}} Confirmed
+    </p>
   </div>
   <div class="clearfix"></div>
   <div class="white-text center-align">
-    <br>
-    <p>People contributing: {{gift.get_contributor_count}}/{{gift.get_all_contributors|length}}</p>
+    <br />
+    <p>
+      People contributing:
+      {{gift.get_contributor_count}}/{{gift.get_all_participants|length}}
+    </p>
     <p>Confirmed Payments: {{gift.get_confirmed_payment_count}}</p>
   </div>
 </div>

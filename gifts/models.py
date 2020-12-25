@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from gifts.utils import datehelper, group_helper, sendgrid_helper
+from gifts.utils import general_utils
 
 
 class ProfilePic(models.Model):
@@ -205,6 +206,7 @@ class Gift(models.Model):
     is_complete = models.BooleanField(default=False)
     chosen_gift = models.ForeignKey('GiftIdea', null=True, blank=True, on_delete=models.SET_NULL, related_name="chosen_gift")
     gift_type = models.CharField(max_length=20, default="other")
+    code = models.CharField(max_length=32, unique=True, null=True)
 
     def create_contributor_relationship_for_group(self):
         if self.gift_group:
@@ -237,6 +239,8 @@ class Gift(models.Model):
             self.gift_type = "birthday"
         else:
             self.gift_type = "other"
+        if not self.pk:
+            self.code = general_utils.create_unique_code(self)
         super(Gift, self).save(*args, **kwargs)
 
     def get_all_gift_suggestions_with_vote_info(self, user):
@@ -245,8 +249,12 @@ class Gift(models.Model):
             idea.user_has_voted = user in idea.votes.all()
         return gift_ideas
 
-    def get_all_contributors(self):
+    def get_all_participants(self):
         gift_relations = ContributorGiftRelation.objects.filter(gift=self)
+        return [x.contributor for x in gift_relations]
+
+    def get_all_contributors(self):
+        gift_relations = ContributorGiftRelation.objects.filter(gift=self, payment_has_cleared=True)
         return [x.contributor for x in gift_relations]
 
     def get_all_comments(self):

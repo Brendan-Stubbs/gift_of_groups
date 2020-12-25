@@ -38,7 +38,7 @@ def send_invite_mail_existing_user(invitation):
     send_mail(message)
 
 def send_gift_creation_mail(gift):
-    all_emails = [x.email for x in gift.get_all_contributors()]
+    all_emails = [x.email for x in gift.get_all_participants()]
     message = Mail(
         from_email='giftlygroups@gmail.com',
         to_emails=all_emails,
