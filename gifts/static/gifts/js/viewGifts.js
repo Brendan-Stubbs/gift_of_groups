@@ -99,6 +99,8 @@ function ajax_update_user_gift_form(gift_relation_id) {
         beforeSend: function () {
             $('#participation_spinner').removeClass('fas fa-check').addClass('fas fa-circle-notch fa-spin').css('display', 'inline-block');
             $('#contribution_spinner').removeClass('fas fa-check').addClass('fas fa-circle-notch fa-spin').css('display', 'inline-block');
+            $('#receiver_message_spinner').removeClass('fas fa-check').addClass('fas fa-circle-notch fa-spin').css('display', 'inline-block');
+
 
         },
         success: function (resp) {
