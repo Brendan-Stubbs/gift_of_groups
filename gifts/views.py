@@ -385,7 +385,6 @@ class CreateOnceOffGift(generic.View):
 
         return redirect("index") # TODO Display Error instead?
         
-        
 
 
 class ClaimGiftCaptaincy(generic.View):
@@ -738,13 +737,14 @@ class ViewBirthdayCard(generic.View):
             gift = query_set.last()
 
         comment_form = GroupCommentForm()
-
-
         contributors = gift.get_all_contributors()
+        contributor_relations = ContributorGiftRelation.objects.filter(gift=gift)
+
         context = {
             "contributors": contributors,
             "gift": gift,
             "comment_form": comment_form,
+            "contributor_relations": contributor_relations,
         }
 
         return render(request, "gifts/birthday_card.html", context)
@@ -753,7 +753,6 @@ class ViewBirthdayCard(generic.View):
 # TODO Give captain the ability to send an invite to the bday boy/girl which sets them as the gift reciever??
 # TODO update bday card so that only gift members and bday boy/girl can see it
 # TODO refactor unique code generators out of the model for invitations
-# TODO separate the javascript for birthday cards
 
 # Maybe
 # TODO Captain must be able to change pledged values
