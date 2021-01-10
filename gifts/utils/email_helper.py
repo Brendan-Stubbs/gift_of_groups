@@ -2,22 +2,23 @@
 # from sendgrid.helpers.mail import Mail
 from gift_of_groups import local_settings
 from django.template.loader import render_to_string
-from gift_of_groups.settings import DOMAIN_NAME
+from gift_of_groups.settings import DOMAIN_NAME, ACTIVATE_EMAIL_ON_ENVIRONMENT
 from django.core.mail import send_mail
 
 domain = DOMAIN_NAME
 
 def send_mail_helper(from_email, to_emails, subject, html_content, fail_silently=True):
-    if type(to_emails) == str:
+    if isinstance(to_emails, str):
         to_emails = [to_emails]
-    if local_settings.EMAIL_HOST_PASSWORD:
+    if ACTIVATE_EMAIL_ON_ENVIRONMENT:
         send_mail(
             subject,
             html_content,
             from_email,
             to_emails,
             fail_silently=fail_silently,
-    )
+        )
+
 
 def send_invite_email(invitation):
     send_mail_helper(

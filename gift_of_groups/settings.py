@@ -157,7 +157,12 @@ MESSAGE_TAGS = {
 }
 
 try:
-    EMAIL_HOST_USER = "giftlygroups@gmail.com"
+    ACTIVATE_EMAIL_ON_ENVIRONMENT = local_settings.ACTIVATE_EMAIL_ON_ENVIRONMENT
+except:
+    ACTIVATE_EMAIL_ON_ENVIRONMENT = False
+
+try:
+    EMAIL_HOST_USER = local_settings.EMAIL_HOST_USER
     EMAIL_HOST_PASSWORD = local_settings.EMAIL_HOST_PASSWORD
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     EMAIL_HOST = "smtp.gmail.com"
