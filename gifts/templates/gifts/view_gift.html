@@ -98,13 +98,18 @@
         {% if user_gift_relation.payment_has_cleared %}
         <button class="btn disabled">Payment Confirmed</button>
         {% elif user_gift_relation.has_made_payment %}
-        <button" class="btn disabled tooltipped" data-position="bottom"
+        <button class="btn disabled tooltipped" data-position="bottom"
           data-tooltip="Your Captain will update this status when your payment has cleared">Payment Pending</button>
-          {% else %}
-          <button onclick="mark_as_paid()" class="btn green tooltipped" data-position="bottom" id="notify-button"
-            data-tooltip=" Let your captain know that you have made payment">Notify of Payment</button>
-          {% endif %}
-          <div style="">{{gift_relation_form.has_made_payment}}</div>
+        {% else %}
+        <button onclick="mark_as_paid()" class="btn green tooltipped" data-position="bottom" id="notify-button"
+          data-tooltip="Let your captain know that you have made payment">Notify of Payment</button>
+        {% endif %}
+        <div style="">{{gift_relation_form.has_made_payment}}</div>
+      </div>
+      <div class="col s12">
+        <i id="receiver_message_spinner" style="display:none" class="fas fa-circle-notch fa-spin"></i>
+        {{gift_relation_form.receiver_message.label_tag}}
+        {{gift_relation_form.receiver_message}}
       </div>
     </form>
   </div>

@@ -67,11 +67,12 @@ class GiftIdeaForm(forms.ModelForm):
 class GiftManagementUserForm(forms.ModelForm):
     class Meta:
         model = ContributorGiftRelation
-        fields = ["contribution", 'has_made_payment', 'participation_status']
+        fields = ["contribution", 'has_made_payment', 'participation_status', "receiver_message"]
         labels = {
             "contribution": "How much are you contributing?",
             "has_made_payment": "Let your captain know you have paid",
-            "participation_status": "Will you be participating?"
+            "participation_status": "Will you be participating?",
+            "receiver_message": "Sign the birthday card",
         }
 
 class GiftCommentForm(forms.ModelForm):

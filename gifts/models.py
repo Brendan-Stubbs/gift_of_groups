@@ -344,6 +344,7 @@ class ContributorGiftRelation(models.Model):
     has_made_payment = models.BooleanField(default=False)
     payment_has_cleared = models.BooleanField(default=False)
     participation_status = models.CharField(max_length=15, null=True, blank=True, choices=PARICIPATION_CHOICES, default=None)
+    receiver_message = models.TextField(null=True)
 
     def save(self, *args, **kwargs):
         if self.contributor != self.gift.receiver:
