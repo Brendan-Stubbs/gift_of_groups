@@ -4,18 +4,21 @@ from gift_of_groups import local_settings
 from django.template.loader import render_to_string
 from gift_of_groups.settings import DOMAIN_NAME, ACTIVATE_EMAIL_ON_ENVIRONMENT
 from django.core.mail import send_mail
+from django.utils.html import strip_tags
 
 domain = DOMAIN_NAME
 
 def send_mail_helper(from_email, to_emails, subject, html_content, fail_silently=True):
     if isinstance(to_emails, str):
         to_emails = [to_emails]
+    plain_message = strip_tags(html_content)
     if ACTIVATE_EMAIL_ON_ENVIRONMENT:
         send_mail(
             subject,
-            html_content,
+            plain_message,
             from_email,
             to_emails,
+            html_message=html_content,
             fail_silently=fail_silently,
         )
 
