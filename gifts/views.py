@@ -10,7 +10,7 @@ from django.core import serializers
 from django.db.models import F
 from django.template.loader import render_to_string
 
-from gifts.utils import group_helper, sendgrid_helper, datehelper
+from gifts.utils import group_helper, email_helper, datehelper
 from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm, GiftIdeaForm, GiftIdea, GiftManagementUserForm, GiftCommentForm, GroupCommentForm, OnceOffGiftForm
 from gifts.models import GiftGroup, GiftGroupInvitation, Gift, ContributorGiftRelation, GiftCommentNotification, Donation, Profile, ProfilePic, GroupCommentNotification, GroupInvitationLink, GiftInvitationLink
 import json
@@ -214,9 +214,9 @@ class ViewIndividualGroup(generic.View):
                 instance.save()
                 # Move the below into the model
                 if User.objects.filter(email=instance.invitee_email).exists():
-                    sendgrid_helper.send_invite_mail_existing_user(instance)
+                    email_helper.send_invite_mail_existing_user(instance)
                 else:
-                    sendgrid_helper.send_invite_email(instance)
+                    email_helper.send_invite_email(instance)
 
                 messages.success(request, "{} has been invited to the group".format(
                     instance.invitee_email))
@@ -696,7 +696,7 @@ class WebhookPatreon(generic.View):
         try:
             data = request.body.decode("utf-8")
             js = json.loads(data)
-            sendgrid_helper.send_json_mail("Patreon JSON Response", str(js))
+            email_helper.send_json_mail("Patreon JSON Response", str(js))
             email = js["included"][1]["attributes"]["email"]
             amount = js["data"]["attributes"]["campaign_lifetime_support_cents"] / 100.0
             origin = "patreon"
@@ -713,7 +713,7 @@ class WebhookPatreon(generic.View):
                 profile.has_made_donation = True
                 profile.save()
         except Exception as e:
-            sendgrid_helper.send_json_mail("error with patreon", str(e))
+            email_helper.send_json_mail("error with patreon", str(e))
         return HttpResponse("")
 
 class MasterCalendar(generic.View):

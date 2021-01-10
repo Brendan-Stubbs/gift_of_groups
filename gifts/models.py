@@ -5,7 +5,7 @@ from django.db.models import Count, Sum
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.crypto import get_random_string
-from gifts.utils import datehelper, group_helper, sendgrid_helper
+from gifts.utils import datehelper, group_helper, email_helper
 from gifts.utils import general_utils
 
 
@@ -90,7 +90,7 @@ class GiftGroup(models.Model):
     def create_invitation(self, inviter, invitee_email):
         if not GiftGroupInvitation.objects.filter(gift_group=self, invitee=invitee_email, status=GiftGroupInvitation.STATUS_PENDING).exists() and not invitee in self.users.all():
             invite = GiftGroupInvitation.objects.create(gift_group=self, invitee_email=invitee_email, inviter=inviter)
-            sendgrid_helper.send_invite_email(invite)
+            email_helper.send_invite_email(invite)
 
     def get_group_gifts_for_user(self, user):
         '''Returns all active gifts for the group, excluding the one's pertaining to user'''
@@ -213,7 +213,7 @@ class Gift(models.Model):
             contributors = self.gift_group.users.all().exclude(id=self.receiver.id)
             for contributor in contributors:
                 ContributorGiftRelation.objects.create(contributor=contributor, gift=self)
-            sendgrid_helper.send_gift_creation_mail(self)
+            email_helper.send_gift_creation_mail(self)
 
     def get_total_pledged_amount(self):
         pledged_total = ContributorGiftRelation.objects.filter(gift=self).aggregate(Sum('contribution'))['contribution__sum']
