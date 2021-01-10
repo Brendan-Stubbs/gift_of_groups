@@ -157,12 +157,12 @@ MESSAGE_TAGS = {
 }
 
 try:
-    EMAIL_HOST_USER = 'apikey'
-    EMAIL_HOST_PASSWORD = local_settings.SENDGRID_API_KEY
+    EMAIL_HOST_USER = "giftlygroups@gmail.com"
+    EMAIL_HOST_PASSWORD = local_settings.EMAIL_HOST_PASSWORD
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-    EMAIL_HOST = 'smtp.sendgrid.net'
+    EMAIL_HOST = "smtp.gmail.com"
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
-    DEFAULT_FROM_EMAIL = local_settings.DEFAULT_FROM_EMAIL
+    DEFAULT_FROM_EMAIL = 'Giftly Groups <giftlygroups@gmail.com>'
 except:
-    "Add email settings in local_settings.py"
+    print("Add email settings in local_settings.py")
