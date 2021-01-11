@@ -48,10 +48,27 @@ def send_gift_creation_mail(gift):
         html_content = render_to_string("gifts/email_templates/gift_created_mail.html", {"gift":gift, "domain":domain}),
     )
 
+def send_comment_notification_mails(comment_notification):
+    comment = comment_notification.comment
+    poster = comment.poster
+    gift = comment.gift
+    context = {
+        "poster": poster,
+        "comment": comment,
+        "gift": gift,
+        "domain": domain,
+    }
+    send_mail_helper(
+        from_email=DEFAULT_FROM_EMAIL,
+        to_emails=comment_notification.user.email,
+        subject = "{} has left a comment".format(poster.first_name),
+        html_content = render_to_string("gifts/email_templates/new_gift_comment.html", context)
+    )
+
 def send_json_mail(subject, error):
     send_mail_helper(
         from_email=DEFAULT_FROM_EMAIL,
         to_emails="stubbsbrendan@gmail.com",
-        subject = subject,
+        subject = "subject",
         html_content = "<p>{}</p>".format(error)
     )

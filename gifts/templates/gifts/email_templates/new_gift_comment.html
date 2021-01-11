@@ -1,0 +1,10 @@
+{% extends 'gifts/email_templates/email_template.html' %} {% block content %}
+<h3></h3>
+<div style="padding: 10px">
+    <p>Greetings from Giftly Groups</p>
+    <p>{{ poster.first_name }} has commented on the {{ gift }} gift.</p>
+    <p>{{ poster.first_name }} says "{{ comment.content }}"</p>
+    <p>Click <a href="{{domain}}{% url 'view_gift' gift.id %}">here</a> to check it out!</p>
+
+</div>
+{% endblock %}

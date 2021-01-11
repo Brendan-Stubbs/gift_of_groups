@@ -409,6 +409,9 @@ class GiftCommentNotification(models.Model):
     def get_url_type(self):
         return "gift"
 
+    def send_email_notification(self):
+        email_helper.send_comment_notification_mails(self)
+
 
 class GroupCommentNotification(models.Model):
     comment = models.ForeignKey(GroupComment, on_delete=models.CASCADE)
