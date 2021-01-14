@@ -32,6 +32,7 @@ urlpatterns = [
     path("ajax/post_gift_comment/<int:gift_id>/", views.PostGiftComment.as_view(), name="post_gift_comment"),
     path("ajax/post_group_comment/<int:group_id>/", views.PostGroupComment.as_view(), name="post_group_comment"),
     path("ajax/captain_confirm_payment/<int:relation_id>/", views.CaptainConfirmPayment.as_view(), name="captain_confirm_payment"),
+    path("ajax/update_email_notifications/<int:relation_id>/", views.UpdateEmailNotifications.as_view(), name="update_email_notifications"),
 
     path("ajax/mark_notifications_read/", views.MarkNotificationsRead.as_view(), name="mark_notfications_read"),
     path("ajax/get_comments/<int:gift_id>/", views.GetComments.as_view(), name="get_comments"),

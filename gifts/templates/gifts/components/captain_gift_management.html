@@ -14,16 +14,16 @@
         <p class="amber-text text-darken-3">Undecided</p>
         {% endif %}
         <i class="material-icons secondary-content teal-text">edit</i>
-        {% if gift_relation.has_made_payment %}
+        {% if gift_relation.participation_status == "approved" %}
         <p>
           R{{gift_relation.contribution|floatformat:2}}
           {% if gift_relation.payment_has_cleared %}
           <span class="green-text"> -Confirmed</span>
-          {% else %}
+          {% elif gift_relation.has_made_payment %}
           <span class="amber-text text-darken-3"> -Awaiting payment</span>
           <a class="btn right" onclick="ajax_confirm_payment({{gift_relation.id}})">Confirm Payment</a>
-          <div class="clearfix"></div>
-          {% endif %}
+        <div class="clearfix"></div>
+        {% endif %}
         </p>
         {% endif %}
       </li>

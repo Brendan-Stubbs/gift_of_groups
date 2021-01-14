@@ -11,7 +11,7 @@ from django.db.models import F
 from django.template.loader import render_to_string
 
 from gifts.utils import group_helper, email_helper, datehelper
-from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm, GiftIdeaForm, GiftIdea, GiftManagementUserForm, GiftCommentForm, GroupCommentForm, OnceOffGiftForm
+from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm, GiftIdeaForm, GiftIdea, GiftManagementUserForm, GiftCommentForm, GroupCommentForm, OnceOffGiftForm, GiftEmailNotificationsForm
 from gifts.models import GiftGroup, GiftGroupInvitation, Gift, ContributorGiftRelation, GiftCommentNotification, Donation, Profile, ProfilePic, GroupCommentNotification, GroupInvitationLink, GiftInvitationLink
 import json
 
@@ -415,6 +415,20 @@ class VoteForGift(generic.View):
             idea.save()
         total_votes = len(idea.votes.all())
         return JsonResponse({"total_votes": total_votes})
+
+
+class UpdateEmailNotifications(generic.View):
+    '''AJAX view allowing users to turn off mail notifications'''
+    def post(self, request, *args, **kwargs):
+        # Validation required here
+        gift_relation = ContributorGiftRelation.objects.get(pk=self.kwargs.get("relation_id"))
+        if request.user.is_authenticated and gift_relation.contributor == request.user:
+            comment_form = GiftEmailNotificationsForm(request.POST, instance=gift_relation)
+            if comment_form.is_valid():
+                instance = comment_form.save()
+                return JsonResponse({"email_notifications_allowed":instance.email_notifications_allowed})
+
+        return JsonResponse({"message":"You are not authorised"}, status=403)
 
 
 class SuggestIdea(generic.View):

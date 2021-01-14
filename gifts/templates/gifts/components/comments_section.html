@@ -1,0 +1,30 @@
+<div id="comment-section" class="row">
+  <div class="col s12 offset-m2 m8 offset-l2 l8">
+    <form id="comment_form" onsubmit="ajax_post_comment('{{gift.id}}')" class="white">
+      {% csrf_token %}
+      {{comment_form.content}}
+
+      <button class="btn">Comment</button>
+      <a class="btn" onclick="refresh_comments('{{gift.id}}')">
+        <div class="valign-wrapper">
+          <i id="comments-refresh" class="material-icons tooltipped" data-position="bottom"
+            data-tooltip="Refresh comments">refresh</i>
+          <!-- Spinner -->
+          <i id="comments-loading" style="display:none" class="fas fa-circle-notch fa-spin"></i>
+          <!-- End Spinner -->
+        </div>
+      </a>
+      <div style="margin-top:7px;">
+        <label for="email_notifications_allowed">
+          <input type="checkbox" class="filled-in" name="email_notifications_allowed"
+            {% if user_gift_relation.email_notifications_allowed %}checked="checked" %}{% endif %}
+            id="email_notifications_allowed" onchange="ajax_update_email_notifications('{{user_gift_relation.pk}}')" />
+          <span class="teal-text filled-in" style="padding-left: 30px;">Email Notifications</span>
+        </label>
+      </div>
+    </form>
+    <div id="comment_list">
+      {% include 'gifts/components/gift-comments.html' %}
+    </div>
+  </div>
+</div>

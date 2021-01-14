@@ -80,6 +80,11 @@ class GiftCommentForm(forms.ModelForm):
         model = GiftComment
         fields = ["content"]
 
+class GiftEmailNotificationsForm(forms.ModelForm):
+    class Meta:
+        model = ContributorGiftRelation
+        fields = ["email_notifications_allowed"]
+
 class GroupCommentForm(forms.ModelForm):
     class Meta:
         model = GroupComment

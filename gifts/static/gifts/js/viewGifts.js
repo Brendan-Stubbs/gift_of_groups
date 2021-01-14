@@ -1,3 +1,8 @@
+function capitalize(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+
 function vote_for_gift_ajax(idea_id) {
     let data = {
         id: idea_id
@@ -166,6 +171,22 @@ function ajax_confirm_payment(relation_id) {
             $("#captain_management_component").empty().append(resp.captain_management_component)
             $('#target-details').empty().append(resp.gift_progress_component)
         },
+    })
+}
+
+function ajax_update_email_notifications(relation_id) {
+    let data = new FormData(document.getElementById('comment_form'))
+    $.ajax({
+        type: 'POST',
+        url: `/ajax/update_email_notifications/${relation_id}/`,
+        dataType: 'json',
+        data: data,
+        contentType: false,
+        processData: false,
+        enctype: 'multipart/form-data',
+        success: function (resp) {
+            alert("Yay")
+        }
     })
 }
 

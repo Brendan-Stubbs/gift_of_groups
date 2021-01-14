@@ -345,6 +345,7 @@ class ContributorGiftRelation(models.Model):
     payment_has_cleared = models.BooleanField(default=False)
     participation_status = models.CharField(max_length=15, null=True, blank=True, choices=PARICIPATION_CHOICES, default=None)
     receiver_message = models.TextField(null=True)
+    email_notifications_allowed = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
         if self.contributor != self.gift.receiver:
@@ -377,7 +378,9 @@ def create_gift_notification(sender, instance, created, **kwargs):
     if created:
         gift_relations = ContributorGiftRelation.objects.filter(gift=instance.gift).exclude(participation_status='rejected').exclude(contributor=instance.poster)
         for relation in gift_relations:
-            GiftCommentNotification.objects.create(user=relation.contributor, comment=instance)
+            obj = GiftCommentNotification.objects.create(user=relation.contributor, comment=instance)
+            obj.send_email_notification()
+            
 
 
 class GroupComment(models.Model):
@@ -410,7 +413,11 @@ class GiftCommentNotification(models.Model):
         return "gift"
 
     def send_email_notification(self):
-        email_helper.send_comment_notification_mails(self)
+        gift = self.comment.gift
+        gift_relation = ContributorGiftRelation.objects.get(contributor=self.user, gift=gift)
+        if gift_relation.email_notifications_allowed:
+            email_helper.send_comment_notification_mails(self)
+
 
 
 class GroupCommentNotification(models.Model):
