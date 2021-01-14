@@ -135,9 +135,15 @@ function ajax_post_comment(gift_id) {
         contentType: false,
         processData: false,
         enctype: 'multipart/form-data',
+        beforeSend: function () {
+            $('#id_content').val('');
+            $("#comments-refresh").hide()
+            $("#comments-loading").show()
+        },
         success: function (resp) {
             $("#comment_list").empty().append(resp.comments_component)
-            $('#id_content').val('');
+            $("#comments-loading").hide()
+            $("#comments-refresh").show()
         },
         error: function (resp) {
             alert("There was an error posting you comment, please refresh the page or try again later")

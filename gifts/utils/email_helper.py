@@ -49,6 +49,7 @@ def send_gift_creation_mail(gift):
     )
 
 def send_comment_notification_mails(comment_notification):
+    ''' Not in use for now, will use when I have set up a queue '''
     comment = comment_notification.comment
     poster = comment.poster
     gift = comment.gift
@@ -61,6 +62,23 @@ def send_comment_notification_mails(comment_notification):
     send_mail_helper(
         from_email=DEFAULT_FROM_EMAIL,
         to_emails=comment_notification.user.email,
+        subject = "{} has left a comment".format(poster.first_name),
+        html_content = render_to_string("gifts/email_templates/new_gift_comment.html", context)
+    )
+
+def send_comment_notification_mail(comment):
+    emails = comment.get_email_addresses_for_notfication()
+    poster = comment.poster
+    gift = comment.gift
+    context = {
+        "poster": poster,
+        "comment": comment,
+        "gift": gift,
+        "domain": domain,
+    }
+    send_mail_helper(
+        from_email=DEFAULT_FROM_EMAIL,
+        to_emails=emails,
         subject = "{} has left a comment".format(poster.first_name),
         html_content = render_to_string("gifts/email_templates/new_gift_comment.html", context)
     )

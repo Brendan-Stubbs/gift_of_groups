@@ -15,7 +15,7 @@ def get_next_birthday(profile):
         birth_year = now.year if now.month < 2 else now.year+1
         birth_day = 28 if birth_year % 4 != 0 else birth_day
         return datetime.datetime(birth_year, birth_month, birth_day)
-    if datetime.datetime(now.year, birth_month, birth_day) >= now:
+    if datetime.datetime(now.year, birth_month, birth_day).date() >= now.date():
         return datetime.datetime(now.year, birth_month, birth_day)
     return datetime.datetime(now.year+1, birth_month, birth_day)
 

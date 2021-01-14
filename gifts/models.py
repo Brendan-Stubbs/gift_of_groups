@@ -372,6 +372,14 @@ class GiftComment(models.Model):
     def __str__(self):
         return self.__unicode__()
 
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            email_helper.send_comment_notification_mail(self)
+        super(GiftComment, self).save(*args, **kwargs)
+
+    def get_email_addresses_for_notfication(self):
+        ''' Returns a list of email addresses who need to receive the email'''
+        return [x.contributor.email for x in ContributorGiftRelation.objects.filter(gift=self.gift, email_notifications_allowed=True)]
 
 @receiver(post_save, sender=GiftComment)
 def create_gift_notification(sender, instance, created, **kwargs):
@@ -379,7 +387,7 @@ def create_gift_notification(sender, instance, created, **kwargs):
         gift_relations = ContributorGiftRelation.objects.filter(gift=instance.gift).exclude(participation_status='rejected').exclude(contributor=instance.poster)
         for relation in gift_relations:
             obj = GiftCommentNotification.objects.create(user=relation.contributor, comment=instance)
-            obj.send_email_notification()
+            # obj.send_email_notification()
             
 
 
@@ -413,6 +421,7 @@ class GiftCommentNotification(models.Model):
         return "gift"
 
     def send_email_notification(self):
+        ''' Out of use until I have set up queue '''
         gift = self.comment.gift
         gift_relation = ContributorGiftRelation.objects.get(contributor=self.user, gift=gift)
         if gift_relation.email_notifications_allowed:
