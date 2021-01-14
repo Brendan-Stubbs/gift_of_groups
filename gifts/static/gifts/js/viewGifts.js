@@ -185,7 +185,7 @@ function ajax_update_email_notifications(relation_id) {
         processData: false,
         enctype: 'multipart/form-data',
         success: function (resp) {
-            alert("Yay")
+            // do something
         }
     })
 }
