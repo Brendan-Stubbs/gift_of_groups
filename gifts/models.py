@@ -23,12 +23,15 @@ class Profile(models.Model):
     birth_date = models.DateField(null=True, blank=True)
     bank_account_name = models.CharField(max_length=50, null=True, blank=True)
     bank_name = models.CharField(max_length=50, null=True, blank=True)
-    bank_account_number = models.CharField(max_length=30, null=True, blank=True)
-    bank_account_type = models.CharField(max_length=20, null=True, blank=True, choices=ACCOUNT_TYPE_CHOICES)
+    bank_account_number = models.CharField(
+        max_length=30, null=True, blank=True)
+    bank_account_type = models.CharField(
+        max_length=20, null=True, blank=True, choices=ACCOUNT_TYPE_CHOICES)
     bank_branch_number = models.CharField(max_length=15, null=True, blank=True)
     bank_branch_name = models.CharField(max_length=50, null=True, blank=True)
     has_made_donation = models.BooleanField(default=False)
-    profile_pic = models.ForeignKey(ProfilePic, on_delete=models.SET_NULL, null=True, blank=True)
+    profile_pic = models.ForeignKey(
+        ProfilePic, on_delete=models.SET_NULL, null=True, blank=True)
 
     def get_profile_pic(self):
         if self.profile_pic:
@@ -55,7 +58,8 @@ class Profile(models.Model):
         for friend in friends:
             next_birthday = friend.profile.get_next_birthday()
             if next_birthday:
-                friend_name = "{} {}".format(friend.first_name, friend.last_name)
+                friend_name = "{} {}".format(
+                    friend.first_name, friend.last_name)
                 if next_birthday in birthdays:
                     birthdays[next_birthday].append(friend_name)
                 else:
@@ -82,26 +86,31 @@ class GiftGroup(models.Model):
     created_at = models.DateField(auto_now_add=True)
     standard_user_can_invite = models.BooleanField(default=False)
     days_to_notify = models.IntegerField(default=14)
-    icon = models.CharField(max_length=30, default="fas fa-users", choices=group_helper.ICON_CHOICES)
+    icon = models.CharField(
+        max_length=30, default="fas fa-users", choices=group_helper.ICON_CHOICES)
 
     def get_all_comments(self):
         return GroupComment.objects.filter(group=self).order_by('-created_at')
 
     def create_invitation(self, inviter, invitee_email):
         if not GiftGroupInvitation.objects.filter(gift_group=self, invitee=invitee_email, status=GiftGroupInvitation.STATUS_PENDING).exists() and not invitee in self.users.all():
-            invite = GiftGroupInvitation.objects.create(gift_group=self, invitee_email=invitee_email, inviter=inviter)
+            invite = GiftGroupInvitation.objects.create(
+                gift_group=self, invitee_email=invitee_email, inviter=inviter)
             email_helper.send_invite_email(invite)
 
     def get_group_gifts_for_user(self, user):
         '''Returns all active gifts for the group, excluding the one's pertaining to user'''
-        group_gifts = ContributorGiftRelation.objects.filter(gift__gift_group=self, gift__is_complete=False, contributor=user).exclude(gift__receiver=user)
+        group_gifts = ContributorGiftRelation.objects.filter(
+            gift__gift_group=self, gift__is_complete=False, contributor=user).exclude(gift__receiver=user)
         return [x.gift for x in group_gifts]
 
     def create_gift_relation_for_group(self, user):
-        active_gifts = Gift.objects.filter(gift_group=self, is_complete=False).exclude(receiver=user)
+        active_gifts = Gift.objects.filter(
+            gift_group=self, is_complete=False).exclude(receiver=user)
         for gift in active_gifts:
             if not ContributorGiftRelation.objects.filter(contributor=user, gift=gift).exists():
-                ContributorGiftRelation.objects.create(contributor=user, gift=gift)
+                ContributorGiftRelation.objects.create(
+                    contributor=user, gift=gift)
 
     def get_invite_link(self):
         if not GroupInvitationLink.objects.filter(group=self).exists():
@@ -114,7 +123,8 @@ class GiftGroup(models.Model):
         birthdays_in_scope = datehelper.get_upcoming_birthdays(self)
         for user in birthdays_in_scope:
             if not Gift.objects.filter(gift_group=self, receiver=user, wrap_up_date=user.profile.get_next_birthday()).exists():
-                Gift.objects.create(gift_group=self, receiver=user, wrap_up_date=user.profile.get_next_birthday())
+                Gift.objects.create(
+                    gift_group=self, receiver=user, wrap_up_date=user.profile.get_next_birthday())
                 gifts_created += 1
         return gifts_created
 
@@ -133,13 +143,13 @@ class GiftGroup(models.Model):
         for member in members:
             next_birthday = member.profile.get_next_birthday()
             if next_birthday:
-                member_name = "{} {}".format(member.first_name, member.last_name)
+                member_name = "{} {}".format(
+                    member.first_name, member.last_name)
                 if next_birthday in birthdays:
                     birthdays[next_birthday].append(member_name)
                 else:
                     birthdays[next_birthday] = [member_name]
         return birthdays
-
 
     def save(self, *args, **kwargs):
         if not self.pk:
@@ -147,7 +157,6 @@ class GiftGroup(models.Model):
             GroupInvitationLink.objects.create(group=self)
         else:
             super(GiftGroup, self).save(*args, **kwargs)
-        
 
     def __unicode__(self):
         return self.name
@@ -197,14 +206,18 @@ class Gift(models.Model):
         ("other", "other"),
     )
 
-    gift_group = models.ForeignKey(GiftGroup, null=True, on_delete=models.CASCADE)
-    captain = models.ForeignKey(User, null=True, blank=True, related_name="group_captain", on_delete=models.SET_NULL)
+    gift_group = models.ForeignKey(
+        GiftGroup, null=True, on_delete=models.CASCADE)
+    captain = models.ForeignKey(User, null=True, blank=True,
+                                related_name="group_captain", on_delete=models.SET_NULL)
     receiver = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    title = models.CharField(max_length=100, null=True, blank=True, default=None)
+    title = models.CharField(max_length=100, null=True,
+                             blank=True, default=None)
     description = models.TextField(null=True, blank=True, default=None)
     wrap_up_date = models.DateField(null=True, blank=True)
     is_complete = models.BooleanField(default=False)
-    chosen_gift = models.ForeignKey('GiftIdea', null=True, blank=True, on_delete=models.SET_NULL, related_name="chosen_gift")
+    chosen_gift = models.ForeignKey(
+        'GiftIdea', null=True, blank=True, on_delete=models.SET_NULL, related_name="chosen_gift")
     gift_type = models.CharField(max_length=20, default="other")
     code = models.CharField(max_length=32, unique=True, null=True)
 
@@ -212,15 +225,18 @@ class Gift(models.Model):
         if self.gift_group:
             contributors = self.gift_group.users.all().exclude(id=self.receiver.id)
             for contributor in contributors:
-                ContributorGiftRelation.objects.create(contributor=contributor, gift=self)
+                ContributorGiftRelation.objects.create(
+                    contributor=contributor, gift=self)
             email_helper.send_gift_creation_mail(self)
 
     def get_total_pledged_amount(self):
-        pledged_total = ContributorGiftRelation.objects.filter(gift=self).aggregate(Sum('contribution'))['contribution__sum']
+        pledged_total = ContributorGiftRelation.objects.filter(
+            gift=self).aggregate(Sum('contribution'))['contribution__sum']
         return pledged_total if pledged_total else 0
 
     def get_total_contribution_amount(self):
-        contribution_total = ContributorGiftRelation.objects.filter(gift=self, payment_has_cleared=True).aggregate(Sum('contribution'))['contribution__sum']
+        contribution_total = ContributorGiftRelation.objects.filter(
+            gift=self, payment_has_cleared=True).aggregate(Sum('contribution'))['contribution__sum']
         return contribution_total if contribution_total else 0
 
     def get_total_pledged_percentage(self):
@@ -244,7 +260,8 @@ class Gift(models.Model):
         super(Gift, self).save(*args, **kwargs)
 
     def get_all_gift_suggestions_with_vote_info(self, user):
-        gift_ideas = GiftIdea.objects.filter(gift=self).annotate(vote_count=Count('votes')).order_by('-vote_count')
+        gift_ideas = GiftIdea.objects.filter(gift=self).annotate(
+            vote_count=Count('votes')).order_by('-vote_count')
         for idea in gift_ideas:
             idea.user_has_voted = user in idea.votes.all()
         return gift_ideas
@@ -254,7 +271,8 @@ class Gift(models.Model):
         return [x.contributor for x in gift_relations]
 
     def get_all_contributors(self):
-        gift_relations = ContributorGiftRelation.objects.filter(gift=self, has_made_payment=True)
+        gift_relations = ContributorGiftRelation.objects.filter(
+            gift=self, has_made_payment=True)
         return [x.contributor for x in gift_relations]
 
     def get_all_comments(self):
@@ -291,6 +309,7 @@ def populate_gift_relations(sender, instance, created, **kwargs):
     if created:
         instance.create_contributor_relationship_for_group()
 
+
 class InvitationLink(models.Model):
     class Meta:
         abstract = True
@@ -322,7 +341,8 @@ class GiftIdea(models.Model):
     description = models.TextField(blank=True)
     url = models.URLField(null=True, blank=True)
     price = models.FloatField()
-    suggested_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    suggested_by = models.ForeignKey(
+        User, null=True, on_delete=models.SET_NULL)
     votes = models.ManyToManyField(User, related_name="votes")
 
     def __unicode__(self):
@@ -343,8 +363,9 @@ class ContributorGiftRelation(models.Model):
     contribution = models.FloatField(default=0)
     has_made_payment = models.BooleanField(default=False)
     payment_has_cleared = models.BooleanField(default=False)
-    participation_status = models.CharField(max_length=15, null=True, blank=True, choices=PARICIPATION_CHOICES, default=None)
-    receiver_message = models.TextField(null=True)
+    participation_status = models.CharField(
+        max_length=15, null=True, blank=True, choices=PARICIPATION_CHOICES, default=None)
+    receiver_message = models.TextField(null=True, blank=True)
     email_notifications_allowed = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
@@ -381,14 +402,16 @@ class GiftComment(models.Model):
         ''' Returns a list of email addresses who need to receive the email'''
         return [x.contributor.email for x in ContributorGiftRelation.objects.filter(gift=self.gift, email_notifications_allowed=True)]
 
+
 @receiver(post_save, sender=GiftComment)
 def create_gift_notification(sender, instance, created, **kwargs):
     if created:
-        gift_relations = ContributorGiftRelation.objects.filter(gift=instance.gift).exclude(participation_status='rejected').exclude(contributor=instance.poster)
+        gift_relations = ContributorGiftRelation.objects.filter(gift=instance.gift).exclude(
+            participation_status='rejected').exclude(contributor=instance.poster)
         for relation in gift_relations:
-            obj = GiftCommentNotification.objects.create(user=relation.contributor, comment=instance)
+            obj = GiftCommentNotification.objects.create(
+                user=relation.contributor, comment=instance)
             # obj.send_email_notification()
-            
 
 
 class GroupComment(models.Model):
@@ -409,7 +432,8 @@ def create_group_notification(sender, instance, created, **kwargs):
     if created:
         group_members = instance.group.users.all().exclude(id=instance.poster.id)
         for member in group_members:
-            GroupCommentNotification.objects.create(user=member, comment=instance)
+            GroupCommentNotification.objects.create(
+                user=member, comment=instance)
 
 
 class GiftCommentNotification(models.Model):
@@ -423,10 +447,10 @@ class GiftCommentNotification(models.Model):
     def send_email_notification(self):
         ''' Out of use until I have set up queue '''
         gift = self.comment.gift
-        gift_relation = ContributorGiftRelation.objects.get(contributor=self.user, gift=gift)
+        gift_relation = ContributorGiftRelation.objects.get(
+            contributor=self.user, gift=gift)
         if gift_relation.email_notifications_allowed:
             email_helper.send_comment_notification_mails(self)
-
 
 
 class GroupCommentNotification(models.Model):
@@ -444,6 +468,7 @@ class Donation(models.Model):
         ("buy_me_a_coffee", "Buy Me a Coffee"),
     )
     email = models.EmailField(max_length=100, null=True, blank=True)
-    origin = models.CharField(max_length=30, null=True, blank=True, choices=ORIGIN_CHOICES)
+    origin = models.CharField(max_length=30, null=True,
+                              blank=True, choices=ORIGIN_CHOICES)
     amount = models.FloatField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)

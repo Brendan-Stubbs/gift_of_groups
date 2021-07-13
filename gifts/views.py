@@ -549,6 +549,8 @@ class UpdateUserGiftRelation(generic.View):
             form = GiftManagementUserForm(request.POST, instance=gift_relation)
             if form.is_valid():
                 instance = form.save()
+            else:
+                print(form.errors)
             context = {
                 "gift": gift_relation.gift,
             }
@@ -556,10 +558,10 @@ class UpdateUserGiftRelation(generic.View):
                 "gifts/components/gift_progress_component.html", context)
             json_context = {
                 "gift_progress_component": gift_progress_component,
-                "has_made_payment": gift_relation.has_made_payment,
-                "receiver_message": gift_relation.receiver_message,
-                "participation_status": gift_relation.participation_status,
-                "contribution": gift_relation.contribution,
+                "has_made_payment": instance.has_made_payment,
+                "receiver_message": instance.receiver_message,
+                "participation_status": instance.participation_status,
+                "contribution": instance.contribution,
             }
             return JsonResponse(json_context)
         except Exception as e:
