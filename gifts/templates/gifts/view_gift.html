@@ -85,7 +85,7 @@
     <form id="user_gift_detail_form" onchange="ajax_update_user_gift_form('{{user_gift_relation.id}}');">
       {% csrf_token %}
       <div class="col s12 m6 l4">
-        <i id="participation_spinner" style="display:none" class="fas fa-circle-notch fa-spin"></i>
+        <i id="participation_status_spinner" style="display:none" class="fas fa-circle-notch fa-spin"></i>
         {{gift_relation_form.participation_status.label_tag}}
         {{gift_relation_form.participation_status}}
       </div>

@@ -93,6 +93,12 @@ function ajax_update_user_gift_form(gift_relation_id) {
     $('#user_gift_detail_success').attr('class', 'hidden-message green-text')
     let data = new FormData(document.getElementById('user_gift_detail_form'));
     data.append('gift_relation_id', gift_relation_id)
+    const changeableValues = [
+        'receiver_message',
+        'participation_status',
+        'contribution',
+]
+
     $.ajax({
         type: 'POST',
         url: `/ajax/update_user_gift_relation/`,
@@ -102,17 +108,22 @@ function ajax_update_user_gift_form(gift_relation_id) {
         processData: false,
         enctype: 'multipart/form-data',
         beforeSend: function () {
-            $('#participation_spinner').removeClass('fas fa-check').addClass('fas fa-circle-notch fa-spin').css('display', 'inline-block');
-            $('#contribution_spinner').removeClass('fas fa-check').addClass('fas fa-circle-notch fa-spin').css('display', 'inline-block');
-            $('#receiver_message_spinner').removeClass('fas fa-check').addClass('fas fa-circle-notch fa-spin').css('display', 'inline-block');
-
-
+            changeableValues.forEach((item) => {
+                $(`#${item}_spinner`).removeClass('fas fa-check').addClass('fas fa-circle-notch fa-spin').css('display', 'inline-block');
+            })
         },
         success: function (resp) {
             $('#user_gift_detail_success').removeClass('hidden-message')
             $('#target-details').empty().append(resp.gift_progress_component)
-            $('#participation_spinner').removeClass('fas fa-circle-notch fa-spin').addClass('fas fa-check').css('display', 'inline-block');
-            $('#contribution_spinner').removeClass('fas fa-circle-notch fa-spin').addClass('fas fa-check').css('display', 'inline-block');
+
+            changeableValues.forEach((item) => {
+                if (resp[item]) {
+                    $(`#${item}_spinner`).removeClass('fas fa-circle-notch fa-spin').addClass('fas fa-check').css('display', 'inline-block');
+                } else {
+                    $(`#${item}_spinner`).removeClass('fas fa-check').addClass('fas fa-circle-notch fa-spin').css('display', 'none');
+                }
+            });
+
             if (resp.has_made_payment) {
                 $('#notify-button').attr('disabled', true);
             }

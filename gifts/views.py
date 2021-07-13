@@ -21,6 +21,7 @@ class Index(generic.View):
         context = {}
         return render(request, "gifts/index.html", context)
 
+
 class About(generic.View):
     def get(self, request, *args, **kwargs):
         return render(request, "gifts/about.html", {})
@@ -175,11 +176,12 @@ class ViewIndividualGroup(generic.View):
         invitation_form = GiftGroupInvitationForm()
         active_gifts = group.get_group_gifts_for_user(user)
         group_gifts_component = render_to_string(
-            "gifts/components/group_gift_collection.html", {"active_gifts": active_gifts, "group":group})
+            "gifts/components/group_gift_collection.html", {"active_gifts": active_gifts, "group": group})
         comment_form = GroupCommentForm()
         invite_link = group.get_invite_link()
         birthdays_dict = group.get_all_members_next_birthday()
-        birthdays = [datehelper.stringify_datetime_year_month_day(key) for key in birthdays_dict]
+        birthdays = [datehelper.stringify_datetime_year_month_day(
+            key) for key in birthdays_dict]
 
         context = {
             "members": members,
@@ -283,13 +285,15 @@ class AcceptGroupInvitationLink(generic.View):
             return redirect('/login/?next=%s' % request.path)
         user = request.user
         try:
-            invite_link = GroupInvitationLink.objects.get(code=self.kwargs['code'])
+            invite_link = GroupInvitationLink.objects.get(
+                code=self.kwargs['code'])
             group = invite_link.group
             if not user in group.users.all():
                 group.users.add(user)
             return redirect('view_individual_group', group.id)
         except Exception as e:
             return redirect('index')
+
 
 class AcceptGiftInvitationLink(generic.View):
     def get(self, request, *args, **kwargs):
@@ -298,14 +302,16 @@ class AcceptGiftInvitationLink(generic.View):
         user = request.user
 
         try:
-            invite_link = GiftInvitationLink.objects.get(code=self.kwargs['code'])
+            invite_link = GiftInvitationLink.objects.get(
+                code=self.kwargs['code'])
             gift = invite_link.gift
             # Check if gift relation exists
             if not ContributorGiftRelation.objects.filter(gift=gift, contributor=user).exists():
                 if gift.receiver and gift.receiver == user:
                     return redirect('index')
-                ContributorGiftRelation.objects.create(gift=gift, contributor=user)
-            
+                ContributorGiftRelation.objects.create(
+                    gift=gift, contributor=user)
+
             return redirect('view_gift', gift.id)
         except Exception as e:
             return redirect('index')
@@ -362,7 +368,8 @@ class ViewGift(generic.View):
             "total_pledged": total_pledged,
             "total_contributed": total_contributed,
             "user": user,
-            "user_gift_relation": user_gift_relation, # TODO Use this to hide the mark complete button
+            # TODO Use this to hide the mark complete button
+            "user_gift_relation": user_gift_relation,
             "birthday_has_passed": birthday_has_passed,
             "gift_invitation_link": gift_invitation_link,
             "comment_form": comment_form,
@@ -370,6 +377,7 @@ class ViewGift(generic.View):
             "gift_relations": gift_relations,
         }
         return render(request, "gifts/view_gift.html", context)
+
 
 class CreateOnceOffGift(generic.View):
     def post(self, request, *args, **kwargs):
@@ -380,11 +388,11 @@ class CreateOnceOffGift(generic.View):
             instance = form.save(commit=False)
             instance.captain = request.user
             instance.save()
-            ContributorGiftRelation.objects.create(contributor=request.user, gift=instance)
+            ContributorGiftRelation.objects.create(
+                contributor=request.user, gift=instance)
             return redirect("view_gift", instance.id)
 
-        return redirect("index") # TODO Display Error instead?
-        
+        return redirect("index")  # TODO Display Error instead?
 
 
 class ClaimGiftCaptaincy(generic.View):
@@ -402,6 +410,7 @@ class ClaimGiftCaptaincy(generic.View):
 
 class VoteForGift(generic.View):
     '''AJAX View allowing users to vote for a gift.'''
+
     def get(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             response = JsonResponse({"error": "You are not logged in"})
@@ -419,16 +428,19 @@ class VoteForGift(generic.View):
 
 class UpdateEmailNotifications(generic.View):
     '''AJAX view allowing users to turn off mail notifications'''
+
     def post(self, request, *args, **kwargs):
         # Validation required here
-        gift_relation = ContributorGiftRelation.objects.get(pk=self.kwargs.get("relation_id"))
+        gift_relation = ContributorGiftRelation.objects.get(
+            pk=self.kwargs.get("relation_id"))
         if request.user.is_authenticated and gift_relation.contributor == request.user:
-            comment_form = GiftEmailNotificationsForm(request.POST, instance=gift_relation)
+            comment_form = GiftEmailNotificationsForm(
+                request.POST, instance=gift_relation)
             if comment_form.is_valid():
                 instance = comment_form.save()
-                return JsonResponse({"email_notifications_allowed":instance.email_notifications_allowed})
+                return JsonResponse({"email_notifications_allowed": instance.email_notifications_allowed})
 
-        return JsonResponse({"message":"You are not authorised"}, status=403)
+        return JsonResponse({"message": "You are not authorised"}, status=403)
 
 
 class SuggestIdea(generic.View):
@@ -506,16 +518,20 @@ class MarkGiftComplete(generic.View):
 
 class CaptainConfirmPayment(generic.View):
     def get(self, request, *args, **kwargs):
-        gift_relation = ContributorGiftRelation.objects.get(pk=self.kwargs.get("relation_id"))
+        gift_relation = ContributorGiftRelation.objects.get(
+            pk=self.kwargs.get("relation_id"))
         if not request.user.is_authenticated and not request.user == gift_relation.gift.captain:
             return JsonResponse({}, status=403)
 
         gift_relation.payment_has_cleared = True
         gift_relation.save()
-        gift_relations = ContributorGiftRelation.objects.filter(gift=gift_relation.gift)
-        captain_management_component = render_to_string("gifts/components/captain_gift_management.html", {"gift_relations": gift_relations})
-        gift_progress_component = render_to_string("gifts/components/gift_progress_component.html", {'gift':gift_relation.gift})
-        
+        gift_relations = ContributorGiftRelation.objects.filter(
+            gift=gift_relation.gift)
+        captain_management_component = render_to_string(
+            "gifts/components/captain_gift_management.html", {"gift_relations": gift_relations})
+        gift_progress_component = render_to_string(
+            "gifts/components/gift_progress_component.html", {'gift': gift_relation.gift})
+
         context = {
             "captain_management_component": captain_management_component,
             "gift_progress_component": gift_progress_component,
@@ -528,19 +544,23 @@ class UpdateUserGiftRelation(generic.View):
         if not request.user.is_authenticated:
             return JsonResponse({}, status=403)
         try:
-            has_made_payment = False
             gift_relation = ContributorGiftRelation.objects.get(
                 pk=request.POST.get('gift_relation_id'))
             form = GiftManagementUserForm(request.POST, instance=gift_relation)
             if form.is_valid():
                 instance = form.save()
-            has_made_payment = gift_relation.has_made_payment
             context = {
                 "gift": gift_relation.gift,
             }
             gift_progress_component = render_to_string(
                 "gifts/components/gift_progress_component.html", context)
-            json_context = {"gift_progress_component": gift_progress_component, "has_made_payment": has_made_payment}
+            json_context = {
+                "gift_progress_component": gift_progress_component,
+                "has_made_payment": gift_relation.has_made_payment,
+                "receiver_message": gift_relation.receiver_message,
+                "participation_status": gift_relation.participation_status,
+                "contribution": gift_relation.contribution,
+            }
             return JsonResponse(json_context)
         except Exception as e:
             print(e)
@@ -633,7 +653,7 @@ class RefreshGifts(generic.View):
             group.create_upcoming_gifts()
             active_gifts = group.get_group_gifts_for_user(request.user)
             group_gifts_component = render_to_string(
-                "gifts/components/group_gift_collection.html", {"active_gifts": active_gifts, "group":group})
+                "gifts/components/group_gift_collection.html", {"active_gifts": active_gifts, "group": group})
             return JsonResponse({"group_gifts_component": group_gifts_component})
         except Exception as e:
             print(e)
@@ -657,7 +677,8 @@ class InviteToGift(generic.View):
             if gift.gift_group:
                 gift.group.create_gift_relation_for_group(user)
             else:
-                ContributorGiftRelation.objects.create(contributor=user, gift=gift)
+                ContributorGiftRelation.objects.create(
+                    contributor=user, gift=gift)
             message = "Succesfully added {} {} to group".format(
                 user.first_name, user.last_name)
             return JsonResponse({"message": message})
@@ -720,7 +741,8 @@ class WebhookPatreon(generic.View):
                 donation.amount = amount
                 donation.save()
             else:
-                Donation.objects.create(email=email, amount=amount, origin=origin)
+                Donation.objects.create(
+                    email=email, amount=amount, origin=origin)
 
             if Profile.objects.filter(user__email=email).exists():
                 profile = Profile.objects.get(user__email=email)
@@ -730,17 +752,19 @@ class WebhookPatreon(generic.View):
             email_helper.send_json_mail("error with patreon", str(e))
         return HttpResponse("")
 
+
 class MasterCalendar(generic.View):
-    def get(self,request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect('/login/?next=%s' % request.path)
         birthdays_dict = request.user.profile.get_all_friends_birthdays()
-        birthdays = [datehelper.stringify_datetime_year_month_day(key) for key in birthdays_dict]
-        return render(request, "gifts/master_calendar.html", {"birthdays":(birthdays), "birthdays_dict": birthdays_dict})
+        birthdays = [datehelper.stringify_datetime_year_month_day(
+            key) for key in birthdays_dict]
+        return render(request, "gifts/master_calendar.html", {"birthdays": (birthdays), "birthdays_dict": birthdays_dict})
 
 
 class ViewBirthdayCard(generic.View):
-    def get(self,request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect('/login/?next=%s' % request.path)
         code = self.kwargs.get("code")
@@ -752,7 +776,8 @@ class ViewBirthdayCard(generic.View):
 
         comment_form = GroupCommentForm()
         contributors = gift.get_all_contributors()
-        contributor_relations = ContributorGiftRelation.objects.filter(gift=gift)
+        contributor_relations = ContributorGiftRelation.objects.filter(
+            gift=gift)
 
         context = {
             "contributors": contributors,
