@@ -20,10 +20,15 @@ cd Venvs
 python3 -m virtualenv gift-of-groups
 ```
 
-Activate your virtual environment and install dependencies
+Activate your virtual environment and install dependencies on Mac / Linux
 ```
 source ~/Venvs/gift-of-groups/bin/activate
 pip install -r requirements.txt
+```
+
+Activate your virtual enviornment on Windoes
+```
+~/Venvs/gift-of-groups/Scripts/activate.bat
 ```
 
 ### Set up local_settings.py in the same directory as settings.py
