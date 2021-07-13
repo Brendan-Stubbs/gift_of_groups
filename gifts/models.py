@@ -240,12 +240,12 @@ class Gift(models.Model):
         return contribution_total if contribution_total else 0
 
     def get_total_pledged_percentage(self):
-        if self.chosen_gift:
+        if self.chosen_gift and self.chosen_gift.price > 0:
             return (self.get_total_pledged_amount() / self.chosen_gift.price) * 100
         return 0
 
     def get_total_contribution_percentage(self):
-        if self.chosen_gift:
+        if self.chosen_gift and self.chosen_gift.price > 0:
             return (self.get_total_contribution_amount() / self.chosen_gift.price) * 100
         return 0
 

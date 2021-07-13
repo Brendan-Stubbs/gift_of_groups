@@ -549,8 +549,6 @@ class UpdateUserGiftRelation(generic.View):
             form = GiftManagementUserForm(request.POST, instance=gift_relation)
             if form.is_valid():
                 instance = form.save()
-            else:
-                print(form.errors)
             context = {
                 "gift": gift_relation.gift,
             }
