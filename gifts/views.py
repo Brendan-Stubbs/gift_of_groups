@@ -346,6 +346,8 @@ class ViewGift(generic.View):
         gift_relations = ContributorGiftRelation.objects.filter(gift=gift)
         members = [x.contributor for x in gift_relations]
         gift_ideas = gift.get_all_gift_suggestions_with_vote_info(user)
+        # users_ideas = list(
+        #     filter(lambda x: x.suggested_by == user, gift_ideas))
         total_pledged = gift.get_total_pledged_amount()
         total_contributed = gift.get_total_contribution_amount
         gift_idea_form = GiftIdeaForm()
@@ -466,7 +468,7 @@ class SuggestIdea(generic.View):
 
                 gift_ideas = gift.get_all_gift_suggestions_with_vote_info(user)
                 gift_suggestion_component = render_to_string(
-                    "gifts/components/gift_suggestions_component.html", {"gift_ideas": gift_ideas})
+                    "gifts/components/gift_suggestions_component.html", {"gift_ideas": gift_ideas}, request)
 
                 response = JsonResponse({
                     "title": instance.title,
@@ -484,6 +486,53 @@ class SuggestIdea(generic.View):
                 {"message": "There was an error submitting your idea"})
             response.status_code = 403
             return response
+
+
+class getIdeaForm(generic.View):
+    def get(self, request, **kwargs):
+        gift_idea_id = self.kwargs.get('gift_idea_id')
+        user = request.user
+        gift_idea = GiftIdea.objects.filter(pk=gift_idea_id, suggested_by=user)
+
+        if gift_idea.exists():
+            form = GiftIdeaForm(instance=gift_idea.last(), prefix='edit')
+            rendered_form = render_to_string(
+                "gifts/components/edit_idea_form.html", {'form': form, 'idea': gift_idea.last()})
+            return JsonResponse({
+                'rendered_form': rendered_form,
+                'idea_id': gift_idea_id,
+            })
+
+        return JsonResponse(status=403)
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class UpdateIdea(generic.View):
+    def post(self, request, **kwargs):
+        if not request.user.is_authenticated:
+            return JsonResponse(status=403)
+
+        gift_idea_id = kwargs.get('idea_id')
+        gift_idea = GiftIdea.objects.filter(
+            pk=gift_idea_id, suggested_by=request.user)
+
+        if gift_idea.exists():
+            gift_idea = gift_idea.last()
+
+            form = GiftIdeaForm(request.POST, instance=gift_idea, prefix='edit')
+            if form.is_valid():
+                form.save()
+
+            gift_ideas = gift_idea.gift.get_all_gift_suggestions_with_vote_info(
+                request.user)
+            gift_suggestion_component = render_to_string(
+                "gifts/components/gift_suggestions_component.html", {"gift_ideas": gift_ideas}, request)
+
+            return JsonResponse({
+                "gift_suggestion_component": gift_suggestion_component,
+            })
+
+        return JsonResponse(status=403)
 
 
 class SetGift(generic.View):

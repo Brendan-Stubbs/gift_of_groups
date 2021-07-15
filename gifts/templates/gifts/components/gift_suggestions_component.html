@@ -1,33 +1,38 @@
-  {% if gift_ideas|length > 0 %}
-  <div class="blue lighten-1 white-text card-panel" style="margin-top: 0; height:100%">
-    <h5 class="center-align">Gift Suggestions</h5>
-    <ul id="ideas-collection" class="collection">
-      {% for idea in gift_ideas %}
-      
-      <li class="collection-item idea-item avatar blue lighten-1">
-        <a href="{{idea.url}}" target="blank">
-          <span class="title white-text">{{idea.title}}</span>
-        </a>
-        <span class="amber-text">R{{idea.price|floatformat:2}}</span>
-        <p class="idea-description">{{idea.description}}</p>
-        <div class="secondary-content">
-          <i id="vote_button{{idea.id}}" {% if not idea.user_has_voted %} onclick="vote_for_gift_ajax('{{idea.id}}');"{% endif %} class="material-icons {% if not idea.user_has_voted %}white-text clickable{% else %} grey-text{% endif %}">thumb_up</i>
-          <span id="vote_counter{{idea.id}}"class="white-text">{{idea.votes.all.count}}</span>
-        </div>
-      </li>
-      {% endfor %}
-    </ul>
-  </div>
+{% if gift_ideas|length > 0 %}
+<div class="blue lighten-1 white-text card-panel" style="margin-top: 0; height:100%">
+  <h5 class="center-align">Gift Suggestions</h5>
+  <ul id="ideas-collection" class="collection">
+    {% for idea in gift_ideas %}
 
-
-  {% else %}
-      <div class="purple lighten-2 card-panel" style="margin-top: 0; height:100%;">
-        <h5 class="center-align white-text">Gift Suggestions</h5>
-        <span class="white-text">No one has suggested a gift just yet.
-          <br><br>
-          Once there are suggestions available, your group will be able to vote for their favourite gift.
-          <br><br>
-          Your group captain still has the final say!
-        </span>
+    <li class="collection-item idea-item avatar blue lighten-1">
+      <a href="{{idea.url}}" target="blank">
+        <span class="title white-text">{{idea.title}}</span>
+      </a>
+      <span class="amber-text">R{{idea.price|floatformat:2}}</span>
+      <p class="idea-description">{{idea.description}}</p>
+      <div class="secondary-content">
+        {% if request.user == idea.suggested_by %}
+        <i class="material-icons white-text" style="float: left;" onclick="getFormForExistingIdea('{{idea.id}}')">edit</i>
+        {% endif %}
+        <i id="vote_button{{idea.id}}" {% if not idea.user_has_voted %} onclick="vote_for_gift_ajax('{{idea.id}}');"
+          {%endif%}
+          class="material-icons {% if not idea.user_has_voted %}white-text clickable{% else %} grey-text{% endif %}">thumb_up</i>
+        <span id="vote_counter{{idea.id}}" class="white-text">{{idea.votes.all.count}}</span>
       </div>
-  {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+
+
+{% else %}
+<div class="purple lighten-2 card-panel" style="margin-top: 0; height:100%;">
+  <h5 class="center-align white-text">Gift Suggestions</h5>
+  <span class="white-text">No one has suggested a gift just yet.
+    <br><br>
+    Once there are suggestions available, your group will be able to vote for their favourite gift.
+    <br><br>
+    Your group captain still has the final say!
+  </span>
+</div>
+{% endif %}
