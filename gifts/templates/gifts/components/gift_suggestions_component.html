@@ -12,7 +12,7 @@
       <p class="idea-description">{{idea.description}}</p>
       <div class="secondary-content">
         {% if request.user == idea.suggested_by %}
-        <i class="material-icons white-text" style="float: left;" onclick="getFormForExistingIdea('{{idea.id}}')">edit</i>
+        <i class="material-icons white-text clickable" style="float: left;" onclick="getFormForExistingIdea('{{idea.id}}')">edit</i>
         {% endif %}
         <i id="vote_button{{idea.id}}" {% if not idea.user_has_voted %} onclick="vote_for_gift_ajax('{{idea.id}}');"
           {%endif%}
