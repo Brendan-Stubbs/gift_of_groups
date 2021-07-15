@@ -70,7 +70,7 @@ function getFormForExistingIdea(idea_id) {
       ideaModalBody
         .empty()
         .append(
-          `<div style="text-align: center"><h4">We are hard at work fetching your form, please be patient</h4><br><i style="font-size: 60px" class="fas fa-circle-notch fa-spin"></i></div>`
+          `<div style="text-align: center"><h4">We are hard at work fetching your form, please be patient</h4><br><br><br><i style="font-size: 60px" class="fas fa-circle-notch fa-spin"></i></div>`
         );
       $("#ideaEditModal").modal("open");
     },
