@@ -884,8 +884,6 @@ class ViewBirthdayCard(generic.View):
 
 # TODO Give captain the ability to send an invite to the bday boy/girl which sets them as the gift reciever??
 # TODO update bday card so that only gift members and bday boy/girl can see it
-# TODO refactor unique code generators out of the model for invitations
 
 # Maybe
-# TODO Captain must be able to change pledged values
 # TODO set up social auth (Google + Facebook)
