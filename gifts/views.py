@@ -633,6 +633,31 @@ class GetUserGiftRelationForm(generic.View):
     rendered_form = render_to_string("gifts/components/edit_gift_relation_form.html", {'form': form, "relation": gift_relation})
     return JsonResponse({"rendered_form": rendered_form})
 
+@method_decorator(csrf_exempt, name="dispatch")
+class CaptainUpdateRelationForm(generic.View):
+  def post(self, request, **kwargs):
+    if not request.user.is_authenticated:
+      return JsonResponse({}, status=403)
+    relation_id = self.kwargs.get('relation_id')
+
+    try:
+      relation = ContributorGiftRelation.objects.get(pk=relation_id)
+      form = GiftManagementUserForm(request.POST, instance=relation)
+      if form.is_valid():
+        instance = form.save(commit=False)
+        payment_has_cleared = True if request.POST.get('payment_has_cleared') == 'true' else False
+
+        if payment_has_cleared:
+          instance.has_made_payment = True
+        instance.payment_has_cleared = payment_has_cleared
+        instance.save()
+        return JsonResponse({})
+      else:
+        print(form.errors)
+
+    except:
+      return JsonResponse({}, status=404)
+
 
 
 class PostGiftComment(generic.View):

@@ -111,7 +111,7 @@ function getFormForExistingRelation(relation_id) {
     success: function (resp) {
       $("#relationEditModalBody").empty().append(resp.rendered_form);
       $("select").formSelect();
-      $("#relation_idea_form").submit(function (event) {
+      $("#edit_relation_form").submit(function (event) {
         event.preventDefault();
       });
     },
@@ -175,7 +175,28 @@ function updateSuggestion(idea_id) {
 }
 
 function updateRelation(relation_id) {
-  // implement update logic
+  let data = new FormData($("#edit_relation_form")[0]);
+  const payment_has_cleared = $("#payment_has_cleared_edit").is(":checked");
+  data.append("payment_has_cleared", payment_has_cleared);
+
+  $.ajax({
+    type: "POST",
+    url: `/ajax/captain_update_relation/${relation_id}`,
+    dataType: "json",
+    data: data,
+    contentType: false,
+    processData: false,
+    enctype: "multipart/form-data",
+    success: function (resp) {
+      $("#relationEditModal").modal("close");
+      location.reload();
+    },
+    error: function (resp) {
+      alert(
+        "There was an error saving your changes, please refresh the page and try again"
+      );
+    },
+  });
 }
 
 function clearForm(form_id) {
