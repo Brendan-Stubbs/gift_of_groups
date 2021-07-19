@@ -13,7 +13,7 @@
         {% else %}
         <p class="amber-text text-darken-3">Undecided</p>
         {% endif %}
-        <i class="material-icons secondary-content teal-text">edit</i>
+        <i class="material-icons secondary-content teal-text" onclick="getFormForExistingRelation('{{gift_relation.id}}')">edit</i>
         {% if gift_relation.participation_status == "approved" %}
         <p>
           R{{gift_relation.contribution|floatformat:2}}

@@ -1,4 +1,5 @@
 var ideaModalDoesExist = false;
+var relationModalDoesExist = false;
 
 function capitalize(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -88,6 +89,40 @@ function getFormForExistingIdea(idea_id) {
   });
 }
 
+function getFormForExistingRelation(relation_id) {
+  $.ajax({
+    type: "GET",
+    url: `/ajax/get_relation_form/${relation_id}`,
+    beforeSend: function () {
+      if (!relationModalDoesExist) {
+        const emptyIdeaModal = `<div id="relationEditModal" class="modal"><div class="modal-content" id="relationEditModalBody" center-align"></div></div>`;
+        $("body").append(emptyIdeaModal);
+        $("#relationEditModal").modal();
+        relationModalDoesExist = true;
+      }
+      relationModalBody = $("#relationEditModalBody");
+      relationModalBody
+        .empty()
+        .append(
+          `<div style="text-align: center"><h4">We are hard at work fetching your form, please be patient</h4><br><br><br><i style="font-size: 60px" class="fas fa-circle-notch fa-spin"></i></div>`
+        );
+      $("#relationEditModal").modal("open");
+    },
+    success: function (resp) {
+      $("#relationEditModalBody").empty().append(resp.rendered_form);
+      $("select").formSelect();
+      $("#relation_idea_form").submit(function (event) {
+        event.preventDefault();
+      });
+    },
+    error: function (resp) {
+      alert(
+        "There was an error fetching the form, please try again. If the problem persists please try refreshing the page"
+      );
+    },
+  });
+}
+
 function add_suggestion_ajax(gift_id, user_id, idea_id = undefined) {
   $("#suggestion-messages").text("");
   let data = new FormData(document.getElementById("suggestionForm"));
@@ -137,6 +172,10 @@ function updateSuggestion(idea_id) {
       );
     },
   });
+}
+
+function updateRelation(relation_id) {
+  // implement update logic
 }
 
 function clearForm(form_id) {

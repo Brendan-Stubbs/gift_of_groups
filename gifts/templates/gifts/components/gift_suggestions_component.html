@@ -11,7 +11,7 @@
       <span class="amber-text">R{{idea.price|floatformat:2}}</span>
       <p class="idea-description">{{idea.description}}</p>
       <div class="secondary-content">
-        {% if request.user == idea.suggested_by %}
+        {% if request.user == idea.suggested_by or request.user == idea.gift.captain %}
         <i class="material-icons white-text clickable" style="float: left;" onclick="getFormForExistingIdea('{{idea.id}}')">edit</i>
         {% endif %}
         <i id="vote_button{{idea.id}}" {% if not idea.user_has_voted %} onclick="vote_for_gift_ajax('{{idea.id}}');"

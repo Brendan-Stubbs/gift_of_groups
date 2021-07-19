@@ -9,6 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 from django.db.models import F
 from django.template.loader import render_to_string
+from django.db.models import Q
 
 from gifts.utils import group_helper, email_helper, datehelper
 from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm, GiftIdeaForm, GiftIdea, GiftManagementUserForm, GiftCommentForm, GroupCommentForm, OnceOffGiftForm, GiftEmailNotificationsForm
@@ -492,7 +493,7 @@ class getIdeaForm(generic.View):
     def get(self, request, **kwargs):
         gift_idea_id = self.kwargs.get('gift_idea_id')
         user = request.user
-        gift_idea = GiftIdea.objects.filter(pk=gift_idea_id, suggested_by=user)
+        gift_idea = GiftIdea.objects.filter(Q(suggested_by=user) | Q (gift__captain=user), pk=gift_idea_id)
 
         if gift_idea.exists():
             form = GiftIdeaForm(instance=gift_idea.last(), prefix='edit')
@@ -512,9 +513,10 @@ class UpdateIdea(generic.View):
         if not request.user.is_authenticated:
             return JsonResponse(status=403)
 
+        user = request.user
         gift_idea_id = kwargs.get('idea_id')
-        gift_idea = GiftIdea.objects.filter(
-            pk=gift_idea_id, suggested_by=request.user)
+        gift_idea = GiftIdea.objects.filter( Q(suggested_by=user) | Q (gift__captain=user),
+            pk=gift_idea_id)
 
         if gift_idea.exists():
             gift_idea = gift_idea.last()
@@ -614,6 +616,23 @@ class UpdateUserGiftRelation(generic.View):
         except Exception as e:
             print(e)
             return JsonResponse({}, status=403)
+
+class GetUserGiftRelationForm(generic.View):
+  def get(self,request, **kwargs):
+    if not request.user.is_authenticated:
+      return JsonResponse({}, status=403)
+
+    relation_id = self.kwargs.get('relation_id')
+
+    try:
+      gift_relation = ContributorGiftRelation.objects.get(pk=relation_id, gift__captain = request.user)
+    except:
+      return JsonResponse({}, status=403)
+
+    form = GiftManagementUserForm(instance=gift_relation)
+    rendered_form = render_to_string("gifts/components/edit_gift_relation_form.html", {'form': form, "relation": gift_relation})
+    return JsonResponse({"rendered_form": rendered_form})
+
 
 
 class PostGiftComment(generic.View):

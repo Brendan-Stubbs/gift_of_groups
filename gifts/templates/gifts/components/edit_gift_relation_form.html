@@ -1,0 +1,22 @@
+<form id="edit_relation_form" onsubmit="updateRelation('{{relation.id}}')">
+  <h4>Editing Put user in here </h4>
+  <div class="col s12 m6 l4">
+    {{form.participation_status.label_tag}}
+    {{form.participation_status}}
+  </div>
+  <div class="col s12 m6 l4">
+    {{form.contribution.label_tag}}
+    {{form.contribution}}
+  </div>
+  <div class="col s12 m6 l4">
+    <p>
+      <p style="display: inline-block; margin-right: 7px;">Payment Confirmed</p>
+      <label>
+        <input type="checkbox" name="payment_has_cleared" {%if relation.payment_has_cleared%} checked="checked" {%endif%} />
+        <span>Payment Confirmed</span>
+      </label>
+    </p>
+  </div>
+
+  <button class="btn">Update</button>
+</form>
