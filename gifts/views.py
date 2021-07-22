@@ -656,8 +656,6 @@ class CaptainUpdateRelationForm(generic.View):
         instance.payment_has_cleared = payment_has_cleared
         instance.save()
         return JsonResponse({})
-      else:
-        print(form.errors)
 
     except:
       return JsonResponse({}, status=404)
@@ -870,6 +868,16 @@ class ViewBirthdayCard(generic.View):
             return redirect("index")
         else:
             gift = query_set.last()
+
+        # If there is an assigned receiver, don't allow outsiders to see this page
+        user_is_participant = request.user in gift.get_all_participants()
+        user_is_recipient = request.user == gift.receiver
+
+        if gift.receiver:
+          if user_is_participant or user_is_recipient:
+            pass
+          else:
+            return redirect('index')
 
         comment_form = GroupCommentForm()
         contributors = gift.get_all_contributors()
