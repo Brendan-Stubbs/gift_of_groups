@@ -37,6 +37,7 @@ urlpatterns = [
     path("ajax/update_idea/<int:idea_id>", views.UpdateIdea.as_view(), name="update_idea"),
     path("ajax/get_relation_form/<int:relation_id>", views.GetUserGiftRelationForm.as_view(), name="get_relation_form"),
     path("ajax/captain_update_relation/<int:relation_id>", views.CaptainUpdateRelationForm.as_view(), name="captain_update_relation"),
+    path("ajax/generate_card/<int:gift_id>/", views.GenerateCard.as_view(), name="generate_card"),
 
     path("ajax/mark_notifications_read/", views.MarkNotificationsRead.as_view(), name="mark_notfications_read"),
     path("ajax/get_comments/<int:gift_id>/", views.GetComments.as_view(), name="get_comments"),

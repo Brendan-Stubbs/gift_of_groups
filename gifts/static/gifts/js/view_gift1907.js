@@ -123,6 +123,24 @@ function getFormForExistingRelation(relation_id) {
   });
 }
 
+function showBirthdayCardPromptModal(firstName, giftId) {
+  const promptString = `You are about to generate a birthday card for ${firstName} \nThis will make a link available to you, which you can then share with the lucky receiver of the gift`;
+  if (confirm(promptString)) {
+    createBirthdayCard(giftId);
+  }
+}
+
+function createBirthdayCard(giftId) {
+  $.ajax({
+    type: "GET",
+    url: `/ajax/generate_card/${giftId}/`,
+    success: (resp) => {
+      window.location = resp.link;
+    },
+    error: () => alert("There was an error, please try again"),
+  });
+}
+
 function add_suggestion_ajax(gift_id, user_id, idea_id = undefined) {
   $("#suggestion-messages").text("");
   let data = new FormData(document.getElementById("suggestionForm"));

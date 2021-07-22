@@ -1,3 +1,6 @@
+from gift_of_groups.local_settings import DOMAIN_NAME
+from django.urls.base import reverse
+from gifts.templatetags.gift_template_tags import abs_url
 from django.shortcuts import render, redirect
 from django.views import generic
 from django.contrib.auth.models import User
@@ -15,6 +18,7 @@ from gifts.utils import group_helper, email_helper, datehelper
 from .forms import GiftGroupForm, Profile, GiftGroupInvitationForm, ProfileForm, GiftIdeaForm, GiftIdea, GiftManagementUserForm, GiftCommentForm, GroupCommentForm, OnceOffGiftForm, GiftEmailNotificationsForm
 from gifts.models import GiftGroup, GiftGroupInvitation, Gift, ContributorGiftRelation, GiftCommentNotification, Donation, Profile, ProfilePic, GroupCommentNotification, GroupInvitationLink, GiftInvitationLink
 import json
+from gifts.utils import general_utils
 
 
 class Index(generic.View):
@@ -862,7 +866,7 @@ class ViewBirthdayCard(generic.View):
             return redirect('/login/?next=%s' % request.path)
         code = self.kwargs.get("code")
         query_set = Gift.objects.filter(code=code)
-        if not query_set.exists:
+        if not query_set.exists():
             return redirect("index")
         else:
             gift = query_set.last()
@@ -881,9 +885,27 @@ class ViewBirthdayCard(generic.View):
 
         return render(request, "gifts/birthday_card.html", context)
 
+class GenerateCard(generic.View):
+  def get(self, request, **kwargs):
+    if not request.user.is_authenticated:
+      return JsonResponse(status=403)
+        
+    gift_id = self.kwargs.get("gift_id")
+    gift = Gift.objects.filter(pk=gift_id, captain=request.user)
 
-# TODO Give captain the ability to send an invite to the bday boy/girl which sets them as the gift reciever??
-# TODO update bday card so that only gift members and bday boy/girl can see it
+    if gift.exists():
+      gift = gift.last()
+      if not gift.code:
+        gift.code = general_utils.create_unique_code(gift)
+        gift.save()
+      link = "{}happy-birthday/{}".format(DOMAIN_NAME, gift.code)
+      print(gift.code)
+      return JsonResponse({ "code": gift.code, "link": link })
+    
+    return JsonResponse(status=403)
+
+# TODO update bday card so that only gift members and bday boy/girl can see it, unless it is a once off gift
 
 # Maybe
 # TODO set up social auth (Google + Facebook)
+# TODO Give captain the ability to send an invite to the bday boy/girl which sets them as the gift reciever of a once off gift??

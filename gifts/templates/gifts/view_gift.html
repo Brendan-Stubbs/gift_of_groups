@@ -11,10 +11,16 @@
     {% if gift.receiver %}
     <h1>{{gift.receiver.first_name}}</h1>
     <h4><i class="material-icons circle pink-text">cake</i> {{gift.wrap_up_date|date:"d F"}}</h4>
+    {%if request.user == gift.captain and not gift.code %}
+    <button class="btn" onclick="showBirthdayCardPromptModal('{{gift.receiver.first_name}}', '{{gift.id}}')">Generate card</button>
+    {%endif%}
     {% else %}
     <h1>{{gift.title}}</h1>
     <h4><i class="material-icons circle pink-text">card_giftcard</i> {{gift.wrap_up_date|date:"d F"}}</h4>
     <p>{{gift.description}}</p>
+    {% endif %}
+    {% if gift.code %}
+    <a class="btn" href="{% url 'view_birthday_card' gift.code %}">Birthday Card</a>
     {% endif %}
 
   </div>
