@@ -647,12 +647,14 @@ class CaptainUpdateRelationForm(generic.View):
     try:
       relation = ContributorGiftRelation.objects.get(pk=relation_id)
       existing_message = relation.receiver_message
+      existing_has_made_payment = relation.has_made_payment
+
       form = GiftManagementUserForm(request.POST, instance=relation)
-      print(relation.receiver_message)
       if form.is_valid():
         instance = form.save(commit=False)
         payment_has_cleared = True if request.POST.get('payment_has_cleared') == 'true' else False
         instance.receiver_message = existing_message
+        instance.has_made_payment = existing_has_made_payment
 
         if payment_has_cleared:
           instance.has_made_payment = True
