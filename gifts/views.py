@@ -883,7 +883,8 @@ class ViewBirthdayCard(generic.View):
             return redirect('index')
 
         comment_form = GroupCommentForm()
-        participants = gift.get_all_participants()
+        # TODO rename the variable
+        participants = gift.get_all_contributors()
         contributor_relations = ContributorGiftRelation.objects.filter(
             gift=gift)
 

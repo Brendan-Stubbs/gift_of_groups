@@ -270,10 +270,6 @@ class Gift(models.Model):
     def get_all_gift_members(self):
         gift_relations = ContributorGiftRelation.objects.filter(gift=self)
         return [x.contributor for x in gift_relations]
-  
-    def get_all_participants(self):
-        gift_relations = ContributorGiftRelation.objects.filter(gift=self)
-        return [x.contributor for x in gift_relations]
 
     def get_all_contributors(self):
         gift_relations = ContributorGiftRelation.objects.filter(
