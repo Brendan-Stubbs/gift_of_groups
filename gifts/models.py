@@ -255,8 +255,9 @@ class Gift(models.Model):
             self.gift_type = "birthday"
         else:
             self.gift_type = "other"
-        if not self.pk:
-            self.code = general_utils.create_unique_code(self)
+        #REMOVE THE BELOW IF EVERYTHING WORKS
+        # if not self.pk:
+        #     self.code = general_utils.create_unique_code(self)
         super(Gift, self).save(*args, **kwargs)
 
     def get_all_gift_suggestions_with_vote_info(self, user):

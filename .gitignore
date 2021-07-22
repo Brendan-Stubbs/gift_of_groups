@@ -110,3 +110,6 @@ GitHub.sublime-settings
 
 # Visual Studio Code # 
 .history
+
+# Other
+.DS_Store
