@@ -258,7 +258,7 @@ class Gift(models.Model):
         #REMOVE THE BELOW IF EVERYTHING WORKS
         # if not self.pk:
         #     self.code = general_utils.create_unique_code(self)
-        # super(Gift, self).save(*args, **kwargs)
+        super(Gift, self).save(*args, **kwargs)
 
     def get_all_gift_suggestions_with_vote_info(self, user):
         gift_ideas = GiftIdea.objects.filter(gift=self).annotate(
