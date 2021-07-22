@@ -47,13 +47,16 @@
     <div class="col s12 offset-m2 m8 offset-l2 l8">
       <div id="comment_list">
         <ul class="collection" id="comment-list">
+          {% comment %} Write a method to help here {% endcomment %}
           {% for contributer_relation in contributor_relations %}
+          {% if contributer_relation.receiver_message %}
           <li class="collection-item avatar">
             <img src="{{contributer_relation.contributor.profile.get_profile_pic}}"
               alt="{{contributer_relation.first_name}}" class="circle">
             <p>{{ contributer_relation.receiver_message }}</p>
             <small>{{ contributer_relation.contributor.get_full_name }}</small>
           </li>
+          {% endif %}
           {% endfor %}
         </ul>
       </div>
