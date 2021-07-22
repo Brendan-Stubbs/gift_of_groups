@@ -912,8 +912,6 @@ class GenerateCard(generic.View):
     
     return JsonResponse(status=403)
 
-# TODO update bday card so that only gift members and bday boy/girl can see it, unless it is a once off gift
-
 # Maybe
 # TODO set up social auth (Google + Facebook)
 # TODO Give captain the ability to send an invite to the bday boy/girl which sets them as the gift reciever of a once off gift??
