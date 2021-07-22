@@ -646,10 +646,13 @@ class CaptainUpdateRelationForm(generic.View):
 
     try:
       relation = ContributorGiftRelation.objects.get(pk=relation_id)
+      existing_message = relation.receiver_message
       form = GiftManagementUserForm(request.POST, instance=relation)
+      print(relation.receiver_message)
       if form.is_valid():
         instance = form.save(commit=False)
         payment_has_cleared = True if request.POST.get('payment_has_cleared') == 'true' else False
+        instance.receiver_message = existing_message
 
         if payment_has_cleared:
           instance.has_made_payment = True
@@ -870,7 +873,7 @@ class ViewBirthdayCard(generic.View):
             gift = query_set.last()
 
         # If there is an assigned receiver, don't allow outsiders to see this page
-        user_is_participant = request.user in gift.get_all_participants()
+        user_is_participant = request.user in gift.get_all_gift_members()
         user_is_recipient = request.user == gift.receiver
 
         if gift.receiver:
@@ -880,12 +883,12 @@ class ViewBirthdayCard(generic.View):
             return redirect('index')
 
         comment_form = GroupCommentForm()
-        contributors = gift.get_all_contributors()
+        participants = gift.get_all_participants()
         contributor_relations = ContributorGiftRelation.objects.filter(
             gift=gift)
 
         context = {
-            "contributors": contributors,
+            "participants": participants,
             "gift": gift,
             "comment_form": comment_form,
             "contributor_relations": contributor_relations,

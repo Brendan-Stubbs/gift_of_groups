@@ -267,6 +267,10 @@ class Gift(models.Model):
             idea.user_has_voted = user in idea.votes.all()
         return gift_ideas
 
+    def get_all_gift_members(self):
+        gift_relations = ContributorGiftRelation.objects.filter(gift=self)
+        return [x.contributor for x in gift_relations]
+  
     def get_all_participants(self):
         gift_relations = ContributorGiftRelation.objects.filter(gift=self)
         return [x.contributor for x in gift_relations]

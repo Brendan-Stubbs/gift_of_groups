@@ -40,7 +40,7 @@ def send_invite_mail_existing_user(invitation):
     )
 
 def send_gift_creation_mail(gift):
-    all_emails = [x.email for x in gift.get_all_participants()]
+    all_emails = [x.email for x in gift.get_all_gift_members()]
     send_mail_helper(
         from_email=DEFAULT_FROM_EMAIL,
         to_emails=all_emails,

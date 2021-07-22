@@ -23,11 +23,11 @@
     <div class="col s12 offset-m1 m10 offset-l2 l8">
       <ul class="collection white">
         <p class="center-align">Happy Birthday, from all of these awesome people</p>
-        {% for contributor in contributors %}
+        {% for participant in participants %}
         <li class="collection-item avatar">
-          <img src="{{contributor.profile.get_profile_pic}}" alt="" class="circle">
-          <span class="title">{{contributor.first_name}}
-            {{contributor.last_name}}</span>
+          <img src="{{participant.profile.get_profile_pic}}" alt="" class="circle">
+          <span class="title">{{participant.first_name}}
+            {{participant.last_name}}</span>
           </p>
         </li>
         {% endfor %}
