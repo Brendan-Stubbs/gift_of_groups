@@ -45,6 +45,10 @@ class Profile(models.Model):
         if self.birth_date:
             return datehelper.get_next_birthday(self)
 
+    def get_next_birthday_from_current_month(self):
+      if self.birth_date:
+        return datehelper.get_next_birthday_starting_beginning_of_current_month(self)
+
     def are_bank_details_complete(self):
         return bool(self.bank_account_number) and bool(self.bank_name)
 
@@ -56,7 +60,7 @@ class Profile(models.Model):
 
         birthdays = {}
         for friend in friends:
-            next_birthday = friend.profile.get_next_birthday()
+            next_birthday = friend.profile.get_next_birthday_from_current_month()
             if next_birthday:
                 friend_name = "{} {}".format(
                     friend.first_name, friend.last_name)
@@ -141,7 +145,7 @@ class GiftGroup(models.Model):
         members = self.users.all()
         birthdays = {}
         for member in members:
-            next_birthday = member.profile.get_next_birthday()
+            next_birthday = member.profile.get_next_birthday_from_current_month()
             if next_birthday:
                 member_name = "{} {}".format(
                     member.first_name, member.last_name)

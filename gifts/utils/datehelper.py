@@ -28,10 +28,13 @@ def get_next_birthday_starting_beginning_of_current_month(profile):
       birth_day = 28 if birth_year % 4 != 0 else birth_day
       return datetime.datetime(now.year, birth_month, birth_day)
   
-  year_to_return =  now.year if now.month == birth_month else now.year + 1
-  # if datetime.datetime(now.year, birth_month, birth_day).date() >= now.date():
-  #     return datetime.datetime(now.year, birth_month, birth_day)
-  return datetime.datetime(year_to_return, birth_month, birth_day)
+
+  if now.month == birth_month:
+     return datetime.datetime(now.year, birth_month, birth_day)
+
+  if datetime.datetime(now.year, birth_month, birth_day).date() >= now.date():
+      return datetime.datetime(now.year, birth_month, birth_day)
+  return datetime.datetime(now.year +1, birth_month, birth_day)
 
 
 def get_upcoming_birthdays(group):
