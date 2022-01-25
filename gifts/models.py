@@ -122,7 +122,7 @@ class GiftGroup(models.Model):
         gifts_created = 0
         birthdays_in_scope = datehelper.get_upcoming_birthdays(self)
         for user in birthdays_in_scope:
-            if not Gift.objects.filter(gift_group=self, receiver=user, wrap_up_date=user.profile.get_next_birthday()).exists():
+            if not Gift.objects.filter(gift_group=self, receiver=user, wrap_up_date=user.profile.get_next_birthday()).exclude(is_complete=True).exists():
                 Gift.objects.create(
                     gift_group=self, receiver=user, wrap_up_date=user.profile.get_next_birthday())
                 gifts_created += 1
