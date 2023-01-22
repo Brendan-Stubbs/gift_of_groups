@@ -98,8 +98,14 @@ try:
 except:
     DATABASES = {
         'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+          'ENGINE': 'django.db.backends.mysql',
+          'NAME': 'development',
+          'USER': 'giftly',
+          'PASSWORD': 'pass',
+          'HOST': 'mysql',
+          'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
         }
     }
 

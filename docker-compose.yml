@@ -1,0 +1,22 @@
+version: '3'
+services: 
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_DATABASE: development
+      MYSQL_USER: giftly
+      MYSQL_PASSWORD: pass
+    ports:
+      - "3309:3309"
+  giftly_groups:
+    build: .
+    ports: 
+      - 8090:8090
+    volumes:
+    - ./:/app
+
+
+
