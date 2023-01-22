@@ -86,3 +86,8 @@ Run local server
 ```
 python mange.py runserver
 ```
+
+**Running with Docker**  
+```bash
+  docker-compose up --build
+```

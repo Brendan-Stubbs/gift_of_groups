@@ -1,6 +1,6 @@
-version: '3'
+version: '3.9'
 services: 
-  db:
+  mysql-server:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
     restart: always
@@ -9,14 +9,31 @@ services:
       MYSQL_DATABASE: development
       MYSQL_USER: giftly
       MYSQL_PASSWORD: pass
+      MYSQL_HOST: 'mysql-server'
     ports:
       - "3309:3309"
+
+
   giftly_groups:
     build: .
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_DATABASE: development
+      MYSQL_USER: giftly
+      MYSQL_PASSWORD: pass
+      MYSQL_HOST: 'mysql-server'
     ports: 
       - 8090:8090
     volumes:
     - ./:/app
+    command: >
+      sh -c "ls &&
+             python manage.py wait_for_db &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - mysql-server
 
+      
 
 
