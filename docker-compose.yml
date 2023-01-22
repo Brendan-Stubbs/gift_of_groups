@@ -10,8 +10,9 @@ services:
       MYSQL_USER: giftly
       MYSQL_PASSWORD: pass
       MYSQL_HOST: 'mysql-server'
+      MYSQL_PORT: '3309'
     ports:
-      - "3309:3309"
+      - "3309:3306"
 
 
   giftly_groups:
@@ -30,7 +31,7 @@ services:
       sh -c "ls &&
              python manage.py wait_for_db &&
              python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:8000"
+             python manage.py runserver 0.0.0.0:8090"
     depends_on:
       - mysql-server
 

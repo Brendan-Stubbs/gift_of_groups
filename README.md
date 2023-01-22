@@ -91,3 +91,4 @@ python mange.py runserver
 ```bash
   docker-compose up --build
 ```
+Access the app on http://localhost:8090
