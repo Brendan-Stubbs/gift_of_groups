@@ -28,9 +28,9 @@ services:
     volumes:
     - ./:/app
     command: >
-      sh -c "ls &&
-             python manage.py wait_for_db &&
+      sh -c "python manage.py wait_for_db &&
              python manage.py migrate &&
+             python manage.py setup_profile_pic_objects &&
              python manage.py runserver 0.0.0.0:8090"
     depends_on:
       - mysql-server
