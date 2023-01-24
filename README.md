@@ -24,6 +24,5 @@ Access the app on http://localhost:8090
 docker exec -it gift_of_groups_giftly_groups_1 pip install <package>
 
 # Update requirements.txt
-docker exec -it gift_of_groups_giftly_groups_1 pip freeze < requirements.txt
-
+docker exec -it gift_of_groups_giftly_groups_1 pip freeze > requirements.txt
 ```
