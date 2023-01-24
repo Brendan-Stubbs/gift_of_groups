@@ -1,5 +1,4 @@
-{% extends 'gifts/base.html' %} {% load static %} {% block title %} Sign Up {%
-endblock %} {% block content %} {% load crispy_forms_tags %}
+{% extends 'gifts/base.html' %} {% load static %} {% block title %} Sign Up {% endblock %} {% block content %} {% load crispy_forms_tags %}
 
 <div class="container" id="content">
   <div class="row">
@@ -34,16 +33,19 @@ endblock %} {% block content %} {% load crispy_forms_tags %}
             {{form.password2}}
           </div>
 
-          {% if form.errors %} {% for field in form %} {% for error in
-          field.errors %}
-          <div class="red-text">
-            <strong>{{ error|escape }}</strong>
-          </div>
-          {% endfor %} {% endfor %} {% for error in form.non_field_errors %}
-          <div class="red-text">
-            <strong>{{ error|escape }}</strong>
-          </div>
-          {% endfor %} {% endif %}
+          {% if form.errors %} 
+            {% for field in form %} {% for error in
+            field.errors %}
+            <div class="red-text">
+              <strong>{{ error|escape }}</strong>
+            </div>
+            {% endfor %} 
+            {% for error in form.non_field_errors %}
+            <div class="red-text">
+              <strong>{{ error|escape }}</strong>
+            </div>
+            {% endfor %} 
+          {% endif %}
 
           <p class="right">
             Already have an account? <a href="{% url 'login' %}">login</a>
