@@ -1,4 +1,4 @@
-# gift_of_groups
+# Giftly Groups
 A web application to manage group birthday gifts
 
 
