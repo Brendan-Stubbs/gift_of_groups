@@ -17,3 +17,13 @@ Ensure you have [docker](https://www.docker.com/products/docker-desktop/) instal
   docker-compose up --build
 ```
 Access the app on http://localhost:8090
+
+**Installing new packages**
+```bash
+
+docker exec -it gift_of_groups_giftly_groups_1 pip install <package>
+
+# Update requirements.txt
+docker exec -it gift_of_groups_giftly_groups_1 pip freeze < requirements.txt
+
+```
