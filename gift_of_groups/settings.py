@@ -33,7 +33,7 @@ except:
     DEBUG = True
     ENVIRONMENT = "local"
     SECRET_KEY = "fe1769t_=18)kl@p-hq97&id3l&r=c1zrn8zy#7!zv-2gtks0_"
-    DOMAIN_NAME = "http://127.0.0.1:8000"
+    DOMAIN_NAME = "http://127.0.0.1:8090"
 
 ALLOWED_HOSTS = ["www.giftlygroups.com", "localhost", "127.0.0.1"]
 
