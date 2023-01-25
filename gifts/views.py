@@ -567,7 +567,8 @@ class MarkGiftComplete(generic.View):
             gift = Gift.objects.get(id=self.kwargs.get("id"))
             gift.is_complete = True
             gift.save()
-            return redirect("view_individual_group", gift.gift_group.id)
+            if gift.gift_group:
+              return redirect("view_individual_group", gift.gift_group.id)
         return redirect("view_groups")
 
 

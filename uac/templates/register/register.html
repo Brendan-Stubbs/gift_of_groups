@@ -1,66 +1,67 @@
-{% extends 'gifts/base.html' %}
-{% load staticfiles %}
-
-{% block title %} Sign Up {% endblock %}
-{% block content %}
-{% load crispy_forms_tags %}
-
+{% extends 'gifts/base.html' %} {% load static %} {% block title %} Sign Up {% endblock %} {% block content %} {% load crispy_forms_tags %}
 
 <div class="container" id="content">
-   <div class="row">
-      <div class="col offset-l3 l6 offset-m1 m10 s12">
-         <form action="" method="POST">
-            {% csrf_token %}
-            <div class="card-panel z-depth-5">
-               <h5 class="center">Sign Up</h5>
-               <div class="input-field">
-                  <i class="material-icons prefix">email</i>
-                  <label for="id_email">Email</label>
-                  {{form.username}}
-               </div>
-               <div class="input-field">
-                  <i class="material-icons prefix">account_circle</i>
-                  <label for="id_first_name">First Name</label>
-                  {{form.first_name}}
-               </div>
-               <div class="input-field">
-                  <i class="material-icons prefix">account_circle</i>
-                  <label for="id_last_name">Last Name</label>
-                  {{form.last_name}}
-               </div>
-               <div class="input-field">
-                  <i class="material-icons prefix">lock</i>
-                  <label for="id_password1">Enter password</label>
-                  {{form.password1}}
-               </div>
-               <div class="input-field">
-                  <i class="material-icons prefix">vpn_key</i>
-                  <label for="id_password2">Confirm password</label>
-                  {{form.password2}}
-               </div>
+  <div class="row">
+    <div class="col offset-l3 l6 offset-m1 m10 s12">
+      <form action="" method="POST">
+        {% csrf_token %}
+        <div class="card-panel z-depth-5">
+          <h5 class="center">Sign Up</h5>
+          <div class="input-field">
+            <i class="material-icons prefix">email</i>
+            <label for="id_email">Email</label>
+            {{form.username}}
+          </div>
+          <div class="input-field">
+            <i class="material-icons prefix">account_circle</i>
+            <label for="id_first_name">First Name</label>
+            {{form.first_name}}
+          </div>
+          <div class="input-field">
+            <i class="material-icons prefix">account_circle</i>
+            <label for="id_last_name">Last Name</label>
+            {{form.last_name}}
+          </div>
+          <div class="input-field">
+            <i class="material-icons prefix">lock</i>
+            <label for="id_password1">Enter password</label>
+            {{form.password1}}
+          </div>
+          <div class="input-field">
+            <i class="material-icons prefix">vpn_key</i>
+            <label for="id_password2">Confirm password</label>
+            {{form.password2}}
+          </div>
 
-           {% if form.errors %}
-               {% for field in form %}
-               {% for error in field.errors %}
-                <div class="red-text">
-                    <strong>{{ error|escape }}</strong>
-                </div>
-            {% endfor %}
-            {% endfor %}
-            {% for error in form.non_field_errors %}
-            <div class="red-text">
+          {% if form.errors %} 
+            {% for field in form %} 
+              {% for error in field.errors %}
+              <div class="red-text">
                 <strong>{{ error|escape }}</strong>
-            </div>
+              </div>
+              {% endfor %} 
+              {% for error in form.non_field_errors %}
+                <div class="red-text">
+                  <strong>{{ error|escape }}</strong>
+                </div>
+              {% endfor %} 
             {% endfor %}
-            {% endif %}
+          {% endif %}
 
-               <p class="right">Already have an account? <a href="{% url 'login' %}">login</a></p>
-               <input type="submit" name="submit" value="register" class="btn left col s12">
-               <div class="clearfix"></div>
-            </div>
-         </form>
-      </div>
-   </div>
+          <p class="right">
+            Already have an account? <a href="{% url 'login' %}">login</a>
+          </p>
+          <input
+            type="submit"
+            name="submit"
+            value="register"
+            class="btn left col s12"
+          />
+          <div class="clearfix"></div>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 {% endblock %}
