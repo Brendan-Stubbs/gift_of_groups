@@ -26,3 +26,12 @@ docker exec -it gift_of_groups_giftly_groups_1 pip install <package>
 # Update requirements.txt
 docker exec -it gift_of_groups_giftly_groups_1 pip freeze > requirements.txt
 ```
+
+**Making and applying migrations**
+```bash
+# Make the migrations
+docker exec -it gift_of_groups_giftly_groups_1 python manage.py makemigrations
+
+# Apply the migrations
+docker exec -it gift_of_groups_giftly_groups_1 python manage.py migrate
+```
