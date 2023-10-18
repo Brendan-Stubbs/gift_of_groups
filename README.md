@@ -5,9 +5,15 @@ A web application to manage group birthday gifts
 
 ### Set up local_settings.py in the same directory as settings.py
 ```
-DEBUG = True
+DEBUG = False
 ENVIRONMENT = "local"
-SECRET_KEY = "my_super_secret_key"
+SECRET_KEY = 'somesecret'
+PATREON_SECRET = "somesecret"
+BUY_ME_A_COFFEE_SECRET = "somesecret"
+DOMAIN_NAME = "https://www.giftlygroups.com/"
+EMAIL_HOST_PASSWORD = "somepassword"
+EMAIL_HOST_USER = "giftlygroups@gmail.com"
+ACTIVATE_EMAIL_ON_ENVIRONMENT = False
 ```
 
 
