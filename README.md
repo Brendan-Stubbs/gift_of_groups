@@ -20,11 +20,11 @@ Access the app on http://localhost:8090
 
 **Installing new packages**
 ```bash
-
-docker exec -it gift_of_groups_giftly_groups_1 pip install <package>
+# -u 0 to run as root user
+docker exec -u 0 -it gift_of_groups_giftly_groups_1 pip install <package>
 
 # Update requirements.txt
-docker exec -it gift_of_groups_giftly_groups_1 pip freeze > requirements.txt
+docker exec -u 0 -it gift_of_groups_giftly_groups_1 pip freeze > requirements.txt
 ```
 
 **Making and applying migrations**
