@@ -41,3 +41,25 @@ docker exec -it gift_of_groups_giftly_groups_1 python manage.py makemigrations
 # Apply the migrations
 docker exec -it gift_of_groups_giftly_groups_1 python manage.py migrate
 ```
+
+# When deploying to Python anywhere
+```bash
+# Activate virtual environment
+source ~/.virtualenvs/giftly/bin/activate
+
+# pull latest changes
+cd ~/gift_of_groups && git pull origin master
+
+# Install dependencies
+pip install -r requirements.txt
+
+# generate static files
+python manage.py collectstatic
+
+# Alternatively
+source ~/.virtualenvs/giftly/bin/activate && \
+cd ~/gift_of_groups && \
+git pull origin master && \
+pip install -r requirements.txt && \
+python manage.py collectstatic
+```
