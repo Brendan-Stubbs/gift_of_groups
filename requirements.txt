@@ -6,14 +6,10 @@ charset-normalizer==3.0.1
 cryptography==3.3.2
 defusedxml==0.7.0rc1
 Django==4.1.12
-<<<<<<< HEAD
 # Django==4.2.6 # Once Pythoin anywhere updates db to mysql 8
-=======
-# Django==4.2.6
->>>>>>> 31792d95eed42218b02eb7d1f5c2ccc13be51141
 django-crispy-forms==1.9.1
 idna==2.10
-mysqlclient==2.2.0
+mysqlclient==2.0.1
 oauthlib==3.1.0
 psycopg2-binary==2.8.5
 pycparser==2.20
