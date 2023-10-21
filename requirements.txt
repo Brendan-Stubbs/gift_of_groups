@@ -5,7 +5,8 @@ chardet==3.0.4
 charset-normalizer==3.0.1
 cryptography==3.3.2
 defusedxml==0.7.0rc1
-Django==4.2.6
+Django==4.1.12
+# Django==4.2.6
 django-crispy-forms==1.9.1
 idna==2.10
 mysqlclient==2.2.0
