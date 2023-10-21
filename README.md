@@ -5,7 +5,7 @@ A web application to manage group birthday gifts
 
 ### Set up local_settings.py in the same directory as settings.py
 ```
-DEBUG = False
+DEBUG = True
 ENVIRONMENT = "local"
 SECRET_KEY = 'somesecret'
 PATREON_SECRET = "somesecret"
