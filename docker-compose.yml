@@ -13,6 +13,8 @@ services:
       MYSQL_PORT: '3309'
     ports:
       - "3309:3306"
+    logging:
+      driver: none  # Disable logging for mysql
 
 
   giftly_groups:

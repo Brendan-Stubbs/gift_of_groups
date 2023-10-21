@@ -8,7 +8,6 @@ RUN pip3 install -r requirements.txt --no-cache-dir
 
 EXPOSE 8090
 
-
 # Creates virtual environment, updates pips, install dependencies
 RUN python -m venv /py && \ 
     /py/bin/pip install --upgrade pip && \
